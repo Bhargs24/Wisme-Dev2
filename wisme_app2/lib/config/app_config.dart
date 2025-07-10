@@ -3,10 +3,12 @@
 /// This file contains all configuration for deployment-ready features
 library;
 
+import '../security/production_security_config.dart';
+
 class AppConfig {
-  // API Configuration - to be filled during deployment
-  static const String openAIApiKey = String.fromEnvironment('OPENAI_API_KEY', defaultValue: '');
-  static const String elevenLabsApiKey = String.fromEnvironment('ELEVENLABS_API_KEY', defaultValue: '');
+  // API Configuration - now managed securely at runtime
+  static String get openAIApiKey => RuntimeApiKeyManager.openAIKey;
+  static String get elevenLabsApiKey => RuntimeApiKeyManager.elevenLabsKey;
   static const String elevenLabsApiUrl = 'https://api.elevenlabs.io/v1';
   static const String openAIApiUrl = 'https://api.openai.com/v1';
   
@@ -57,9 +59,7 @@ class AppConfig {
   
   /// Check if app is properly configured for production
   static bool get isConfiguredForProduction {
-    return openAIApiKey.isNotEmpty && 
-           elevenLabsApiKey.isNotEmpty &&
-           isProduction;
+    return RuntimeApiKeyManager.isConfigured && isProduction;
   }
   
   /// Get configuration status for debugging
