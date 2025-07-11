@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'routes.dart';
 import 'design_system/themes/app_theme.dart';
 import 'providers/settings_provider.dart';
+import 'UI/widgets/auth_wrapper.dart';
 
 class WismeApp extends StatelessWidget {
   const WismeApp({super.key});
@@ -17,7 +18,7 @@ class WismeApp extends StatelessWidget {
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
           themeMode: settingsProvider.themeMode,
-          initialRoute: AppRoutes.home,
+          home: const AuthWrapper(), // ✅ CRITICAL FIX: Proper authentication flow
           routes: AppRoutes.routes,
           onGenerateRoute: AppRoutes.generateRoute,
         );

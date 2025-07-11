@@ -3,51 +3,67 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
   final AuthService _authService;
+  final SharedPreferences _prefs;
 
   UserProfile? _currentUser;
-  bool _isLoading = false;
+  bool _isLoading = true; // Start as loading
   String? _error;
+  bool _hasCompletedOnboarding = false;
 
   UserProvider({
     required AuthService authService,
     required SharedPreferences prefs,
-  }) : _authService = authService {
+  }) : _authService = authService, _prefs = prefs {
     _initializeUser();
   }
 
   // Getters
   UserProfile? get currentUser => _currentUser;
-  UserProfile? get user => _currentUser; // Alias for UI compatibility
+  UserProfile? get user => _currentUser;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isLoggedIn => _currentUser != null;
-  bool get hasCompletedOnboarding => _currentUser != null; // Simplified for now
+  bool get hasCompletedOnboarding => _hasCompletedOnboarding;
 
   void clearError() {
     _error = null;
     notifyListeners();
   }
 
-  void _initializeUser() {
-    // Listen to auth state changes from Firebase User
-    _authService.authStateChanges.listen((firebaseUser) async {
-      if (firebaseUser != null) {
-        await _loadUserProfile(firebaseUser.uid);
-      } else {
-        _currentUser = null;
+  Future<void> _initializeUser() async {
+    _isLoading = true;
+    notifyListeners();
+    
+    try {
+      // Check onboarding status first
+      _hasCompletedOnboarding = _prefs.getBool('has_completed_onboarding') ?? false;
+      
+      // Listen to auth state changes from Firebase User
+      _authService.authStateChanges.listen((firebaseUser) async {
+        if (firebaseUser != null) {
+          await _loadUserProfile(firebaseUser.uid);
+        } else {
+          _currentUser = null;
+        }
+        _isLoading = false;
         notifyListeners();
-      }
-    });
+      });
+    } catch (e) {
+      _error = 'Failed to initialize user: $e';
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
+  /// Convert UserModel to UserProfile
   UserProfile _convertUserModelToProfile(UserModel userModel) {
     return UserProfile(
       id: userModel.id,
       email: userModel.email,
       displayName: userModel.displayName,
+      avatarUrl: userModel.photoURL,
       createdAt: userModel.createdAt,
       lastActiveAt: userModel.lastLoginAt,
-      avatarUrl: userModel.photoURL,
       achievements: [], // Default empty achievements
     );
   }
@@ -284,8 +300,11 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  /// Complete onboarding process
   Future<void> completeOnboarding() async {
-    await markOnboardingComplete();
+    await _prefs.setBool('has_completed_onboarding', true);
+    _hasCompletedOnboarding = true;
+    notifyListeners();
   }
 }
 

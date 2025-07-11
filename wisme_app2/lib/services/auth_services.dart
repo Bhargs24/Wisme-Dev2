@@ -1,13 +1,13 @@
 import '../core/exports.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart'; // Temporarily disabled
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 class AuthService {
   static final _logger = Logger();
   
   FirebaseAuth? _auth;
-  GoogleSignIn? _googleSignIn;
+  // GoogleSignIn? _googleSignIn; // Temporarily disabled
   FirebaseFirestore? _firestore;
   
   bool _isFirebaseAvailable = false;
@@ -17,7 +17,8 @@ class AuthService {
       // Only initialize if Firebase is properly configured
       // This will fail gracefully if Firebase is not set up
       _auth = FirebaseAuth.instance;
-      _googleSignIn = GoogleSignIn();
+      // Temporarily disable Google Sign-In for web until properly configured
+      // _googleSignIn = GoogleSignIn();
       _firestore = FirebaseFirestore.instance;
       _isFirebaseAvailable = true;
       _logger.i('AuthService: Firebase services initialized');
@@ -132,49 +133,8 @@ class AuthService {
       throw Exception('Firebase is not configured. Please set up Firebase to use Google Sign-In.');
     }
     
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential result = await _auth!.signInWithCredential(credential);
-      
-      if (result.user != null) {
-        // Check if user profile exists, create if not
-        UserModel? userModel = await getUserProfile(result.user!.uid);
-        
-        if (userModel == null) {
-          userModel = UserModel(
-            id: result.user!.uid,
-            email: result.user!.email ?? '',
-            displayName: result.user!.displayName ?? 'User',
-            photoURL: result.user!.photoURL,
-            createdAt: DateTime.now(),
-            lastLoginAt: DateTime.now(),
-            preferences: UserPreferences(),
-            learningProfile: LearningProfile(
-              lastActiveDate: DateTime.now(),
-            ),
-            progress: UserProgress(
-              lastProgressUpdate: DateTime.now(),
-            ),
-          );
-          await _createUserProfile(userModel);
-        } else {
-          await _updateLastActiveTime(result.user!.uid);
-        }
-        
-        return userModel;
-      }
-      return null;
-    } catch (e) {
-      throw Exception('Google sign in failed: $e');
-    }
+    // Temporarily disabled until Google Sign-In is properly configured for web
+    throw Exception('Google Sign-In is temporarily disabled. Please use email/password authentication.');
   }
 
   /// Sign out
@@ -186,7 +146,8 @@ class AuthService {
     try {
       await Future.wait([
         if (_auth != null) _auth!.signOut(),
-        if (_googleSignIn != null) _googleSignIn!.signOut(),
+        // Google Sign-In temporarily disabled
+        // if (_googleSignIn != null) _googleSignIn!.signOut(),
       ]);
     } catch (e) {
       throw Exception('Sign out failed: $e');

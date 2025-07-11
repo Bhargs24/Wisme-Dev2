@@ -30,6 +30,7 @@ You need to set up **3 things**:
    - Click **"Create new secret key"**
    - Name it: `Wisme App`
    - **Copy the key** (starts with `sk-...`)
+   REDACTED_OPENAI_KEY_SET_VIA_ENV
    - ⚠️ **Save it somewhere safe** - you won't see it again!
 
 ### Step 1.2: ElevenLabs API Key (3 minutes)

@@ -7,17 +7,17 @@ library;
 class ApiKeys {
   // OpenAI API Key
   // Get yours from: https://platform.openai.com/api-keys
-  static const String openAI = 'REPLACE_WITH_YOUR_OPENAI_API_KEY';
+  static const String openAI = 'REDACTED_OPENAI_KEY_SET_VIA_ENV';
   
   // ElevenLabs API Key  
   // Get yours from: https://elevenlabs.io/speech-synthesis
-  static const String elevenLabs = 'REPLACE_WITH_YOUR_ELEVENLABS_API_KEY';
+  static const String elevenLabs = 'sk_4251133ba2069affc76cc7a2b55378362cfe9ac389f0e708';
   
   // Firebase Configuration (will be updated after Firebase setup)
-  static const String firebaseApiKey = 'REPLACE_WITH_FIREBASE_API_KEY';
-  static const String firebaseProjectId = 'REPLACE_WITH_FIREBASE_PROJECT_ID';
-  static const String firebaseMessagingSenderId = 'REPLACE_WITH_SENDER_ID';
-  static const String firebaseAppId = 'REPLACE_WITH_FIREBASE_APP_ID';
+  static const String firebaseApiKey = 'AIzaSyC5ZOdEAg7t1UfKd_n7_wonnDJA-6X9zJg';
+  static const String firebaseProjectId = 'wisme-app';
+  static const String firebaseMessagingSenderId = '71244676159';
+  static const String firebaseAppId = '1:71244676159:android:481d374fd302bf88b28c8a';
   
   // Validation
   static bool get isOpenAIConfigured => openAI.isNotEmpty && !openAI.contains('REPLACE_WITH');

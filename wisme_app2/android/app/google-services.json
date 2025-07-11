@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "71244676159",
+    "project_id": "wisme-app",
+    "storage_bucket": "wisme-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71244676159:android:481d374fd302bf88b28c8a",
+        "android_client_info": {
+          "package_name": "com.example.wisme_app2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5ZOdEAg7t1UfKd_n7_wonnDJA-6X9zJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
 
 import 'firebase_options.dart';
-
 import 'app.dart';
 import 'config/app_config.dart';
 import 'providers/audio_provider.dart';
@@ -34,10 +33,8 @@ void main() async {
   logger.i('🚀 App Configuration Status:');
   logger.i('  - OpenAI configured: ${AppConfig.openAIApiKey.isNotEmpty}');
   logger.i('  - ElevenLabs configured: ${AppConfig.elevenLabsApiKey.isNotEmpty}');
-  logger.i('  - Environment: ${EnvironmentConfig.environment}');
-  logger.i('  - Production ready: ${AppConfig.isConfiguredForProduction}');
   
-  // Initialize Firebase first 
+  // Initialize Firebase
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -111,4 +108,3 @@ void main() async {
     ),
   );
 }
-

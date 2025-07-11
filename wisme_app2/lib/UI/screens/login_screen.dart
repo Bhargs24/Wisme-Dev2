@@ -1,4 +1,10 @@
 import '../../core/exports.dart';
+import '../../design_system/theme.dart';
+import '../../design_system/colors.dart' as WismeColors;
+import '../../design_system/typography.dart';
+import '../../design_system/spacing.dart';
+import '../widgets/wisme_button.dart';
+import '../widgets/wisme_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -89,7 +95,18 @@ class _LoginScreenState extends State<LoginScreen>
       }
 
       if (success && mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        // Don't navigate manually - AuthWrapper will handle this automatically
+        // Just show success feedback
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_isLogin ? 'Welcome back!' : 'Account created successfully!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

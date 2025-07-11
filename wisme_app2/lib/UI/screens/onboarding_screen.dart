@@ -1,4 +1,5 @@
 import '../../core/exports.dart';
+
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -13,6 +14,21 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   int _currentPage = 0;
+
+  // Selected topics for learning
+  final Set<String> _selectedTopics = {};
+  
+  // Available topics - this should come from a service/API
+  final List<Map<String, dynamic>> _availableTopics = [
+    {'id': 'business', 'name': 'Business & Entrepreneurship', 'icon': Icons.business_center, 'description': 'Strategic thinking, leadership, and business fundamentals'},
+    {'id': 'technology', 'name': 'Technology & Programming', 'icon': Icons.computer, 'description': 'Software development, AI, and emerging tech'},
+    {'id': 'science', 'name': 'Science & Research', 'icon': Icons.science, 'description': 'Scientific method, discoveries, and innovations'},
+    {'id': 'psychology', 'name': 'Psychology & Human Behavior', 'icon': Icons.psychology, 'description': 'Understanding minds, emotions, and behavior'},
+    {'id': 'health', 'name': 'Health & Wellness', 'icon': Icons.health_and_safety, 'description': 'Physical and mental health optimization'},
+    {'id': 'finance', 'name': 'Finance & Investing', 'icon': Icons.attach_money, 'description': 'Personal finance, investing, and economics'},
+    {'id': 'creativity', 'name': 'Creativity & Arts', 'icon': Icons.palette, 'description': 'Creative thinking, design, and artistic expression'},
+    {'id': 'communication', 'name': 'Communication & Language', 'icon': Icons.chat, 'description': 'Public speaking, writing, and language skills'},
+  ];
 
   @override
   void initState() {
@@ -51,11 +67,11 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: Row(
-                children: List.generate(3, (index) => 
+                children: List.generate(2, (index) => 
                   Expanded(
                     child: Container(
                       height: 4,
-                      margin: EdgeInsets.only(right: index < 2 ? 8 : 0),
+                      margin: EdgeInsets.only(right: index < 1 ? 8 : 0),
                       decoration: BoxDecoration(
                         color: index <= _currentPage 
                             ? theme.primaryColor
@@ -81,8 +97,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 },
                 children: [
                   _buildWelcomePage(),
-                  _buildLearningStylePage(),
-                  _buildCoachSelectionPage(),
+                  _buildTopicSelectionPage(),
                 ],
               ),
             ),
@@ -107,8 +122,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     const SizedBox.shrink(),
                   
                   ElevatedButton(
-                    onPressed: () {
-                      if (_currentPage < 2) {
+                    onPressed: _canProceed() ? () {
+                      if (_currentPage < 1) {
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeOut,
@@ -116,14 +131,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       } else {
                         _completeOnboarding();
                       }
-                    },
+                    } : null,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: Text(_currentPage < 2 ? 'Continue' : 'Start Learning'),
+                    child: Text(_currentPage < 1 ? 'Continue' : 'Start Learning'),
                   ),
                 ],
               ),
@@ -134,20 +149,27 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     );
   }
 
+  bool _canProceed() {
+    if (_currentPage == 0) return true; // Welcome page
+    if (_currentPage == 1) return _selectedTopics.isNotEmpty; // Need at least 1 topic
+    return false;
+  }
+
   Widget _buildWelcomePage() {
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 20),
+              
               // Hero illustration
               Container(
-                width: 200,
-                height: 200,
+                width: 160,
+                height: 160,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -157,16 +179,16 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       Theme.of(context).primaryColor.withValues(alpha: 0.7),
                     ],
                   ),
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(80),
                 ),
                 child: const Icon(
                   Icons.psychology_outlined,
-                  size: 80,
+                  size: 70,
                   color: Colors.white,
                 ),
               ),
               
-              const SizedBox(height: 48),
+              const SizedBox(height: 32),
               
               // Welcome text
               Text(
@@ -177,7 +199,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
               
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               
               Text(
                 'Your AI-powered microlearning companion.\nLearn anything in just 10-15 minutes a day.',
@@ -187,7 +209,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
               
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               
               // Features preview
               _buildFeatureCard(
@@ -196,7 +218,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 description: 'Lessons tailored to your interests and pace',
               ),
               
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               
               _buildFeatureCard(
                 icon: Icons.record_voice_over,
@@ -204,13 +226,15 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 description: 'Learn with Kai and Vee, your AI learning buddies',
               ),
               
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               
               _buildFeatureCard(
                 icon: Icons.trending_up,
                 title: 'Smart Progress Tracking',
                 description: 'See your knowledge grow with intelligent analytics',
               ),
+              
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -223,11 +247,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 40),
+              
               Text(
                 'How do you like to learn?',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -246,7 +271,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
               
-              const SizedBox(height: 48),
+              const SizedBox(height: 32),
               
               _buildLearningStyleOption(
                 icon: Icons.book_outlined,
@@ -281,6 +306,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 description: 'Actionable frameworks and templates',
                 isSelected: false,
               ),
+              
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -293,11 +320,12 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 40),
+              
               Text(
                 'Meet your AI coaches',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -316,7 +344,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 textAlign: TextAlign.center,
               ),
               
-              const SizedBox(height: 48),
+              const SizedBox(height: 32),
               
               _buildCoachOption(
                 name: 'Kai',
@@ -326,7 +354,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 isSelected: true,
               ),
               
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               
               _buildCoachOption(
                 name: 'Vee',
@@ -336,7 +364,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 isSelected: false,
               ),
               
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               
               // Voice preview button
               OutlinedButton.icon(
@@ -352,6 +380,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   ),
                 ),
               ),
+              
+              const SizedBox(height: 40),
             ],
           ),
         ),

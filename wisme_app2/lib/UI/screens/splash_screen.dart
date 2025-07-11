@@ -47,9 +47,12 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _startAnimations() async {
+    if (!mounted) return;
     await Future.delayed(const Duration(milliseconds: 300));
+    if (!mounted) return;
     _logoController.forward();
     await Future.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
     _textController.forward();
   }
 

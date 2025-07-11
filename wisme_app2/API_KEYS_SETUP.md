@@ -45,10 +45,10 @@ Edit this file: `lib/config/api_keys.dart`
 ```dart
 class ApiKeys {
   // Replace with your actual OpenAI key
-  static const String openAI = 'sk-your-actual-openai-key-here';
+  static const String openAI = 'REDACTED_OPENAI_KEY_SET_VIA_ENV';
   
   // Replace with your actual ElevenLabs key  
-  static const String elevenLabs = 'your-actual-elevenlabs-key-here';
+  static const String elevenLabs = 'sk_4251133ba2069affc76cc7a2b55378362cfe9ac389f0e708';
   
   // Firebase values (from Firebase setup)
   static const String firebaseApiKey = 'your-firebase-web-api-key';
