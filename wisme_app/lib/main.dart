@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'shared/themes/app_theme.dart';
-import 'features/auth/presentation/pages/welcome_screen.dart';
+import 'features/auth/auth.dart';
 
 void main() {
   runApp(
