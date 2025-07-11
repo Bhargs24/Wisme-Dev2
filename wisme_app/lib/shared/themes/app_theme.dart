@@ -136,7 +136,7 @@ class WismeTheme {
       // ===== CARD THEME =====
       cardTheme: CardTheme(
         elevation: 0,
-        color: WismeColors.surface,
+        color: WismeColors.backgroundPrimary, // Use backgroundPrimary instead of surface
         surfaceTintColor: Colors.transparent,
         shadowColor: Color(0x0D000000), // Colors.black.withOpacity(0.05)
         shape: RoundedRectangleBorder(
@@ -456,21 +456,21 @@ class WismeTheme {
 
       // ===== TYPOGRAPHY THEME =====
       textTheme: TextTheme(
-        displayLarge: WismeTypography.h1,
-        displayMedium: WismeTypography.h2,
-        displaySmall: WismeTypography.h3,
-        headlineLarge: WismeTypography.h3,
-        headlineMedium: WismeTypography.h4,
-        headlineSmall: WismeTypography.h5,
-        titleLarge: WismeTypography.h4,
-        titleMedium: WismeTypography.h5,
-        titleSmall: WismeTypography.h6,
-        bodyLarge: WismeTypography.bodyLarge,
-        bodyMedium: WismeTypography.bodyMedium,
-        bodySmall: WismeTypography.bodySmall,
-        labelLarge: WismeTypography.button,
-        labelMedium: WismeTypography.label,
-        labelSmall: WismeTypography.caption,
+        displayLarge: WismeTypography.h1.copyWith(color: WismeColors.textPrimary),
+        displayMedium: WismeTypography.h2.copyWith(color: WismeColors.textPrimary),
+        displaySmall: WismeTypography.h3.copyWith(color: WismeColors.textPrimary),
+        headlineLarge: WismeTypography.h3.copyWith(color: WismeColors.textPrimary),
+        headlineMedium: WismeTypography.h4.copyWith(color: WismeColors.textPrimary),
+        headlineSmall: WismeTypography.h5.copyWith(color: WismeColors.textPrimary),
+        titleLarge: WismeTypography.h4.copyWith(color: WismeColors.textPrimary),
+        titleMedium: WismeTypography.h5.copyWith(color: WismeColors.textPrimary),
+        titleSmall: WismeTypography.h6.copyWith(color: WismeColors.textPrimary),
+        bodyLarge: WismeTypography.bodyLarge.copyWith(color: WismeColors.textPrimary),
+        bodyMedium: WismeTypography.bodyMedium.copyWith(color: WismeColors.textPrimary),
+        bodySmall: WismeTypography.bodySmall.copyWith(color: WismeColors.textSecondary),
+        labelLarge: WismeTypography.button.copyWith(color: WismeColors.textPrimary),
+        labelMedium: WismeTypography.label.copyWith(color: WismeColors.textSecondary),
+        labelSmall: WismeTypography.caption.copyWith(color: WismeColors.textTertiary),
       ),
     );
   }
