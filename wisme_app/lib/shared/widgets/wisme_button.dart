@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_typography.dart';
 import '../../core/constants/app_spacing.dart';
@@ -148,18 +147,25 @@ class _WismeButtonState extends State<WismeButton>
       },
     );
 
-    // Add loading shimmer effect
+    // Add loading shimmer effect (using built-in animation)
     if (widget.isLoading) {
-      button = button
-          .animate(onPlay: (controller) => controller.repeat())
-          .shimmer(duration: 1500.ms, color: Colors.white.withOpacity(0.3));
+      button = AnimatedOpacity(
+        opacity: 0.7,
+        duration: const Duration(milliseconds: 800),
+        child: button,
+      );
     }
 
-    // Add entrance animation
-    button = button
-        .animate()
-        .fadeIn(duration: 200.ms)
-        .scale(begin: const Offset(0.9, 0.9), duration: 200.ms);
+    // Add entrance animation using built-in widgets
+    button = AnimatedScale(
+      scale: 1.0,
+      duration: const Duration(milliseconds: 200),
+      child: AnimatedOpacity(
+        opacity: 1.0,
+        duration: const Duration(milliseconds: 200),
+        child: button,
+      ),
+    );
 
     // Wrap with tooltip if provided
     if (widget.tooltip != null) {

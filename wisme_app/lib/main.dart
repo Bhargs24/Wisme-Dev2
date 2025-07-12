@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'shared/themes/app_theme.dart';
-import 'features/auth/auth.dart';
+import 'core/services/supabase_service.dart';
+import 'features/auth/presentation/pages/welcome_screen_simple.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Supabase Backend
+  await SupabaseService.initialize();
+  
   runApp(
     ProviderScope(
-      child: WismeApp(),
+      child: const WismeApp(),
     ),
   );
 }
@@ -17,29 +22,13 @@ class WismeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wisme - AI Learning Coach',
+      title: 'Wisme - AI-Powered Learning',
       debugShowCheckedModeBanner: false,
-      
-      // ===== THEME CONFIGURATION =====
-      theme: WismeTheme.lightTheme,
-      darkTheme: WismeTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      
-      // ===== NAVIGATION =====
-      home: WelcomeScreen(),
-      
-      // ===== PERFORMANCE OPTIMIZATIONS =====
-      builder: (context, child) {
-        // Ensure text doesn't scale beyond reasonable limits
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(
-              MediaQuery.of(context).textScaler.scale(1.0).clamp(0.8, 1.3),
-            ),
-          ),
-          child: child!,
-        );
-      },
+      home: const WelcomeScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
     );
   }
 }

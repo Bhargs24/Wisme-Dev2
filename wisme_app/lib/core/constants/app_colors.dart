@@ -203,3 +203,19 @@ class WismeColors {
     return hslDark.toColor();
   }
 }
+
+/// AppColors - Convenient alias for WismeColors
+class AppColors {
+  AppColors._();
+
+  // Core colors
+  static Color get primary => WismeColors.primaryBlue;
+  static Color get background => WismeColors.backgroundPrimary;
+  static Color get surface => WismeColors.surface;
+  static Color get border => WismeColors.border;
+  
+  // Text colors
+  static Color get textPrimary => WismeColors.textPrimary;
+  static Color get textSecondary => WismeColors.textSecondary;
+  static Color get textTertiary => WismeColors.textTertiary;
+}

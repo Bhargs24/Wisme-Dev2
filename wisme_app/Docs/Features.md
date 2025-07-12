@@ -1,219 +1,186 @@
-📚 Wisme — Full Feature Breakdown (2025)
-________________________________________
-✅ CORE FEATURES (MUST-HAVE for MVP)
-These define Wisme’s core value: AI-powered daily learning via smart, personalized voice content.
-1. AI-Powered Learning Coaches
-●	Users can create & name multiple coaches
-
-●	Each coach has a fixed tone, personality, and voice
-
-●	Coaches remember user preferences, tone, learning progress
-
-●	Feels like a smart friend, not a generic chatbot
-
-2. Open Topic Entry + Smart Categorization
-●	Users type any topic (e.g., “crypto”, “how to train a dog”)
-
-●	AI classifies into one of 16 content categories
-
-●	AI determines appropriate knowledge levels based on context
-
-3. Predefined Knowledge Levels (Dynamic per Category)
-For each category, 3–4 tailored levels such as:
-●	🔹 Core Concepts
-
-●	📈 Case Studies / Advanced Models
-
-●	🛠 Tools & Trends
-
-●	🎛 Bit of Everything (Balanced Mix)
-
-4. Curriculum Generation (Learning Journey Mode)
-●	AI builds a structured multi-day plan per topic + level
-
-●	Combines cached + new audio lessons to form a smart path
-
-●	Users progress through curated episodes over time
-
-5. Daily Podcast-Style Audio Episodes
-●	5–12 min audio episodes per day
-
-●	Human-like voice via ElevenLabs
-
-●	Feels like a personalized podcast, not a lecture
-
-6. Voice Format Options (Solo vs. Multi-Voice)
-●	Users choose between:
-
-○	🎙 Solo Coach
-
-○	🎧 Podcast Duo: e.g. "Coach + Curious Friend"
-
-●	Switchable mid-journey
-
-7. User Profiles + Progress Tracking
-●	Track learning streaks, history, completed episodes
-
-●	Coach-specific tracking
-
-●	Episode bookmarking, saving for review
-
-8. Backend Audio Storage Logic
-●	Every audio clip stored with:
-
-○	Category
-
-○	Topic
-
-○	Subtopic
-
-○	Knowledge level
-
-○	Hashtags
-
-○	Coach voice
-
-●	AI searches based on hashtags and similarity for reuse
-
-●	Dynamic personalization (reorders segments, rephrases slightly)
-
-________________________________________
-✨ DELIGHTER FEATURES (Enhancers)
-Make learning addictive, sticky, and habit-forming.
-9. Smart Hashtag-Based Content Retrieval
-●	Every lesson is tagged with relevant #topics, #knowledgelevel, #coachvoice
-
-●	AI generates new hashtags from user topic input and retrieves matching content
-
-●	Ranking algorithm finds most relevant content based on similarity
-
-10. Avoiding Repetition System
-●	Tracks what each user has already learned
-
-●	Ranks unseen or semi-relevant lessons higher
-
-●	Prevents serving duplicate episodes even if topic overlaps
-
-11. Coach Growth System
-●	Coaches “level up” with you
-
-●	Unlock new dialogue styles, teaching formats, or tones
-
-●	Adds emotional connection and gamification
-
-12. Dynamic Book Mode (Page-by-Page Learning)
-●	Users upload or pick a book
-
-●	AI breaks it down page by page
-
-●	Coach teaches, explains, and quizzes with context
-
-●	Works with open-source or licensed books
-
-13. Daily Recaps & Quiz Mode
-●	End of each session includes TL;DR summary
-
-●	Optional mini-quiz to reinforce knowledge
-
-●	Retention-focused interaction
-
-14. "Wisme Wrapped" Recap System
-●	Monthly or yearly report of what you’ve learned
-
-●	Breakdown by category, level, time spent
-
-●	Social sharing options to show off progress
-
-________________________________________
-🚀 DIFFERENTIATOR FEATURES (Wisme-Only Uniques)
-These make Wisme stand apart from NotebookLM or Duolingo.
-15. Coach Collaboration Mode
-●	Two coaches debate or co-teach a topic
-
-●	E.g., “Stoic vs. Hustler” on productivity
-
-●	Dynamic teaching formats
-
-16. AI Mood Awareness (Optional)
-●	System detects user mood (from choices, typing, voice tone)
-
-●	Adjusts delivery style to match energy
-
-●	E.g., calming tone during late night, upbeat in morning
-
-17. Offline Mode
-●	Download episodes or journeys
-
-●	Key for school accessibility or travel
-
-18. Community Curation (Future)
-●	Users or creators can share their learning journeys
-
-●	Public coach profiles or topic playlists
-
-●	Collaborative learning via shared tracks
-
-19. Book Publisher Integrations
-●	Create premium AI-coached learning journeys from books
-
-●	Author-curated commentary or summary tracks
-
-________________________________________
-🛠 BACKEND + TECH FEATURES
-🧠 Smart Hashtag Content Matching Engine
-●	Topics are tagged with rich metadata (hashtags + category + level)
-
-●	When a new request comes in:
-
-○	AI generates hashtags based on input
-
-○	Matches against DB entries
-
-○	Uses semantic ranking (embedding similarity)
-
-●	If high similarity content exists → reuse with slight personalization
-
-●	If not → generate fresh content
-
-🧠 Audio Storage Strategy
-●	Tree structure: /category/topic/lesson_name/
-
-●	Each lesson stores:
-
-○	Audio URL
-
-○	Transcript
-
-○	Tags
-
-○	Coach voice
-
-○	Version (to handle updates/personalizations)
-
-●	Efficient caching to avoid duplicate generation
-
-🔁 Content Reuse Logic
-●	Segments reused if user hasn’t encountered it
-
-●	Reordered or rephrased slightly for freshness
-
-●	Personalized to coach voice or user style
-
-🧠 Intent Detection Engine
-●	Classifies vague topics (e.g. “dogs” → training, evolution, behavior)
-
-●	Asks clarifying questions if needed
-
-●	Categorizes topic correctly before lesson generation
-
-________________________________________
-📐 Future-Ready Vision
-●	🧠 Real-time conversational learning with coach (voice-based)
-
-●	🥽 Mixed Reality classroom integration (via your own MR headset)
-
-●	🧑‍🤝‍🧑 Group journeys: Learn together with friends/classmates
-
-●	✍️ AI journal assistant to summarize weekly learnings
+# Features
+
+## 🎯 **CORE WISME FEATURES**
+
+### **🤖 AI-Powered Learning System**
+- **15 Knowledge Categories**: Complete coverage from Technology to Ethics
+- **Adaptive Knowledge Levels**: Domain-specific learning progressions
+- **Smart Topic Processing**: Natural language input to structured learning
+- **Intelligent Content Generation**: GPT-4 powered episode creation
+- **Semantic Content Reuse**: Prevents repetitive content, optimizes quality
+
+### **🎙️ Dual Coach Personality System**
+- **Kai**: Calm, thoughtful, philosophical mentor
+- **Vee**: Energetic, enthusiastic, motivating friend
+- **Per-Topic Customization**: Choose coach personality per learning subject
+- **Voice Synthesis**: High-quality TTS with distinct personalities
+- **Mood Toggle**: Switch between coaches mid-episode
+
+### **📱 Audio-First Learning Experience**
+- **10-15 Minute Episodes**: Perfect for daily learning habits
+- **Podcast-Style Content**: Engaging, story-driven learning
+- **Synchronized Transcripts**: Text follows audio for accessibility
+- **Progressive Playback**: Resume exactly where you left off
+- **Offline Support**: Download episodes for learning anywhere
+
+### **🧭 Personalized Learning Journeys**
+- **5-Episode Learning Paths**: Structured, sequential learning
+- **Topic-Specific Customization**: Learning style, coach, goals per topic
+- **Smart Progression**: AI-planned episode sequencing
+- **Adaptive Difficulty**: Content adjusts to user comprehension
+- **Journey Continuation**: Seamless topic exploration and deepening
+
+### **📚 Smart Content Discovery**
+- **Natural Language Search**: "I want to learn about..." queries
+- **Vector Similarity Matching**: Semantic content discovery
+- **Trending Topics**: Popular and timely learning content
+- **"Feeling Curious?"**: AI-suggested surprise learning topics
+- **Category Exploration**: Browse by interest areas
+
+### **📊 Progress & Analytics**
+- **Daily Learning Streaks**: Gamified consistency tracking
+- **Completion Analytics**: Episode and journey progress
+- **Learning Time Tracking**: Session duration and total time
+- **Topic Mastery Indicators**: Progress visualization per subject
+- **Engagement Insights**: Personal learning pattern analysis
+
+### **🎨 Intuitive User Experience**
+- **3-Screen Onboarding**: Streamlined first-time setup
+- **Clean Audio Player**: Distraction-free learning interface
+- **Smart Navigation**: Easy access to continue learning
+- **Dark Mode Support**: Comfortable learning in any environment
+- **Accessibility**: Screen reader support, high contrast options
+
+### **⚙️ Customization & Settings**
+- **Playback Controls**: Speed adjustment, quality settings
+- **Notification Management**: Smart learning reminders
+- **Privacy Controls**: Data management and account settings
+- **Coach Preferences**: Default personality and style settings
+- **Content Filtering**: Safe, moderated learning environment
+
+## 🚀 **ADVANCED FEATURES**
+
+### **🧠 Intelligent Recommendations**
+- **Learning Pattern Analysis**: AI learns your preferences
+- **Optimal Timing Suggestions**: Best times for learning sessions
+- **Content Difficulty Matching**: Right level for your knowledge
+- **Cross-Topic Connections**: Related learning suggestions
+- **Skill Gap Analysis**: Identify areas for improvement
+
+### **💬 Interactive Learning**
+- **Ask the Coach**: GPT-powered Q&A about any episode
+- **Episode Feedback**: Rate content quality and relevance
+- **Learning Reflections**: Guided questions for deeper understanding
+- **Daily Actions**: Practical tasks to apply learned concepts
+- **Social Sharing**: Share favorite episodes and achievements
+
+### **📱 Multi-Platform Support**
+- **iOS & Android**: Native mobile apps
+- **Web Application**: Desktop browser learning
+- **Cross-Device Sync**: Seamless progress across devices
+- **Cloud Storage**: Secure data backup and synchronization
+- **Multiple Audio Formats**: Optimized for different devices
+
+### **🎯 Goal-Oriented Learning**
+- **Learning Objectives**: Explore, Master, or Apply focus
+- **Skill Development Tracking**: Progress toward specific skills
+- **Achievement System**: Badges and milestones
+- **Learning Challenges**: Daily and weekly goals
+- **Progress Visualization**: Clear advancement indicators
+
+## 🔮 **FUTURE FEATURES**
+
+### **🌐 Social Learning**
+- **Learning Communities**: Connect with fellow learners
+- **Discussion Forums**: Episode-specific conversations
+- **Study Groups**: Collaborative learning experiences
+- **Leaderboards**: Friendly learning competitions
+- **Content Sharing**: User-generated learning content
+
+### **🎨 Enhanced Personalization**
+- **Voice Cloning**: Personalized coach voices
+- **Custom Learning Paths**: User-created learning journeys
+- **AI Tutoring**: Real-time learning assistance
+- **Adaptive Content**: Dynamic difficulty adjustment
+- **Predictive Learning**: Anticipate learning needs
+
+### **🔊 Advanced Audio Features**
+- **Spatial Audio**: Immersive learning experiences
+- **Multi-Language Support**: Global learning accessibility
+- **Live Learning Sessions**: Real-time interactive episodes
+- **Voice Commands**: Hands-free learning control
+- **Audio Bookmarking**: Save specific moments
+
+### **📈 Enterprise Features**
+- **Corporate Learning**: Business-focused content
+- **Team Progress Tracking**: Organizational learning analytics
+- **Custom Content Integration**: Company-specific learning
+- **Learning Compliance**: Required training tracking
+- **API Integration**: Connect with existing systems
+
+### **🌟 Emerging Technologies**
+- **AR/VR Integration**: Immersive learning environments
+- **IoT Device Support**: Smart home learning triggers
+- **Wearable Integration**: Learning on smartwatches
+- **Voice Assistant Support**: Alexa, Google Home integration
+- **Blockchain Credentials**: Verified learning certificates
+
+## 🎯 **FEATURE PRIORITIES**
+
+### **MVP Features (Launch Ready)**
+1. ✅ Authentication & User Profiles
+2. ✅ 3-Screen Onboarding Flow
+3. ✅ AI Content Generation (15 categories)
+4. ✅ Dual Coach System (Kai & Vee)
+5. ✅ Learning Choice Flow (post-topic)
+6. 🔧 Audio Player & Episode Playback
+7. 🔧 Topic Input & Processing
+8. 🔧 Basic Home Dashboard
+
+### **Phase 2 Features (Post-Launch)**
+1. 📋 5-Episode Learning Journeys
+2. 📋 Advanced Search & Discovery
+3. 📋 Progress Analytics & Gamification
+4. 📋 Library & Content Management
+5. 📋 Interactive Features (Ask Coach)
+6. 📋 Offline Support & Downloads
+
+### **Phase 3 Features (Growth)**
+1. 📋 Social Learning Features
+2. 📋 Advanced Personalization
+3. 📋 Multi-Platform Support
+4. 📋 Enterprise Solutions
+5. 📋 Voice Command Integration
+6. 📋 Global Expansion Features
+
+### **Phase 4 Features (Innovation)**
+1. 📋 AR/VR Learning Experiences
+2. 📋 AI Tutoring & Real-time Assistance
+3. 📋 Blockchain Credentials
+4. 📋 IoT & Smart Device Integration
+5. 📋 Advanced Analytics & Insights
+6. 📋 Creator Economy Platform
+
+## 📊 **SUCCESS METRICS**
+
+### **User Engagement**
+- **Session Duration**: Target 25+ minutes
+- **Episode Completion**: 80%+ completion rate
+- **Daily Streaks**: 40% users maintain 7+ day streaks
+- **Content Diversity**: Users explore 5+ categories
+
+### **Learning Effectiveness**
+- **Knowledge Retention**: 90% recall after 7 days
+- **Skill Application**: 80% apply learned concepts
+- **Goal Achievement**: 70% complete learning objectives
+- **User Satisfaction**: 4.8+ app store rating
+
+### **Product Quality**
+- **Audio Quality**: 4.5+ user rating
+- **Content Relevance**: 85%+ positive feedback
+- **Coach Preference**: Balanced Kai/Vee usage
+- **Feature Adoption**: 60%+ use core features
+
+This comprehensive feature set positions Wisme as the most intelligent, engaging, and effective personalized learning platform, designed to transform how people acquire new knowledge and skills through AI-powered, audio-first experiences.
 
 
