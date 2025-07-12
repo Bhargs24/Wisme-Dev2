@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../onboarding/onboarding_flow.dart';
+import 'sign_in_screen.dart';
 
 /// Simplified Welcome Screen for Fast Development
 /// Professional design with minimal dependencies
@@ -146,7 +147,7 @@ class WelcomeScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const OnboardingFlow(),
+                              builder: (context) => const SignInScreen(),
                             ),
                           );
                         },

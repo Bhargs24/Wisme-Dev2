@@ -1,14 +1,24 @@
+import 'environment_config.dart';
+
 /// API Configuration for Wisme App
-/// Replace these with your actual API keys before production
+/// Uses environment variables for secure API key management
 class ApiConfig {
   // OpenAI API Configuration
-  static const String openAiApiKey = 'YOUR_OPENAI_API_KEY';
+  static String get openAiApiKey => EnvironmentConfig.openaiApiKey;
   static const String openAiBaseUrl = 'https://api.openai.com/v1/chat/completions';
   
+  // Claude API Configuration
+  static String get claudeApiKey => EnvironmentConfig.claudeApiKey;
+  static const String claudeBaseUrl = 'https://api.anthropic.com/v1/messages';
+  
   // PlayHT API Configuration  
-  static const String playHtApiKey = 'YOUR_PLAYHT_API_KEY';
-  static const String playHtUserId = 'YOUR_PLAYHT_USER_ID';
+  static String get playHtApiKey => EnvironmentConfig.playhtApiKey;
+  static String get playHtUserId => EnvironmentConfig.playhtUserId;
   static const String playHtBaseUrl = 'https://api.play.ht/api/v2';
+  
+  // ElevenLabs API Configuration
+  static String get elevenlabsApiKey => EnvironmentConfig.elevenlabsApiKey;
+  static const String elevenlabsBaseUrl = 'https://api.elevenlabs.io/v1';
   
   // Voice IDs for coach personalities (PlayHT voices optimized for personalities)
   static const Map<String, String> voiceIds = {
@@ -20,6 +30,7 @@ class ApiConfig {
   
   // Model configurations (using PlayDialog for best emotional expression)
   static const String gptModel = 'gpt-4';
+  static const String claudeModel = 'claude-3-sonnet-20240229';
   static const String playHtModel = 'PlayDialog'; // Best for emotive, contextual speech
   
   // Audio quality settings with compression
@@ -36,16 +47,38 @@ class ApiConfig {
   };
   
   // API validation
-  static bool get isOpenAiConfigured => openAiApiKey != 'YOUR_OPENAI_API_KEY';
-  static bool get isPlayHtConfigured => playHtApiKey != 'YOUR_PLAYHT_API_KEY' && playHtUserId != 'YOUR_PLAYHT_USER_ID';
+  static bool get isOpenAiConfigured => openAiApiKey.isNotEmpty;
+  static bool get isClaudeConfigured => claudeApiKey.isNotEmpty;
+  static bool get isPlayHtConfigured => playHtApiKey.isNotEmpty && playHtUserId.isNotEmpty;
+  static bool get isElevenlabsConfigured => elevenlabsApiKey.isNotEmpty;
   
   static void validateConfiguration() {
-    if (!isOpenAiConfigured) {
-      throw Exception('OpenAI API key not configured in ApiConfig');
+    final errors = <String>[];
+    
+    if (!isOpenAiConfigured && !isClaudeConfigured) {
+      errors.add('No AI service configured (OpenAI or Claude required)');
     }
-    if (!isPlayHtConfigured) {
-      throw Exception('PlayHT API key not configured in ApiConfig');
+    if (!isPlayHtConfigured && !isElevenlabsConfigured) {
+      errors.add('No TTS service configured (PlayHT or ElevenLabs required)');
     }
+    
+    if (errors.isNotEmpty) {
+      throw Exception('API Configuration errors:\n${errors.join('\n')}');
+    }
+  }
+  
+  /// Get preferred AI service
+  static String get preferredAiService {
+    if (isOpenAiConfigured) return 'openai';
+    if (isClaudeConfigured) return 'claude';
+    throw Exception('No AI service configured');
+  }
+  
+  /// Get preferred TTS service
+  static String get preferredTtsService {
+    if (isPlayHtConfigured) return 'playht';
+    if (isElevenlabsConfigured) return 'elevenlabs';
+    throw Exception('No TTS service configured');
   }
 }
 

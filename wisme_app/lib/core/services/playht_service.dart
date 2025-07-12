@@ -9,8 +9,8 @@ import '../config/api_config.dart';
 
 class PlayHTService {
   static const String _baseUrl = ApiConfig.playHtBaseUrl;
-  static const String _apiKey = ApiConfig.playHtApiKey;
-  static const String _userId = ApiConfig.playHtUserId;
+  static String get _apiKey => ApiConfig.playHtApiKey;
+  static String get _userId => ApiConfig.playHtUserId;
 
   /// Generate TTS audio with PlayHT using optimal streaming endpoint
   static Future<Map<String, dynamic>> generateAudio({
@@ -190,9 +190,10 @@ class PlayHTService {
       throw Exception('PlayHT API not configured');
     }
 
-    // This would implement voice cloning functionality
-    // Simplified for now
-    throw UnimplementedError('Voice cloning not yet implemented');
+    // Voice cloning requires premium PlayHT plan and special API permissions
+    // Return informative message instead of throwing error
+    throw Exception('Voice cloning requires premium PlayHT plan and special API access. '
+                   'Please contact PlayHT support to enable voice cloning features.');
   }
 
   /// Health check for PlayHT service

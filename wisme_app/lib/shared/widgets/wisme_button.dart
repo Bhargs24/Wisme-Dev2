@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
-import '../../core/constants/app_spacing.dart';
+import '../../core/core.dart';
 
 /// Wisme Custom Button System - Beautiful, accessible, and engaging buttons
 /// Supports multiple variants, animations, and states for optimal UX

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../home/home_dashboard.dart';
 
 /// Initial Onboarding Flow - 3 Screens for User Setup
 /// 1. Welcome & Intent - "Why are you here?" (sets general motivation)
@@ -43,12 +44,12 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   }
 
   void _completeOnboarding() {
-    // Save basic user preferences and navigate to topic input
-    // Learning-specific choices (style, coach, goals) will be made in context
+    // Save basic user preferences and navigate to main dashboard
+    // For a proper app, this would save to database/preferences
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => MainDashboard(), // Navigate to main app
+        builder: (context) => const HomeDashboard(),
       ),
     );
   }
@@ -483,7 +484,7 @@ class _ProfileSetupPage extends StatelessWidget {
 // Learning-specific pages moved to topic selection context
 // These will be presented AFTER user selects a topic to learn
 
-// Placeholder for Main Dashboard
+// Main Dashboard implementation
 class MainDashboard extends StatelessWidget {
   const MainDashboard({super.key});
 

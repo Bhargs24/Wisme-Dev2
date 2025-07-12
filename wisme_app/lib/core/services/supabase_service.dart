@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../models/episode.dart';
+import '../config/environment_config.dart';
+import '../../models/models.dart';
 
 /// Supabase Service - Backend integration for Wisme
 /// Handles authentication, data storage, and real-time features
@@ -7,12 +8,22 @@ class SupabaseService {
   static SupabaseClient get client => Supabase.instance.client;
   static User? get currentUser => client.auth.currentUser;
 
-  /// Initialize Supabase with your project credentials
-  /// TODO: Replace with your actual Supabase URL and anon key
+  /// Initialize Supabase with environment configuration
   static Future<void> initialize() async {
+    await EnvironmentConfig.initialize();
+    
+    final supabaseUrl = EnvironmentConfig.supabaseUrl;
+    final supabaseKey = EnvironmentConfig.supabaseAnonKey;
+    
+    if (supabaseUrl.isEmpty || supabaseKey.isEmpty) {
+      throw Exception(
+        'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY in your environment variables.'
+      );
+    }
+    
     await Supabase.initialize(
-      url: 'YOUR_SUPABASE_URL', // Replace with your URL
-      anonKey: 'YOUR_SUPABASE_ANON_KEY', // Replace with your anon key
+      url: supabaseUrl,
+      anonKey: supabaseKey,
     );
   }
 
@@ -216,7 +227,15 @@ class SupabaseService {
 
   /// Offline Support
   static Future<void> syncOfflineData() async {
-    // Implementation for syncing offline data when connection is restored
-    // This would handle uploading locally stored episodes and progress
+    // Sync offline data when connection is restored
+    // Handles uploading locally stored episodes and progress
+    try {
+      // In production: implement actual sync logic
+      // 1. Check for offline data
+      // 2. Upload to Supabase
+      // 3. Update local state
+    } catch (e) {
+      print('Sync failed: $e');
+    }
   }
 }

@@ -1,33 +1,84 @@
 import 'package:flutter/material.dart';
 
-/// Learning-specific choice screens shown AFTER user selects a topic
-/// These choices are now contextual to the selected topic/subject
-class LearningChoiceFlow extends StatefulWidget {
-  final String selectedTopic;
-  final Function(Map<String, String>) onChoicesComplete;
 
-  const LearningChoiceFlow({
+
+
+import '../../core/core.dart';
+import '../../shared/shared.dart';
+import '../../models/models.dart';
+/// Smart Learning Choice Flow with AI-Powered Category Detection
+/// Uses domain-adaptive knowledge levels instead of generic difficulty
+class SmartLearningChoiceFlow extends StatefulWidget {
+  final String selectedTopic;
+  final String? personalContext;
+  final Function(Map<String, dynamic>) onChoicesComplete;
+
+  const SmartLearningChoiceFlow({
     super.key,
     required this.selectedTopic,
+    this.personalContext,
     required this.onChoicesComplete,
   });
 
   @override
-  State<LearningChoiceFlow> createState() => _LearningChoiceFlowState();
+  State<SmartLearningChoiceFlow> createState() => _SmartLearningChoiceFlowState();
 }
 
-class _LearningChoiceFlowState extends State<LearningChoiceFlow> {
+class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  bool _isAnalyzing = true;
   
-  String? _selectedLearningStyle;
+  // AI Classification Results
+  TopicClassification? _classification;
+  String? _selectedKnowledgeLevel;
   String? _selectedCoach;
   String? _selectedGoal;
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _analyzeTopicWithAI();
+  }
+
+  Future<void> _analyzeTopicWithAI() async {
+    try {
+      final classification = await AdvancedTopicClassifier.analyzeTopicWithAI(
+        widget.selectedTopic,
+        personalContext: widget.personalContext,
+      );
+      
+      setState(() {
+        _classification = classification;
+        _isAnalyzing = false;
+      });
+    } catch (e) {
+      // Fallback to generic classification
+      setState(() {
+        _classification = _createFallbackClassification();
+        _isAnalyzing = false;
+      });
+    }
+  }
+
+  TopicClassification _createFallbackClassification() {
+    return TopicClassification(
+      originalTopic: widget.selectedTopic,
+      category: 'Personal Development',
+      knowledgeLevel: '🎯 Self-Development',
+      confidence: 0.7,
+      subtopics: [],
+      learningStyleHints: ['practical'],
+      episodePlan: EpisodePlan(
+        progressionPath: ['Introduction', 'Core Concepts', 'Application'],
+        learningObjectives: ['Understand basics', 'Apply knowledge'],
+        totalEpisodes: 3,
+      ),
+      recommendedCoach: 'Vee',
+      estimatedDuration: 30,
+      prerequisiteTopics: [],
+      personalContext: widget.personalContext,
+    );
   }
 
   void _nextPage() {
@@ -37,174 +88,98 @@ class _LearningChoiceFlowState extends State<LearningChoiceFlow> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Complete the learning choices
-      widget.onChoicesComplete({
-        'learningStyle': _selectedLearningStyle!,
-        'coach': _selectedCoach!,
-        'goal': _selectedGoal!,
-      });
+      _completeChoices();
     }
   }
 
-  bool _canContinue() {
-    switch (_currentPage) {
-      case 0:
-        return _selectedLearningStyle != null;
-      case 1:
-        return _selectedCoach != null;
-      case 2:
-        return _selectedGoal != null;
-      default:
-        return false;
-    }
+  void _completeChoices() {
+    final choices = {
+      'topic': widget.selectedTopic,
+      'category': _classification!.category,
+      'knowledgeLevel': _selectedKnowledgeLevel!,
+      'coach': _selectedCoach!,
+      'goal': _selectedGoal!,
+      'personalContext': widget.personalContext,
+      'classification': _classification!,
+    };
+    
+    widget.onChoicesComplete(choices);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isAnalyzing) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 24),
+              Text(
+                'Analyzing "${widget.selectedTopic}"...',
+                style: const TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Determining the best learning approach for you',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Learning ${widget.selectedTopic}'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        title: Text(
+          'Customize Your ${_classification!.category} Learning',
+          style: const TextStyle(fontSize: 16),
+        ),
       ),
       body: Column(
         children: [
           // Progress indicator
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: (_currentPage + 1) / 3,
-                    backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  '${_currentPage + 1}/3',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF2196F3),
-                  ),
-                ),
-              ],
-            ),
+          LinearProgressIndicator(
+            value: (_currentPage + 1) / 3,
+            backgroundColor: Colors.grey[200],
+            valueColor: AlwaysStoppedAnimation<Color>(WismeColors.primaryBlue),
           ),
-
-          // Page content
           Expanded(
             child: PageView(
               controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },
+              onPageChanged: (index) => setState(() => _currentPage = index),
               children: [
-                _LearningStylePage(
-                  topic: widget.selectedTopic,
-                  selectedStyle: _selectedLearningStyle,
-                  onStyleSelected: (style) {
-                    setState(() {
-                      _selectedLearningStyle = style;
-                    });
-                  },
-                ),
-                _CoachSelectionPage(
-                  topic: widget.selectedTopic,
-                  selectedCoach: _selectedCoach,
-                  onCoachSelected: (coach) {
-                    setState(() {
-                      _selectedCoach = coach;
-                    });
-                  },
-                ),
-                _GoalSettingPage(
-                  topic: widget.selectedTopic,
-                  selectedGoal: _selectedGoal,
-                  onGoalSelected: (goal) {
-                    setState(() {
-                      _selectedGoal = goal;
-                    });
-                  },
-                ),
+                _buildKnowledgeLevelPage(),
+                _buildCoachSelectionPage(),
+                _buildGoalSettingPage(),
               ],
             ),
           ),
-
-          // Continue button
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _canContinue() ? _nextPage : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2196F3),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  _currentPage == 2 ? 'Start Learning' : 'Continue',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _buildBottomButton(),
         ],
       ),
     );
   }
-}
 
-// Learning Style selection with topic context
-class _LearningStylePage extends StatelessWidget {
-  final String topic;
-  final String? selectedStyle;
-  final Function(String) onStyleSelected;
-
-  const _LearningStylePage({
-    required this.topic,
-    required this.selectedStyle,
-    required this.onStyleSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final styles = [
-      {
-        'title': 'Fundamentals',
-        'subtitle': 'Start with $topic basics and core concepts',
-        'icon': Icons.foundation
-      },
-      {
-        'title': 'Case Studies',
-        'subtitle': 'Learn $topic through real-world examples',
-        'icon': Icons.business_center
-      },
-      {
-        'title': 'Mixed Approach',
-        'subtitle': 'Combine $topic theory with practical examples',
-        'icon': Icons.shuffle
-      },
-    ];
-
+  Widget _buildKnowledgeLevelPage() {
+    final levels = AdvancedTopicClassifier.categoryLevels[_classification!.category] ?? [];
+    
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'How do you want to learn $topic?',
+            'Choose your ${_classification!.category} approach',
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -212,7 +187,7 @@ class _LearningStylePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Choose your preferred learning approach for this topic',
+            'Each approach is designed specifically for ${_classification!.category} learning',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
@@ -221,63 +196,56 @@ class _LearningStylePage extends StatelessWidget {
           const SizedBox(height: 32),
           Expanded(
             child: ListView.builder(
-              itemCount: styles.length,
+              itemCount: levels.length,
               itemBuilder: (context, index) {
-                final style = styles[index];
-                final isSelected = selectedStyle == style['title'];
+                final level = levels[index];
+                final isSelected = _selectedKnowledgeLevel == level;
+                final description = _getLevelDescription(_classification!.category, level);
                 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: InkWell(
-                    onTap: () => onStyleSelected(style['title'] as String),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: isSelected ? const Color(0xFF2196F3) : Colors.grey[300]!,
-                          width: isSelected ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        color: isSelected ? const Color(0xFF2196F3).withOpacity(0.1) : null,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            style['icon'] as IconData,
-                            size: 32,
-                            color: isSelected ? const Color(0xFF2196F3) : Colors.grey[600],
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    onTap: () => setState(() => _selectedKnowledgeLevel = level),
+                    child: ModernCard(
+                      backgroundColor: isSelected 
+                          ? WismeColors.primaryBlue.withOpacity(0.1) 
+                          : null,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Text(
-                                  style['title'] as String,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: isSelected ? const Color(0xFF2196F3) : null,
-                                  ),
+                                Radio<String>(
+                                  value: level,
+                                  groupValue: _selectedKnowledgeLevel,
+                                  onChanged: (value) => setState(() => _selectedKnowledgeLevel = value),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  style['subtitle'] as String,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
+                                Expanded(
+                                  child: Text(
+                                    level,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          if (isSelected)
-                            const Icon(
-                              Icons.check_circle,
-                              color: Color(0xFF2196F3),
-                              size: 24,
+                            const SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 48),
+                              child: Text(
+                                description,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
                             ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -289,211 +257,22 @@ class _LearningStylePage extends StatelessWidget {
       ),
     );
   }
-}
 
-// Coach selection with topic context
-class _CoachSelectionPage extends StatelessWidget {
-  final String topic;
-  final String? selectedCoach;
-  final Function(String) onCoachSelected;
-
-  const _CoachSelectionPage({
-    required this.topic,
-    required this.selectedCoach,
-    required this.onCoachSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Choose your $topic coach',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Select the AI coach that best fits your learning style for $topic',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 48),
-          Expanded(
-            child: Column(
-              children: [
-                // Kai - Calm Coach
-                Expanded(
-                  child: InkWell(
-                    onTap: () => onCoachSelected('Kai'),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: selectedCoach == 'Kai' ? const Color(0xFF2196F3) : Colors.grey[300]!,
-                          width: selectedCoach == 'Kai' ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        color: selectedCoach == 'Kai' ? const Color(0xFF2196F3).withOpacity(0.1) : null,
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF4CAF50).withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.spa,
-                              size: 40,
-                              color: Color(0xFF4CAF50),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Kai',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: selectedCoach == 'Kai' ? const Color(0xFF2196F3) : null,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Calm & Thoughtful',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF4CAF50),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Perfect for deep $topic learning and contemplation. Explains complex concepts clearly.',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                
-                const SizedBox(height: 24),
-                
-                // Vee - Energetic Coach
-                Expanded(
-                  child: InkWell(
-                    onTap: () => onCoachSelected('Vee'),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: selectedCoach == 'Vee' ? const Color(0xFF2196F3) : Colors.grey[300]!,
-                          width: selectedCoach == 'Vee' ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        color: selectedCoach == 'Vee' ? const Color(0xFF2196F3).withOpacity(0.1) : null,
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF9800).withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.bolt,
-                              size: 40,
-                              color: Color(0xFFFF9800),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Vee',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: selectedCoach == 'Vee' ? const Color(0xFF2196F3) : null,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Energetic & Motivating',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFFFF9800),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Makes $topic exciting and engaging. Great for staying motivated through challenging concepts.',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Goal setting with topic context
-class _GoalSettingPage extends StatelessWidget {
-  final String topic;
-  final String? selectedGoal;
-  final Function(String) onGoalSelected;
-
-  const _GoalSettingPage({
-    required this.topic,
-    required this.selectedGoal,
-    required this.onGoalSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final goals = [
+  Widget _buildCoachSelectionPage() {
+    final coaches = [
       {
-        'title': 'Explore',
-        'subtitle': 'Get an overview of $topic and key concepts',
-        'icon': Icons.explore
+        'name': 'Kai',
+        'personality': 'Calm & Thoughtful',
+        'description': 'Deep, reflective learning with philosophical insights',
+        'icon': Icons.psychology,
+        'color': WismeColors.kaiPrimary,
       },
       {
-        'title': 'Master',
-        'subtitle': 'Become an expert in $topic fundamentals',
-        'icon': Icons.military_tech
-      },
-      {
-        'title': 'Apply',
-        'subtitle': 'Learn $topic for immediate practical use',
-        'icon': Icons.build
+        'name': 'Vee',
+        'personality': 'Energetic & Practical',
+        'description': 'Dynamic, action-oriented learning with real-world focus',
+        'icon': Icons.bolt,
+        'color': WismeColors.veePrimary,
       },
     ];
 
@@ -503,7 +282,7 @@ class _GoalSettingPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'What\'s your $topic goal?',
+            'Choose your learning coach for ${widget.selectedTopic}',
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -511,7 +290,121 @@ class _GoalSettingPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'This helps us customize your $topic learning path',
+            'Your coach will guide your ${_classification!.category} journey',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 32),
+          Expanded(
+            child: ListView.builder(
+              itemCount: coaches.length,
+              itemBuilder: (context, index) {
+                final coach = coaches[index];
+                final isSelected = _selectedCoach == coach['name'];
+                
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: InkWell(
+                    onTap: () => setState(() => _selectedCoach = coach['name'] as String),
+                    child: ModernCard(
+                      backgroundColor: isSelected 
+                          ? (coach['color'] as Color).withOpacity(0.1) 
+                          : null,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: (coach['color'] as Color).withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Icon(
+                                coach['icon'] as IconData,
+                                color: coach['color'] as Color,
+                                size: 30,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${coach['name']} - ${coach['personality']}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    coach['description'] as String,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Radio<String>(
+                              value: coach['name'] as String,
+                              groupValue: _selectedCoach,
+                              onChanged: (value) => setState(() => _selectedCoach = value),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGoalSettingPage() {
+    final goals = [
+      {
+        'title': 'Explore',
+        'subtitle': 'Get a comprehensive overview and understand key concepts',
+        'icon': Icons.explore,
+      },
+      {
+        'title': 'Master',
+        'subtitle': 'Develop deep expertise and comprehensive understanding',
+        'icon': Icons.military_tech,
+      },
+      {
+        'title': 'Apply',
+        'subtitle': 'Focus on practical implementation and real-world use',
+        'icon': Icons.build,
+      },
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'What\'s your goal with ${widget.selectedTopic}?',
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'This shapes your ${_classification!.category} learning journey',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
@@ -523,60 +416,55 @@ class _GoalSettingPage extends StatelessWidget {
               itemCount: goals.length,
               itemBuilder: (context, index) {
                 final goal = goals[index];
-                final isSelected = selectedGoal == goal['title'];
+                final isSelected = _selectedGoal == goal['title'];
                 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: InkWell(
-                    onTap: () => onGoalSelected(goal['title'] as String),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: isSelected ? const Color(0xFF2196F3) : Colors.grey[300]!,
-                          width: isSelected ? 2 : 1,
+                    onTap: () => setState(() => _selectedGoal = goal['title'] as String),
+                    child: ModernCard(
+                      backgroundColor: isSelected 
+                          ? WismeColors.primaryBlue.withOpacity(0.1) 
+                          : null,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          children: [
+                            Icon(
+                              goal['icon'] as IconData,
+                              size: 32,
+                              color: isSelected ? WismeColors.primaryBlue : Colors.grey[600],
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    goal['title'] as String,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    goal['subtitle'] as String,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Radio<String>(
+                              value: goal['title'] as String,
+                              groupValue: _selectedGoal,
+                              onChanged: (value) => setState(() => _selectedGoal = value),
+                            ),
+                          ],
                         ),
-                        borderRadius: BorderRadius.circular(12),
-                        color: isSelected ? const Color(0xFF2196F3).withOpacity(0.1) : null,
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            goal['icon'] as IconData,
-                            size: 32,
-                            color: isSelected ? const Color(0xFF2196F3) : Colors.grey[600],
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  goal['title'] as String,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: isSelected ? const Color(0xFF2196F3) : null,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  goal['subtitle'] as String,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (isSelected)
-                            const Icon(
-                              Icons.check_circle,
-                              color: Color(0xFF2196F3),
-                              size: 24,
-                            ),
-                        ],
                       ),
                     ),
                   ),
@@ -587,5 +475,74 @@ class _GoalSettingPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildBottomButton() {
+    bool canContinue = false;
+    String buttonText = 'Continue';
+    
+    switch (_currentPage) {
+      case 0:
+        canContinue = _selectedKnowledgeLevel != null;
+        break;
+      case 1:
+        canContinue = _selectedCoach != null;
+        break;
+      case 2:
+        canContinue = _selectedGoal != null;
+        buttonText = 'Start Learning Journey';
+        break;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: canContinue ? _nextPage : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: WismeColors.primaryBlue,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Text(
+            buttonText,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getLevelDescription(String category, String level) {
+    final descriptions = {
+      'Technology & AI': {
+        '🔹 Core Concepts': 'Fundamentals, definitions, and basic principles',
+        '💼 Case Studies': 'Real implementations, company examples, success stories',
+        '🛠 Tools & Trends': 'Latest tools, frameworks, emerging technologies',
+        '🎛 Bit of Everything': 'Balanced mix of theory, practice, and trends',
+      },
+      'Business & Finance': {
+        '💡 Fundamentals': 'Basic principles, core theories, essential concepts',
+        '💼 Case Studies': 'Company strategies, market analysis, business stories',
+        '📈 Growth Strategy': 'Scaling tactics, market penetration, expansion methods',
+        '🎛 Balanced Mix': 'Theory + real examples + actionable strategies',
+      },
+      // Add more categories as needed...
+    };
+    
+    return descriptions[category]?[level] ?? 'Specialized approach for this topic';
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }

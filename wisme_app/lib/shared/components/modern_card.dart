@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/core.dart';
 
 class ModernCard extends StatelessWidget {
   final Widget child;

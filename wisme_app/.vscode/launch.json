@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🤖 Android Emulator - Test Mode",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_test.dart",
+            "deviceId": "emulator-5554",
+            "args": [
+                "--no-sound-null-safety"
+            ]
+        },
+        {
+            "name": "📱 Android Emulator - Main App",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "deviceId": "emulator-5554",
+            "args": [
+                "--no-sound-null-safety"
+            ]
+        },
+        {
+            "name": "🌐 Chrome - Test Mode",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_test.dart",
+            "deviceId": "chrome"
+        },
+        {
+            "name": "🖥️ Windows Desktop - Test Mode",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_test.dart",
+            "deviceId": "windows"
+        }
+    ]
+}

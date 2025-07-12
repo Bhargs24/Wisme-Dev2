@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/services/supabase_service.dart';
-import 'features/auth/presentation/pages/welcome_screen_simple.dart';
+import 'core/core.dart';
+import 'features/features.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Supabase Backend
-  await SupabaseService.initialize();
+  try {
+    // Initialize Environment Configuration
+    await EnvironmentConfig.initialize();
+    
+    // Print configuration status for debugging
+    if (EnvironmentConfig.debugMode) {
+      EnvironmentConfig.printConfigurationStatus();
+    }
+    
+    // Initialize Supabase Backend
+    await SupabaseService.initialize();
+    
+  } catch (e) {
+    print('❌ Initialization Error: $e');
+    // In production, you might want to show an error screen
+  }
   
   runApp(
     ProviderScope(

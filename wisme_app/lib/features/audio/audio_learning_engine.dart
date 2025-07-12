@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import '../../core/core.dart';
+import '../../shared/shared.dart';
+import '../../models/models.dart';
 import 'package:audioplayers/audioplayers.dart';
+import '../../core/core.dart';
+import '../../shared/shared.dart';
+import '../../models/models.dart';
 import 'dart:io';
-import '../../core/content/podcast_content_generator.dart';
-import '../../core/config/api_config.dart';
-import '../../core/services/playht_service.dart';
+
+
+
 
 /// Audio Learning Engine with PlayHT Integration
 /// Handles TTS generation, audio playback, transcript sync, and progress tracking

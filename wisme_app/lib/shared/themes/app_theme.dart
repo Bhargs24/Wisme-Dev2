@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_typography.dart';
-import '../../core/constants/app_spacing.dart';
+import '../../core/core.dart';
 
 /// Wisme Theme System - Complete design system implementation
 /// Creates consistent, beautiful, and accessible themes for the entire app
@@ -34,7 +32,7 @@ class WismeTheme {
         onErrorContainer: WismeColors.errorDark,
         surface: WismeColors.backgroundPrimary,
         onSurface: WismeColors.textPrimary,
-        surfaceVariant: WismeColors.backgroundSecondary,
+        surfaceContainerHighest: WismeColors.backgroundSecondary,
         onSurfaceVariant: WismeColors.textSecondary,
         outline: WismeColors.border,
         outlineVariant: WismeColors.borderLight,
@@ -499,7 +497,7 @@ class WismeTheme {
         onErrorContainer: WismeColors.errorLight,
         surface: WismeColors.darkBackground,
         onSurface: WismeColors.darkTextPrimary,
-        surfaceVariant: WismeColors.darkSurface,
+        surfaceContainerHighest: WismeColors.darkSurface,
         onSurfaceVariant: WismeColors.darkTextSecondary,
         outline: WismeColors.darkBorder,
         outlineVariant: WismeColors.darkDivider,
