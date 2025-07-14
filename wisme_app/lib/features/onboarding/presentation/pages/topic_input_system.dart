@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/core.dart';
 import '../../../../shared/components/modern_card.dart';
 
 /// Topic Classification Result
@@ -111,7 +111,7 @@ class _TopicInputSystemState extends ConsumerState<TopicInputSystem> {
   }
 
   /// Simple topic classification (to be replaced with AI integration)
-  TopicClassificationResult _classifyTopic(String topic) {
+  TopicClassificationResult _classifyTopicFallback(String topic) {
     final lowerTopic = topic.toLowerCase();
     
     // Simple keyword-based classification
@@ -175,10 +175,21 @@ class _TopicInputSystemState extends ConsumerState<TopicInputSystem> {
     });
 
     try {
-      // Simulate AI topic analysis
-      await Future.delayed(const Duration(seconds: 2));
+      // Use real AI topic classification
+      final aiClassification = await AdvancedTopicClassifier.analyzeTopicWithAI(
+        topic,
+        userBackground: 'General learner', // Could be personalized later
+        learningIntent: 'Learn fundamentals and apply knowledge',
+      );
       
-      final result = _classifyTopic(topic);
+      // Convert AI classification to UI classification
+      final result = TopicClassificationResult(
+        primaryCategory: aiClassification.category,
+        difficultyLevel: aiClassification.knowledgeLevel,
+        estimatedSessions: aiClassification.episodePlan.totalEpisodes,
+        suggestedTags: aiClassification.subtopics.map((s) => s.title).toList(),
+        confidenceScore: aiClassification.confidence,
+      );
       
       setState(() {
         _classification = result;
@@ -186,15 +197,19 @@ class _TopicInputSystemState extends ConsumerState<TopicInputSystem> {
       });
       
     } catch (e) {
+      // Fallback to simple classification if AI fails
+      final result = _classifyTopicFallback(topic);
+      
       setState(() {
+        _classification = result;
         _isAnalyzing = false;
       });
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error analyzing topic: $e'),
-            backgroundColor: WismeColors.error,
+            content: Text('Using basic classification. AI service: ${e.toString()}'),
+            backgroundColor: Colors.orange,
           ),
         );
       }

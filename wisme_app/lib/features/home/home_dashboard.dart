@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../features.dart';
+import '../topic/topic_to_episode_flow.dart';
+import '../journey/learning_journey_screen.dart';
 
 
 class HomeDashboard extends StatefulWidget {
@@ -40,9 +42,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 const SizedBox(height: 24),
                 _buildContinueLearning(),
                 const SizedBox(height: 24),
+                _buildActiveJourneys(),
+                const SizedBox(height: 24),
                 _buildTodaysPlan(context),
                 const SizedBox(height: 24),
                 _buildFeelingCurious(context),
+                const SizedBox(height: 24),
+                _buildLibraryQuickAccess(),
                 const SizedBox(height: 24),
                 _buildQuickStats(),
               ],
@@ -359,76 +365,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => TopicInputSystem(
-                        onTopicSubmitted: (topic, personalContext) async {
-                          // Show loading dialog while generating episode
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) => const AlertDialog(
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(height: 16),
-                                  Text('Creating your personalized learning episode...'),
-                                ],
-                              ),
-                            ),
-                          );
-
-                          try {
-                            // Use ContentIntegrationService to generate complete episode
-                            final contentService = ContentIntegrationService();
-                            final episode = await contentService.generateEpisodeFromTopic(
-                              topic,
-                              personalContext: personalContext,
-                            );
-
-                            if (context.mounted) {
-                              Navigator.of(context).pop(); // Close loading dialog
-                              Navigator.of(context).pop(); // Close topic input screen
-                              
-                              // Navigate directly to audio player with generated episode
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EnhancedAudioPlayerSystem(
-                                    episode: {
-                                      'id': episode.id,
-                                      'title': episode.title,
-                                      'content': episode.content,
-                                      'category': episode.category,
-                                      'knowledgeLevel': episode.knowledgeLevel,
-                                      'durationMinutes': episode.durationMinutes,
-                                      'hashtags': episode.hashtags,
-                                    },
-                                    coachName: episode.coachPersonality,
-                                  ),
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            if (context.mounted) {
-                              Navigator.of(context).pop(); // Close loading dialog
-                              
-                              // Show error message
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error creating episode: ${e.toString()}'),
-                                  backgroundColor: Colors.red.shade600,
-                                  action: SnackBarAction(
-                                    label: 'Retry',
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      // Could retry here
-                                    },
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                      ),
+                      builder: (context) => const TopicToEpisodeFlow(),
                     ),
                   );
                 },
@@ -499,6 +436,175 @@ class _HomeDashboardState extends State<HomeDashboard> {
     );
   }
 
+  Widget _buildActiveJourneys() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Active Learning Journeys',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                // Navigate to all journeys
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('All journeys coming soon!')),
+                );
+              },
+              child: const Text('View All'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        
+        // Journey Cards
+        ModernCard(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF2196F3), Color(0xFF00BCD4)],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.psychology,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Machine Learning Fundamentals',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            'Episode 2 of 5 • 60% Complete',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LearningJourneyScreen(
+                              topic: 'Machine Learning Fundamentals',
+                              category: '💻 Technology',
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2196F3),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text('Continue', style: TextStyle(fontSize: 12)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                LinearProgressIndicator(
+                  value: 0.6,
+                  backgroundColor: Colors.grey.shade200,
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF2196F3)),
+                  minHeight: 6,
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                    const SizedBox(width: 4),
+                    Text(
+                      '23 minutes remaining',
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                    ),
+                    const SizedBox(width: 16),
+                    const Icon(Icons.person, size: 16, color: Colors.grey),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Next with Coach Vee',
+                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Start New Journey Button
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TopicToEpisodeFlow(),
+                ),
+              );
+            },
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Color(0xFF2196F3)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: Color(0xFF2196F3)),
+                SizedBox(width: 8),
+                Text(
+                  'Start New Learning Journey',
+                  style: TextStyle(
+                    color: Color(0xFF2196F3),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildBottomNav() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
@@ -563,6 +669,155 @@ class _HomeDashboardState extends State<HomeDashboard> {
           label: 'Profile',
         ),
       ],
+    );
+  }
+
+  Widget _buildLibraryQuickAccess() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Your Learning Library',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1E293B),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to library tab in main navigation
+                    DefaultTabController.of(context).animateTo(2);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: WismeColors.primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'View All',
+                      style: TextStyle(
+                        color: WismeColors.primaryBlue,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildLibraryCard(
+                    'Favorites',
+                    '12 episodes',
+                    Icons.favorite,
+                    WismeColors.error,
+                    () {
+                      // Navigate to favorites tab
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildLibraryCard(
+                    'In Progress',
+                    '5 episodes',
+                    Icons.play_circle,
+                    WismeColors.warning,
+                    () {
+                      // Navigate to in progress
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildLibraryCard(
+                    'Completed',
+                    '25 episodes',
+                    Icons.check_circle,
+                    WismeColors.success,
+                    () {
+                      // Navigate to completed
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLibraryCard(
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: color.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: 24,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

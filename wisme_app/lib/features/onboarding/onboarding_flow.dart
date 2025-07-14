@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../home/home_dashboard.dart';
+import '../navigation/main_navigation_shell.dart';
 
 /// Initial Onboarding Flow - 3 Screens for User Setup
 /// 1. Welcome & Intent - "Why are you here?" (sets general motivation)
@@ -49,7 +49,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomeDashboard(),
+        builder: (context) => const MainNavigationShell(),
       ),
     );
   }

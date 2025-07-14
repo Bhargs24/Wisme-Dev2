@@ -12,14 +12,17 @@ class EpisodeLibraryScreen extends StatefulWidget {
   State<EpisodeLibraryScreen> createState() => _EpisodeLibraryScreenState();
 }
 
-class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
+class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> 
+    with SingleTickerProviderStateMixin {
   final ContentIntegrationService _contentService = ContentIntegrationService();
+  late TabController _tabController;
   List<Episode> _episodes = [];
   bool _isLoading = true;
   String _selectedFilter = 'All';
 
   final List<String> _filterOptions = [
     'All',
+    'Favorites',
     'In Progress',
     'Completed',
     'Not Started',
@@ -28,7 +31,14 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
     _loadEpisodes();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadEpisodes() async {
@@ -55,6 +65,8 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
 
   List<Episode> get _filteredEpisodes {
     switch (_selectedFilter) {
+      case 'Favorites':
+        return _episodes.where((e) => e.isFavorited).toList();
       case 'In Progress':
         return _episodes.where((e) => 
           e.completionPercentage > 0 && e.completionPercentage < 1.0).toList();
@@ -82,65 +94,33 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
             onPressed: _loadEpisodes,
           ),
         ],
-      ),
-      body: Column(
-        children: [
-          // Filter Options
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: WismeColors.surface,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _filterOptions.map((filter) {
-                  final isSelected = _selectedFilter == filter;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: FilterChip(
-                      label: Text(filter),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        setState(() {
-                          _selectedFilter = filter;
-                        });
-                      },
-                      backgroundColor: WismeColors.surfaceVariant,
-                      selectedColor: WismeColors.primaryBlue.withOpacity(0.1),
-                      labelStyle: TextStyle(
-                        color: isSelected 
-                          ? WismeColors.primaryBlue
-                          : WismeColors.textSecondary,
-                        fontWeight: isSelected 
-                          ? FontWeight.w600
-                          : FontWeight.w400,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+        bottom: TabBar(
+          controller: _tabController,
+          labelColor: WismeColors.primaryBlue,
+          unselectedLabelColor: WismeColors.textSecondary,
+          indicatorColor: WismeColors.primaryBlue,
+          tabs: const [
+            Tab(
+              icon: Icon(Icons.library_books),
+              text: 'Episodes',
             ),
-          ),
-          
-          // Episodes List
-          Expanded(
-            child: _isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : _filteredEpisodes.isEmpty
-                ? _buildEmptyState()
-                : RefreshIndicator(
-                    onRefresh: _loadEpisodes,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: _filteredEpisodes.length,
-                      itemBuilder: (context, index) {
-                        final episode = _filteredEpisodes[index];
-                        return _buildEpisodeCard(episode);
-                      },
-                    ),
-                  ),
-          ),
+            Tab(
+              icon: Icon(Icons.favorite),
+              text: 'Favorites',
+            ),
+            Tab(
+              icon: Icon(Icons.analytics),
+              text: 'Stats',
+            ),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildEpisodesTab(),
+          _buildFavoritesTab(),
+          _buildStatsTab(),
         ],
       ),
     );
@@ -222,6 +202,21 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
                           ),
                         ],
                       ),
+                    ),
+                    // Favorite Button
+                    IconButton(
+                      onPressed: () => _toggleFavorite(episode),
+                      icon: Icon(
+                        episode.isFavorited 
+                          ? Icons.favorite 
+                          : Icons.favorite_border,
+                        color: episode.isFavorited 
+                          ? WismeColors.error 
+                          : WismeColors.textSecondary,
+                      ),
+                      tooltip: episode.isFavorited 
+                        ? 'Remove from favorites' 
+                        : 'Add to favorites',
                     ),
                     _buildStatusIndicator(episode.completionPercentage),
                   ],
@@ -395,6 +390,48 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
     }
   }
 
+  Future<void> _toggleFavorite(Episode episode) async {
+    try {
+      // Update the episode's favorite status
+      final updatedEpisode = episode.copyWith(isFavorited: !episode.isFavorited);
+      
+      // Update the episode in the backend
+      await _contentService.updateEpisode(updatedEpisode);
+      
+      // Update the local list
+      setState(() {
+        final index = _episodes.indexWhere((e) => e.id == episode.id);
+        if (index != -1) {
+          _episodes[index] = updatedEpisode;
+        }
+      });
+
+      // Show feedback
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              updatedEpisode.isFavorited 
+                ? 'Added to favorites' 
+                : 'Removed from favorites'
+            ),
+            backgroundColor: WismeColors.success,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update favorite: $e'),
+            backgroundColor: WismeColors.error,
+          ),
+        );
+      }
+    }
+  }
+
   void _openEpisode(Episode episode) {
     Navigator.push(
       context,
@@ -409,6 +446,275 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen> {
           },
           coachName: episode.coachPersonality,
         ),
+      ),
+    );
+  }
+
+  Widget _buildEpisodesTab() {
+    return Column(
+      children: [
+        // Filter Options
+        Container(
+          padding: const EdgeInsets.all(16),
+          color: WismeColors.surface,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _filterOptions.map((filter) {
+                final isSelected = _selectedFilter == filter;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: FilterChip(
+                    label: Text(filter),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedFilter = filter;
+                      });
+                    },
+                    backgroundColor: WismeColors.surfaceVariant,
+                    selectedColor: WismeColors.primaryBlue.withOpacity(0.1),
+                    labelStyle: TextStyle(
+                      color: isSelected 
+                        ? WismeColors.primaryBlue
+                        : WismeColors.textSecondary,
+                      fontWeight: isSelected 
+                        ? FontWeight.w600
+                        : FontWeight.w400,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        
+        // Episodes List
+        Expanded(
+          child: _isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : _filteredEpisodes.isEmpty
+              ? _buildEmptyState()
+              : RefreshIndicator(
+                  onRefresh: _loadEpisodes,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _filteredEpisodes.length,
+                    itemBuilder: (context, index) {
+                      final episode = _filteredEpisodes[index];
+                      return _buildEpisodeCard(episode);
+                    },
+                  ),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFavoritesTab() {
+    final favorites = _episodes.where((e) => e.isFavorited).toList();
+    
+    return _isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : favorites.isEmpty
+        ? _buildFavoritesEmptyState()
+        : RefreshIndicator(
+            onRefresh: _loadEpisodes,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: favorites.length,
+              itemBuilder: (context, index) {
+                final episode = favorites[index];
+                return _buildEpisodeCard(episode);
+              },
+            ),
+          );
+  }
+
+  Widget _buildStatsTab() {
+    final completedCount = _episodes.where((e) => e.isCompleted).length;
+    final favoriteCount = _episodes.where((e) => e.isFavorited).length;
+    final inProgressCount = _episodes.where((e) => e.isInProgress).length;
+    final totalDuration = _episodes.fold<int>(0, (sum, e) => sum + e.durationMinutes);
+    final completedDuration = _episodes
+        .where((e) => e.isCompleted)
+        .fold<int>(0, (sum, e) => sum + e.durationMinutes);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Learning Statistics',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: WismeColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 24),
+          
+          // Stats Grid
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 1.2,
+            children: [
+              _buildStatCard(
+                'Total Episodes',
+                _episodes.length.toString(),
+                Icons.library_books,
+                WismeColors.primaryBlue,
+              ),
+              _buildStatCard(
+                'Completed',
+                completedCount.toString(),
+                Icons.check_circle,
+                WismeColors.success,
+              ),
+              _buildStatCard(
+                'Favorites',
+                favoriteCount.toString(),
+                Icons.favorite,
+                WismeColors.error,
+              ),
+              _buildStatCard(
+                'In Progress',
+                inProgressCount.toString(),
+                Icons.play_circle,
+                WismeColors.warning,
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Time Stats
+          ModernCard(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Time Investment',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: WismeColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Total Content'),
+                      Text(
+                        '${(totalDuration / 60).toStringAsFixed(1)}h',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Completed'),
+                      Text(
+                        '${(completedDuration / 60).toStringAsFixed(1)}h',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: WismeColors.success,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: totalDuration > 0 ? completedDuration / totalDuration : 0,
+                    backgroundColor: WismeColors.surfaceVariant,
+                    valueColor: const AlwaysStoppedAnimation<Color>(WismeColors.success),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return ModernCard(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 32,
+              color: color,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: WismeColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFavoritesEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.favorite_border,
+            size: 64,
+            color: WismeColors.textSecondary,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'No favorites yet',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: WismeColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Tap the heart icon on episodes to add them to your favorites',
+            style: TextStyle(
+              fontSize: 16,
+              color: WismeColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

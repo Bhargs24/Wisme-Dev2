@@ -1,6 +1,7 @@
 
+import '../../models/models.dart';
+import '../ai/advanced_topic_classifier.dart';
 import '../content/podcast_content_generator.dart';
-
 import '../storage/content_database.dart';
 import '../services/supabase_service.dart';
 
@@ -177,6 +178,11 @@ class ContentIntegrationService {
   /// Update episode progress
   Future<void> updateEpisodeProgress(String episodeId, double progress) async {
     await SupabaseService.updateEpisodeProgress(episodeId, progress, progress >= 1.0);
+  }
+
+  /// Update episode
+  Future<void> updateEpisode(Episode episode) async {
+    await SupabaseService.updateEpisode(episode);
   }
 
   /// Track learning session

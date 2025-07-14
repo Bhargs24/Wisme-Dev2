@@ -6,6 +6,9 @@ export 'services/auth_service.dart';
 export 'services/content_integration_service.dart';
 export 'services/email_service.dart';
 export 'services/enhanced_auth_service.dart';
+export 'services/openai_service.dart';
+export 'services/optimized_openai_service.dart';
+export 'services/prompt_engineering_audit_service.dart';
 export 'services/playht_service.dart';
 export 'services/supabase_service.dart';
 

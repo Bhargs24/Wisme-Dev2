@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../../models/models.dart';
+import '../journey/learning_journey_screen.dart';
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
@@ -38,6 +39,8 @@ class _SearchScreenState extends State<SearchScreen> {
             _buildSearchBar(),
             const SizedBox(height: 24),
             if (!_isSearching) ...[
+              _buildFeelingCurious(),
+              const SizedBox(height: 24),
               _buildTrendingTopics(),
               const SizedBox(height: 24),
               _buildCategories(),
@@ -384,6 +387,261 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildFeelingCurious() {
+    // Curated list of curiosity-sparking content suggestions
+    final curiousTopics = [
+      {
+        'title': 'Why do we dream?',
+        'description': 'Explore the fascinating world of sleep science',
+        'category': '🧠 Neuroscience',
+        'difficulty': 'Beginner',
+        'duration': '8 min',
+        'gradient': [WismeColors.primaryBlue, WismeColors.wisdomPurple],
+      },
+      {
+        'title': 'How Bitcoin actually works',
+        'description': 'Demystify cryptocurrency in simple terms',
+        'category': '💰 Technology',
+        'difficulty': 'Intermediate',
+        'duration': '12 min',
+        'gradient': [WismeColors.kaiPrimary, WismeColors.primaryBlue],
+      },
+      {
+        'title': 'The psychology of procrastination',
+        'description': 'Understanding why we delay and how to overcome it',
+        'category': '🧠 Psychology',
+        'difficulty': 'Beginner',
+        'duration': '10 min',
+        'gradient': [WismeColors.veePrimary, WismeColors.kaiPrimary],
+      },
+      {
+        'title': 'Why octopuses are aliens',
+        'description': 'The incredible intelligence of cephalopods',
+        'category': '🌊 Marine Biology',
+        'difficulty': 'Beginner',
+        'duration': '7 min',
+        'gradient': [WismeColors.wisdomPurple, WismeColors.veePrimary],
+      },
+      {
+        'title': 'The science of happiness',
+        'description': 'What research tells us about joy and well-being',
+        'category': '😊 Psychology',
+        'difficulty': 'Beginner',
+        'duration': '11 min',
+        'gradient': [WismeColors.success, WismeColors.primaryBlue],
+      },
+      {
+        'title': 'How music affects your brain',
+        'description': 'The neuroscience behind melodies and emotions',
+        'category': '🎵 Neuroscience',
+        'difficulty': 'Intermediate',
+        'duration': '9 min',
+        'gradient': [WismeColors.primaryBlue, WismeColors.kaiPrimary],
+      },
+    ];
+
+    // Get a random topic for curiosity
+    final randomTopic = (curiousTopics..shuffle()).first;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Text(
+              '🤔 Feeling Curious?',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Spacer(),
+            TextButton.icon(
+              onPressed: () {
+                setState(() {
+                  // This will regenerate with a new random topic
+                });
+              },
+              icon: const Icon(Icons.refresh, size: 16),
+              label: const Text('Surprise me'),
+              style: TextButton.styleFrom(
+                foregroundColor: WismeColors.primaryBlue,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          height: 160,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: randomTopic['gradient'] as List<Color>,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: (randomTopic['gradient'] as List<Color>)[0].withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                // Navigate to topic generation with this curious topic
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LearningJourneyScreen(
+                      topic: randomTopic['title'] as String,
+                      category: randomTopic['category'] as String,
+                    ),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            randomTopic['category'] as String,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.schedule,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                randomTopic['duration'] as String,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      randomTopic['title'] as String,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      randomTopic['description'] as String,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.play_arrow,
+                                color: (randomTopic['gradient'] as List<Color>)[0],
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Start Learning',
+                                style: TextStyle(
+                                  color: (randomTopic['gradient'] as List<Color>)[0],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            randomTopic['difficulty'] as String,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

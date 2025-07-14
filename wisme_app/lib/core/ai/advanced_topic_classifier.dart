@@ -1,262 +1,237 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../config/api_config.dart';
+import '../services/optimized_openai_service.dart';
+import '../../models/models.dart';
 
-/// Advanced AI Topic Classification System - Clean Implementation
-/// Optimized prompts for cost efficiency and personalization support
+/// Advanced AI Topic Classification System - Optimized with God-Level Prompts
+/// Uses single API call for complete learning experience generation
 class AdvancedTopicClassifier {
 
-  /// 15 Primary Categories with 4 Knowledge Levels Each
-  static const Map<String, List<String>> categoryLevels = {
-    'Technology & AI': ['🔹 Core Concepts', '💼 Case Studies', '🛠 Tools & Trends', '🎛 Bit of Everything'],
-    'Business & Finance': ['💡 Fundamentals', '💼 Case Studies', '📈 Growth Strategy', '🎛 Balanced Mix'],
-    'Psychology & Mind': ['🧠 Theories & Experiments', '💬 Real-Life Application', '🧘 Mindfulness & Behavior', '🎛 Mixed Approach'],
-    'Science & Nature': ['🔬 Scientific Concepts', '🧬 Discoveries', '🌱 Ethics & Controversies', '🎛 Narrative Mix'],
-    'Creativity & Design': ['🎨 Design Fundamentals', '📚 Iconic Examples', '🛠 Frameworks & Tools', '🎛 Creative Blend'],
-    'Personal Development': ['📖 Philosophy & Mental Models', '🎯 Self-Development', '💬 Habits & Mindset', '🎛 Reflective Mix'],
-    'History & Culture': ['🗺️ Timelines', '🌍 Cultural Impact', '🎶 Media & Storytelling', '🎛 Blended Approach'],
-    'Skills & Tools': ['🧰 Getting Started', '🔧 Pro Tools & Hacks', '📈 Workflows & Systems', '🎛 Practical Guide'],
-    'Career & Strategy': ['🪞 Identity & Purpose', '📄 Career Assets', '🧭 Strategic Moves', '🎛 Holistic Journey'],
-    'Law & Governance': ['📜 Legal Foundations', '🧭 Governance & Policy', '⚖️ Case Law & Precedents', '🎛 Civic Systems Mix'],
-    'Geopolitics & Global Affairs': ['🌐 Power Dynamics', '🤝 Diplomacy & Alliances', '💣 Conflicts & Security', '🎛 Global Narrative Mix'],
-    'Environment & Sustainability': ['🌱 Climate & Ecology', '🔋 Sustainable Systems', '🧪 Environmental Tech', '🎛 Eco-Strategy Blend'],
-    'Mathematics & Logic': ['🧮 Foundational Concepts', '🔢 Applied Techniques', '🧠 Logic & Formal Systems', '🎛 Mathematical Narrative'],
-    'Gaming & Interactive Media': ['🎮 Game Design Principles', '🧠 Player Experience', '📚 Iconic Games & Genres', '🎛 Gaming Culture Mix'],
-    'Society & Ethics': ['🧭 Social Structures', '🧬 Moral Frameworks', '💬 Real-World Ethics', '🎛 Reflective Society Blend'],
-    'Futurism & Exploration': ['🌌 Space & Cosmos', '🤖 Emerging Futures', '🔭 Exploration Scenarios', '🎛 Futuristic Outlooks'],
-  };
+  /// Complete 60 Knowledge Levels (15 categories × 4 levels each)
+  static const Map<String, List<String>> categoryLevels = OptimizedOpenAIService.knowledgeLevels;
 
-  /// Main analysis with personalization support
+  /// MASTER ANALYSIS: Single API call for complete learning experience
   static Future<TopicClassification> analyzeTopicWithAI(String topic, {
     String? userBackground,
     String? learningIntent,
-    String? personalContext, // NEW: Personal situation/goals
+    String? personalContext,
     List<String>? previousTopics,
-    String? openAiApiKey,
+    String? preferredCoach,
+    String? learningGoal,
   }) async {
-    final apiKey = openAiApiKey ?? ApiConfig.openAiApiKey;
-    
-    if (!ApiConfig.isOpenAiConfigured && openAiApiKey == null) {
-      throw Exception('OpenAI API key not configured. Please set up ApiConfig or provide openAiApiKey parameter.');
-    }
-
     try {
-      final analysis = await _performOptimizedAnalysis(
-        topic, 
-        apiKey,
+      // Single optimized API call for everything
+      final completeExperience = await OptimizedOpenAIService().generateCompleteLearningExperience(
+        topic: topic,
         userBackground: userBackground,
         learningIntent: learningIntent,
         personalContext: personalContext,
         previousTopics: previousTopics,
+        preferredCoach: preferredCoach,
+        learningGoal: learningGoal,
       );
 
+      // Extract topic analysis from comprehensive response
+      final analysis = completeExperience['topicAnalysis'] as Map<String, dynamic>;
+      final journey = completeExperience['learningJourney'] as Map<String, dynamic>;
+      final episodes = journey['episodes'] as List<dynamic>;
+
+      // Convert to TopicClassification model
       return TopicClassification(
         originalTopic: topic,
         category: analysis['category'] as String,
         knowledgeLevel: analysis['knowledgeLevel'] as String,
         confidence: (analysis['confidence'] as num).toDouble(),
-        subtopics: (analysis['subtopics'] as List).map((s) => SubtopicResult.fromJson(s)).toList(),
-        learningStyleHints: List<String>.from(analysis['learningStyleHints'] ?? []),
-        episodePlan: EpisodePlan.fromJson(analysis['episodePlan']),
+        subtopics: _extractSubtopics(episodes),
+        learningStyleHints: _extractLearningHints(analysis),
+        episodePlan: EpisodePlan(
+          progressionPath: episodes.map((e) => e['title'] as String).toList(),
+          learningObjectives: _extractAllObjectives(episodes),
+          totalEpisodes: episodes.length,
+        ),
         recommendedCoach: analysis['recommendedCoach'] as String,
-        estimatedDuration: analysis['estimatedDuration'] as int,
-        prerequisiteTopics: List<String>.from(analysis['prerequisiteTopics'] ?? []),
+        estimatedDuration: analysis['estimatedTotalDuration'] as int,
+        prerequisiteTopics: previousTopics ?? [],
         personalContext: personalContext,
+        // Store complete experience for later use
+        completeLearningExperience: completeExperience,
       );
     } catch (e) {
+      print('⚠️ Optimized OpenAI analysis failed, using fallback: $e');
       return _createFallbackClassification(topic, personalContext);
     }
   }
 
-  /// Optimized single API call - cost efficient
-  static Future<Map<String, dynamic>> _performOptimizedAnalysis(
-    String topic, 
-    String apiKey, {
-    String? userBackground,
-    String? learningIntent,
-    String? personalContext,
-    List<String>? previousTopics,
-  }) async {
-    // Compact, efficient prompt
-    final systemPrompt = '''Expert learning architect. Analyze topic & create personalized learning plan.
-
-Categories: ${categoryLevels.keys.take(8).join(', ')}, ${categoryLevels.keys.skip(8).join(', ')}
-
-Levels per category: 🔹 Core Concepts, 💼 Case Studies, 🛠 Tools & Trends, 🎛 Bit of Everything
-
-JSON format:
-{
-  "category": "exact_match",
-  "knowledgeLevel": "🔹 Core Concepts",
-  "confidence": 0.9,
-  "subtopics": [{"title": "...", "description": "...", "keyConcepts": ["..."], "estimatedDuration": 15, "difficultyProgression": 0.3}],
-  "learningStyleHints": ["analytical"],
-  "episodePlan": {"progressionPath": ["..."], "learningObjectives": ["..."], "totalEpisodes": 3},
-  "recommendedCoach": "Kai",
-  "estimatedDuration": 45,
-  "prerequisiteTopics": ["..."]
-}
-
-Coach: Kai=analytical/technical, Vee=creative/practical. 3-4 subtopics, 10-20min each.''';
-
-    // Build context efficiently
-    String contextInfo = '';
-    if (personalContext != null && personalContext.isNotEmpty) {
-      contextInfo += 'Personal Context: $personalContext\n';
-    }
-    if (userBackground != null) contextInfo += 'Background: $userBackground\n';
-    if (learningIntent != null) contextInfo += 'Intent: $learningIntent\n';
-
-    final userPrompt = '''Topic: "$topic"
-${contextInfo.isEmpty ? '' : contextInfo}
-Personalize for context. Return JSON only.''';
-
-    final response = await http.post(
-      Uri.parse(ApiConfig.openAiBaseUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $apiKey',
-      },
-      body: jsonEncode({
-        'model': ApiConfig.gptModel,
-        'messages': [
-          {'role': 'system', 'content': systemPrompt},
-          {'role': 'user', 'content': userPrompt},
-        ],
-        'max_tokens': 1200, // Reduced for cost efficiency
-        'temperature': 0.7,
-      }),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('OpenAI API error: ${response.statusCode} - ${response.body}');
-    }
-
-    final data = jsonDecode(response.body);
-    final content = data['choices'][0]['message']['content'] as String;
-    
-    try {
-      return jsonDecode(content);
-    } catch (e) {
-      final jsonMatch = RegExp(r'\{.*\}', dotAll: true).firstMatch(content);
-      if (jsonMatch != null) {
-        return jsonDecode(jsonMatch.group(0)!);
-      }
-      throw Exception('Failed to parse AI response as JSON');
-    }
+  /// Extract subtopics from generated episodes
+  static List<SubtopicResult> _extractSubtopics(List<dynamic> episodes) {
+    return episodes.map((episode) {
+      final keyInsights = episode['keyInsights'] as List<dynamic>? ?? [];
+      return SubtopicResult(
+        title: episode['title'] as String,
+        description: episode['description'] as String,
+        keyConcepts: keyInsights.map((insight) => insight.toString()).toList(),
+        estimatedDuration: episode['duration'] as int,
+        difficultyProgression: (episodes.indexOf(episode) + 1) / episodes.length,
+      );
+    }).toList();
   }
 
+  /// Extract learning style hints from analysis
+  static List<String> _extractLearningHints(Map<String, dynamic> analysis) {
+    final coach = analysis['recommendedCoach'] as String;
+    final knowledgeLevel = analysis['knowledgeLevel'] as String;
+    
+    final hints = <String>[];
+    
+    // Coach-based hints
+    if (coach == 'Kai') {
+      hints.addAll(['analytical', 'philosophical', 'deep-thinking']);
+    } else {
+      hints.addAll(['practical', 'energetic', 'action-oriented']);
+    }
+    
+    // Knowledge level-based hints
+    if (knowledgeLevel.contains('Core Concepts')) {
+      hints.addAll(['foundational', 'systematic']);
+    } else if (knowledgeLevel.contains('Case Studies')) {
+      hints.addAll(['example-driven', 'real-world']);
+    } else if (knowledgeLevel.contains('Tools & Trends')) {
+      hints.addAll(['cutting-edge', 'practical-tools']);
+    } else {
+      hints.addAll(['comprehensive', 'balanced']);
+    }
+    
+    return hints.take(5).toList();
+  }
+
+  /// Extract all learning objectives from episodes
+  static List<String> _extractAllObjectives(List<dynamic> episodes) {
+    final allObjectives = <String>[];
+    for (final episode in episodes) {
+      final objectives = episode['learningObjectives'] as List<dynamic>? ?? [];
+      allObjectives.addAll(objectives.map((obj) => obj.toString()));
+    }
+    return allObjectives.take(8).toList(); // Limit to prevent overload
+  }
+
+  /// Create fallback classification when AI fails
   static TopicClassification _createFallbackClassification(String topic, String? personalContext) {
+    // Smart category detection based on keywords
+    String category = 'Personal Development'; // Default
+    String knowledgeLevel = '🔹 Core Concepts';
+    String coach = 'Kai';
+    
+    final topicLower = topic.toLowerCase();
+    
+    // Advanced keyword matching with context awareness
+    if (topicLower.contains(RegExp(r'tech|ai|program|code|software|data|machine|algorithm|computer'))) {
+      category = 'Technology & AI';
+      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'beginner|new|start')) ?? false 
+          ? '🔹 Core Concepts' : '🛠 Tools & Trends';
+      coach = 'Kai';
+    } else if (topicLower.contains(RegExp(r'business|money|finance|market|startup|entrepreneur|strategy'))) {
+      category = 'Business & Finance';
+      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'example|case|company')) ?? false 
+          ? '💼 Case Studies' : '💡 Fundamentals';
+      coach = 'Vee';
+    } else if (topicLower.contains(RegExp(r'psychology|mind|behavior|emotion|mental|cognitive'))) {
+      category = 'Psychology & Mind';
+      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'practical|apply|real')) ?? false 
+          ? '💬 Real-Life Application' : '🧠 Theories & Experiments';
+      coach = 'Kai';
+    } else if (topicLower.contains(RegExp(r'science|physics|chemistry|biology|research|study'))) {
+      category = 'Science & Nature';
+      knowledgeLevel = '🔬 Scientific Concepts';
+      coach = 'Kai';
+    } else if (topicLower.contains(RegExp(r'design|art|creative|music|visual|aesthetic'))) {
+      category = 'Creativity & Design';
+      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'tool|software|technique')) ?? false 
+          ? '🛠 Frameworks & Tools' : '🎨 Design Fundamentals';
+      coach = 'Vee';
+    } else if (topicLower.contains(RegExp(r'career|job|work|professional|skill|leadership'))) {
+      category = 'Career & Strategy';
+      knowledgeLevel = '🪞 Identity & Purpose';
+      coach = 'Vee';
+    } else if (topicLower.contains(RegExp(r'history|culture|society|social|political'))) {
+      category = 'History & Culture';
+      knowledgeLevel = '🗺️ Timelines';
+      coach = 'Kai';
+    } else if (topicLower.contains(RegExp(r'environment|climate|sustainability|green|eco'))) {
+      category = 'Environment & Sustainability';
+      knowledgeLevel = '🌱 Climate & Ecology';
+      coach = 'Kai';
+    }
+
     return TopicClassification(
       originalTopic: topic,
-      category: 'Personal Development',
-      knowledgeLevel: '🔹 Core Concepts',
-      confidence: 0.5,
+      category: category,
+      knowledgeLevel: knowledgeLevel,
+      confidence: 0.6, // Lower confidence for fallback
       subtopics: [
         SubtopicResult(
           title: 'Introduction to $topic',
-          description: personalContext != null 
-              ? 'Getting started with $topic in your specific context'
-              : 'Getting started with the fundamentals',
-          keyConcepts: ['core_concepts', 'basic_understanding'],
-          estimatedDuration: 15,
-          difficultyProgression: 0.3,
+          description: 'Foundation and overview concepts',
+          keyConcepts: ['fundamentals', 'basics', 'overview'],
+          estimatedDuration: 8,
+          difficultyProgression: 0.2,
+        ),
+        SubtopicResult(
+          title: 'Core Principles',
+          description: 'Key concepts and important ideas',
+          keyConcepts: ['principles', 'concepts', 'theory'],
+          estimatedDuration: 10,
+          difficultyProgression: 0.5,
         ),
         SubtopicResult(
           title: 'Practical Applications',
-          description: personalContext != null
-              ? 'How to apply $topic to your specific situation'
-              : 'How to apply these concepts in real life',
-          keyConcepts: ['practical_use', 'real_world_examples'],
-          estimatedDuration: 18,
-          difficultyProgression: 0.6,
+          description: 'Real-world implementation and usage',
+          keyConcepts: ['application', 'practice', 'implementation'],
+          estimatedDuration: 12,
+          difficultyProgression: 0.8,
         ),
       ],
-      learningStyleHints: ['practical_focus'],
+      learningStyleHints: coach == 'Kai' 
+          ? ['analytical', 'systematic', 'thoughtful'] 
+          : ['practical', 'energetic', 'action-oriented'],
       episodePlan: EpisodePlan(
-        progressionPath: ['Introduction to $topic', 'Practical Applications'],
-        learningObjectives: ['Understand core concepts', 'Apply knowledge practically'],
-        totalEpisodes: 2,
+        progressionPath: ['Foundation', 'Core Concepts', 'Applications'],
+        learningObjectives: [
+          'Understand $topic fundamentals',
+          'Learn key principles and concepts',
+          'Apply knowledge in practical scenarios',
+        ],
+        totalEpisodes: 3,
       ),
-      recommendedCoach: 'Vee',
-      estimatedDuration: 33,
-      prerequisiteTopics: [],
+      recommendedCoach: coach,
+      estimatedDuration: 30,
+      prerequisiteTopics: const [],
       personalContext: personalContext,
     );
   }
-}
 
-/// Data Models for Classification Results
-class TopicClassification {
-  final String originalTopic;
-  final String category;
-  final String knowledgeLevel;
-  final double confidence;
-  final List<SubtopicResult> subtopics;
-  final List<String> learningStyleHints;
-  final EpisodePlan episodePlan;
-  final String recommendedCoach;
-  final int estimatedDuration;
-  final List<String> prerequisiteTopics;
-  final String? personalContext; // NEW
-
-  TopicClassification({
-    required this.originalTopic,
-    required this.category,
-    required this.knowledgeLevel,
-    required this.confidence,
-    required this.subtopics,
-    required this.learningStyleHints,
-    required this.episodePlan,
-    required this.recommendedCoach,
-    required this.estimatedDuration,
-    required this.prerequisiteTopics,
-    this.personalContext,
-  });
-}
-
-class SubtopicResult {
-  final String title;
-  final String description;
-  final List<String> keyConcepts;
-  final int estimatedDuration;
-  final double difficultyProgression;
-
-  SubtopicResult({
-    required this.title,
-    required this.description,
-    required this.keyConcepts,
-    required this.estimatedDuration,
-    required this.difficultyProgression,
-  });
-
-  factory SubtopicResult.fromJson(Map<String, dynamic> json) {
-    return SubtopicResult(
-      title: json['title'] as String,
-      description: json['description'] as String,
-      keyConcepts: List<String>.from(json['keyConcepts'] ?? json['key_concepts'] ?? []),
-      estimatedDuration: json['estimatedDuration'] ?? json['estimated_duration'] ?? 12,
-      difficultyProgression: (json['difficultyProgression'] ?? json['difficulty_progression'] ?? 0.5).toDouble(),
-    );
+  /// Quick classification without AI (for testing/fallback)
+  static TopicClassification classifyTopicBasic(String topic) {
+    return _createFallbackClassification(topic, null);
   }
-}
 
-class EpisodePlan {
-  final List<String> progressionPath;
-  final List<String> learningObjectives;
-  final int totalEpisodes;
+  /// Test connection using optimized service
+  static Future<bool> testConnection() async {
+    try {
+      return await OptimizedOpenAIService().testConnection();
+    } catch (e) {
+      print('Topic classifier connection test failed: $e');
+      return false;
+    }
+  }
 
-  EpisodePlan({
-    required this.progressionPath,
-    required this.learningObjectives,
-    required this.totalEpisodes,
-  });
+  /// Get all available categories
+  static List<String> get availableCategories => categoryLevels.keys.toList();
 
-  factory EpisodePlan.fromJson(Map<String, dynamic> json) {
-    return EpisodePlan(
-      progressionPath: List<String>.from(json['progressionPath'] ?? []),
-      learningObjectives: List<String>.from(json['learningObjectives'] ?? []),
-      totalEpisodes: json['totalEpisodes'] as int,
-    );
+  /// Get knowledge levels for a specific category
+  static List<String> getKnowledgeLevelsForCategory(String category) {
+    return categoryLevels[category] ?? [];
+  }
+
+  /// Validate if a knowledge level exists
+  static bool isValidKnowledgeLevel(String category, String level) {
+    return categoryLevels[category]?.contains(level) ?? false;
   }
 }

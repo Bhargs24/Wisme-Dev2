@@ -141,6 +141,12 @@ class SupabaseService {
     }
   }
 
+  static Future<void> updateEpisode(Episode episode) async {
+    if (episode.id == null) return;
+    
+    await client.from('episodes').update(episode.toJson()).eq('id', episode.id!);
+  }
+
   static Future<void> _incrementUserStats() async {
     if (currentUser == null) return;
 

@@ -50,6 +50,7 @@ CREATE TABLE episodes (
     -- Episode Status
     is_completed BOOLEAN DEFAULT false,
     completion_percentage REAL DEFAULT 0.0,
+    is_favorited BOOLEAN DEFAULT false,
     audio_url TEXT,
     transcript TEXT,
     
@@ -96,6 +97,33 @@ CREATE TABLE user_favorites (
     favorited_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     
     UNIQUE(user_id, episode_id)
+);
+
+-- Learning Journeys Table
+CREATE TABLE learning_journeys (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    
+    -- Journey Content
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    category TEXT NOT NULL,
+    knowledge_level TEXT NOT NULL,
+    episode_ids UUID[] DEFAULT '{}',
+    
+    -- Journey Progress
+    is_completed BOOLEAN DEFAULT false,
+    completion_percentage REAL DEFAULT 0.0,
+    current_episode_index INTEGER DEFAULT 0,
+    
+    -- Rewards & Achievements
+    reward_badge TEXT,
+    estimated_duration_minutes INTEGER DEFAULT 0,
+    
+    -- Timestamps
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    completed_at TIMESTAMP WITH TIME ZONE
 );
 
 -- User Learning Stats View (for dashboard)

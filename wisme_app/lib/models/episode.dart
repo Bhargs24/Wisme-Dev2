@@ -12,6 +12,7 @@ class Episode {
   final List<String> hashtags;
   final bool isCompleted;
   final double completionPercentage;
+  final bool isFavorited;
   final String? audioUrl;
   final String? transcript;
   final DateTime createdAt;
@@ -29,6 +30,7 @@ class Episode {
     this.hashtags = const [],
     this.isCompleted = false,
     this.completionPercentage = 0.0,
+    this.isFavorited = false,
     this.audioUrl,
     this.transcript,
     required this.createdAt,
@@ -49,6 +51,7 @@ class Episode {
       hashtags: List<String>.from(json['hashtags'] ?? []),
       isCompleted: json['is_completed'] ?? false,
       completionPercentage: (json['completion_percentage'] ?? 0.0).toDouble(),
+      isFavorited: json['is_favorited'] ?? false,
       audioUrl: json['audio_url'],
       transcript: json['transcript'],
       createdAt: json['created_at'] != null 
@@ -74,6 +77,7 @@ class Episode {
       'hashtags': hashtags,
       'is_completed': isCompleted,
       'completion_percentage': completionPercentage,
+      'is_favorited': isFavorited,
       if (audioUrl != null) 'audio_url': audioUrl,
       if (transcript != null) 'transcript': transcript,
       'created_at': createdAt.toIso8601String(),
@@ -94,6 +98,7 @@ class Episode {
     List<String>? hashtags,
     bool? isCompleted,
     double? completionPercentage,
+    bool? isFavorited,
     String? audioUrl,
     String? transcript,
     DateTime? createdAt,
@@ -111,6 +116,7 @@ class Episode {
       hashtags: hashtags ?? this.hashtags,
       isCompleted: isCompleted ?? this.isCompleted,
       completionPercentage: completionPercentage ?? this.completionPercentage,
+      isFavorited: isFavorited ?? this.isFavorited,
       audioUrl: audioUrl ?? this.audioUrl,
       transcript: transcript ?? this.transcript,
       createdAt: createdAt ?? this.createdAt,

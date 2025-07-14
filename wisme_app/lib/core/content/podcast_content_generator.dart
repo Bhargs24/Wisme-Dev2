@@ -1,13 +1,14 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../ai/advanced_topic_classifier.dart';
+import '../../models/models.dart';
 import '../config/api_config.dart';
+import '../services/openai_service.dart';
 
-/// Podcast-Style Content Generation Engine
-/// Creates engaging, personality-driven audio learning content
+/// Podcast-Style Content Generation Engine - Real OpenAI Integration
+/// Creates engaging, personality-driven audio learning content using OpenAIService
 class PodcastContentGenerator {
 
-  /// Generate episode script with personalization
+  /// Generate episode script with real OpenAI integration
   Future<String> generateEpisodeScript(
     String topic,
     String episodeTitle,
@@ -17,28 +18,49 @@ class PodcastContentGenerator {
     String? personalContext,
     String? openAiApiKey,
   }) async {
-    final apiKey = openAiApiKey ?? ApiConfig.openAiApiKey;
-    
-    if (!ApiConfig.isOpenAiConfigured && openAiApiKey == null) {
-      throw Exception('OpenAI API key not configured. Please set up ApiConfig or provide openAiApiKey parameter.');
-    }
-
     try {
-      return await _generatePersonalizedPodcastScript(
-        topic,
-        episodeTitle,
-        episodeContent,
-        coachPersonality,
-        knowledgeLevel,
-        apiKey,
+      // Use OpenAIService for real content generation
+      return await OpenAIService().generateEpisodeContent(
+        topic: topic,
+        title: episodeTitle,
+        category: _getCategoryFromTopic(topic),
+        knowledgeLevel: knowledgeLevel,
+        coachPersonality: coachPersonality,
         personalContext: personalContext,
+        durationMinutes: _estimateDuration(knowledgeLevel),
       );
     } catch (e) {
+      print('⚠️ OpenAI episode generation failed, using fallback: $e');
       return _generateFallbackScript(topic, episodeTitle, coachPersonality, personalContext);
     }
   }
 
-  /// Optimized AI-powered podcast script generation with personalization
+  /// Estimate duration based on knowledge level
+  int _estimateDuration(String knowledgeLevel) {
+    if (knowledgeLevel.contains('Core Concepts')) return 8;
+    if (knowledgeLevel.contains('Case Studies')) return 12;
+    if (knowledgeLevel.contains('Tools & Trends')) return 10;
+    return 10; // Default
+  }
+
+  /// Get category from topic (simple keyword matching)
+  String _getCategoryFromTopic(String topic) {
+    final topicLower = topic.toLowerCase();
+    if (topicLower.contains(RegExp(r'tech|ai|program|code|software|data'))) {
+      return 'Technology & AI';
+    } else if (topicLower.contains(RegExp(r'business|money|finance|market|startup'))) {
+      return 'Business & Finance';
+    } else if (topicLower.contains(RegExp(r'psychology|mind|behavior|emotion'))) {
+      return 'Psychology & Mind';
+    } else if (topicLower.contains(RegExp(r'science|physics|chemistry|biology'))) {
+      return 'Science & Nature';
+    } else if (topicLower.contains(RegExp(r'design|art|creative|music'))) {
+      return 'Creativity & Design';
+    }
+    return 'Personal Development'; // Default
+  }
+
+  /// Legacy method - now using OpenAI service directly
   Future<String> _generatePersonalizedPodcastScript(
     String topic,
     String episodeTitle,

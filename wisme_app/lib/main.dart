@@ -18,6 +18,19 @@ void main() async {
     // Initialize Supabase Backend
     await SupabaseService.initialize();
     
+    // Test OpenAI Integration (if configured)
+    if (EnvironmentConfig.openaiApiKey.isNotEmpty) {
+      print('🤖 Testing OpenAI integration...');
+      try {
+        final isWorking = await OpenAIService().testConnection();
+        print(isWorking ? '✅ OpenAI integration working!' : '⚠️ OpenAI connection issues');
+      } catch (e) {
+        print('⚠️ OpenAI test failed: $e');
+      }
+    } else {
+      print('⚠️ OpenAI API key not configured - using mock data');
+    }
+    
   } catch (e) {
     print('❌ Initialization Error: $e');
     // In production, you might want to show an error screen

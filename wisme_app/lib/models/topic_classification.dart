@@ -1,0 +1,132 @@
+/// Topic Classification Models for AI-powered learning system
+
+/// Main topic classification result from AI analysis
+class TopicClassification {
+  final String originalTopic;
+  final String category;
+  final String knowledgeLevel;
+  final double confidence;
+  final List<SubtopicResult> subtopics;
+  final List<String> learningStyleHints;
+  final EpisodePlan episodePlan;
+  final String recommendedCoach;
+  final int estimatedDuration;
+  final List<String> prerequisiteTopics;
+  final String? personalContext;
+  final Map<String, dynamic>? completeLearningExperience; // Store full AI response
+
+  const TopicClassification({
+    required this.originalTopic,
+    required this.category,
+    required this.knowledgeLevel,
+    required this.confidence,
+    required this.subtopics,
+    required this.learningStyleHints,
+    required this.episodePlan,
+    required this.recommendedCoach,
+    required this.estimatedDuration,
+    required this.prerequisiteTopics,
+    this.personalContext,
+    this.completeLearningExperience,
+  });
+
+  factory TopicClassification.fromJson(Map<String, dynamic> json) {
+    return TopicClassification(
+      originalTopic: json['originalTopic'] ?? '',
+      category: json['category'] ?? '',
+      knowledgeLevel: json['knowledgeLevel'] ?? '',
+      confidence: (json['confidence'] ?? 0.0).toDouble(),
+      subtopics: (json['subtopics'] as List? ?? [])
+          .map((s) => SubtopicResult.fromJson(s))
+          .toList(),
+      learningStyleHints: List<String>.from(json['learningStyleHints'] ?? []),
+      episodePlan: EpisodePlan.fromJson(json['episodePlan'] ?? {}),
+      recommendedCoach: json['recommendedCoach'] ?? 'Kai',
+      estimatedDuration: json['estimatedDuration'] ?? 30,
+      prerequisiteTopics: List<String>.from(json['prerequisiteTopics'] ?? []),
+      personalContext: json['personalContext'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'originalTopic': originalTopic,
+      'category': category,
+      'knowledgeLevel': knowledgeLevel,
+      'confidence': confidence,
+      'subtopics': subtopics.map((s) => s.toJson()).toList(),
+      'learningStyleHints': learningStyleHints,
+      'episodePlan': episodePlan.toJson(),
+      'recommendedCoach': recommendedCoach,
+      'estimatedDuration': estimatedDuration,
+      'prerequisiteTopics': prerequisiteTopics,
+      if (personalContext != null) 'personalContext': personalContext,
+    };
+  }
+}
+
+/// Individual subtopic result within a topic classification
+class SubtopicResult {
+  final String title;
+  final String description;
+  final List<String> keyConcepts;
+  final int estimatedDuration;
+  final double difficultyProgression;
+
+  const SubtopicResult({
+    required this.title,
+    required this.description,
+    required this.keyConcepts,
+    required this.estimatedDuration,
+    required this.difficultyProgression,
+  });
+
+  factory SubtopicResult.fromJson(Map<String, dynamic> json) {
+    return SubtopicResult(
+      title: json['title'] as String,
+      description: json['description'] as String,
+      keyConcepts: List<String>.from(json['keyConcepts'] ?? json['key_concepts'] ?? []),
+      estimatedDuration: json['estimatedDuration'] ?? json['estimated_duration'] ?? 12,
+      difficultyProgression: (json['difficultyProgression'] ?? json['difficulty_progression'] ?? 0.5).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'keyConcepts': keyConcepts,
+      'estimatedDuration': estimatedDuration,
+      'difficultyProgression': difficultyProgression,
+    };
+  }
+}
+
+/// Episode plan structure for a topic
+class EpisodePlan {
+  final List<String> progressionPath;
+  final List<String> learningObjectives;
+  final int totalEpisodes;
+
+  const EpisodePlan({
+    required this.progressionPath,
+    required this.learningObjectives,
+    required this.totalEpisodes,
+  });
+
+  factory EpisodePlan.fromJson(Map<String, dynamic> json) {
+    return EpisodePlan(
+      progressionPath: List<String>.from(json['progressionPath'] ?? []),
+      learningObjectives: List<String>.from(json['learningObjectives'] ?? []),
+      totalEpisodes: json['totalEpisodes'] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'progressionPath': progressionPath,
+      'learningObjectives': learningObjectives,
+      'totalEpisodes': totalEpisodes,
+    };
+  }
+}
