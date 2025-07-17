@@ -490,7 +490,7 @@ Return only hashtags, one per line, starting with #''';
 
 $pace
 
-In this episode ${episodeNumber}, we'll cover the essential aspects that matter most for your learning journey. [PAUSE]
+In this episode $episodeNumber, we'll cover the essential aspects that matter most for your learning journey. [PAUSE]
 
 Let me start with a question: What comes to mind when you think about $topic? [THOUGHTFUL_PAUSE]
 

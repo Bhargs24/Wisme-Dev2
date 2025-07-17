@@ -24,15 +24,10 @@ class _LearningAnalyticsDashboardState extends State<LearningAnalyticsDashboard>
   late TabController _tabController;
   late AnimationController _progressController;
   late AnimationController _streakController;
-  late Animation<double> _progressAnimation;
-  late Animation<double> _streakAnimation;
   
   // Loading and state management
   bool _isLoading = false;
   String? _errorMessage;
-  
-  // Selected time range for analytics
-  int _selectedTimeRange = 0; // 0: Week, 1: Month, 2: Year
   
   // Analytics data
   Map<String, dynamic> _analyticsData = {};
@@ -55,12 +50,9 @@ class _LearningAnalyticsDashboardState extends State<LearningAnalyticsDashboard>
       vsync: this,
     );
     
-    _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _progressController, curve: Curves.easeOut),
-    );
-    _streakAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _streakController, curve: Curves.elasticOut),
-    );
+    // Initialize animations
+    print("Initializing progress animation: ${_progressController.value}");
+    print("Initializing streak animation: ${_streakController.value}");
     
     _loadAnalyticsData();
   }
@@ -132,7 +124,7 @@ class _LearningAnalyticsDashboardState extends State<LearningAnalyticsDashboard>
       'weeklyGoalProgress': 85, // percentage
       'monthlyGoalProgress': 72, // percentage
       'totalSessions': 156,
-      'favoriteCategory': 'Technology',
+      'favoriteCategory': '💻 Technology & AI',
       'learningSpeedImprovement': 23, // percentage
       'retentionRate': 89, // percentage
       'streaks': [

@@ -296,13 +296,20 @@ class _CategoryPreferencesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     const categories = [
       'Technology & AI',
-      'Business & Marketing',
+      'Business & Finance',
+      'Psychology & Mind',
+      'Science & Nature',
+      'Creativity & Design',
       'Personal Development',
-      'Science & Health',
-      'Creative Arts',
-      'Finance & Investing',
       'History & Culture',
-      'Language Learning',
+      'Skills & Tools',
+      'Career & Strategy',
+      'Law & Governance',
+      'Geopolitics & Global Affairs',
+      'Environment & Sustainability',
+      'Mathematics & Logic',
+      'Gaming & Interactive Media',
+      'Society & Ethics',
     ];
 
     return Padding(

@@ -240,7 +240,7 @@ class ContentReuseEngine {
     return findReusableContent(
       newContentTopic: searchQuery,
       category: category,
-      knowledgeLevel: userProfile.learningStyle, // Use learning style as knowledge level fallback
+      knowledgeLevel: 'Intermediate', // Default knowledge level for podcast learning
       userId: userId,
     );
   }

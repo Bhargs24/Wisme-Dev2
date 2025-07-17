@@ -545,7 +545,7 @@ class PromptEngineeringAuditService {
 
   /// Print comprehensive audit report
   void printAuditReport(Map<String, dynamic> results) {
-    print('\n' + '='*60);
+    print('\n${'='*60}');
     print('🎯 GOD-LEVEL PROMPT ENGINEERING AUDIT REPORT');
     print('='*60);
     
@@ -588,7 +588,7 @@ class PromptEngineeringAuditService {
       print('  • Efficiency rating: ${cost['costEfficiencyRating']}');
     }
     
-    print('\n' + '='*60);
+    print('\n${'='*60}');
     print('Audit completed successfully! 🎉');
     print('='*60 + '\n');
   }

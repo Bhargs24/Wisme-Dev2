@@ -2,8 +2,12 @@
 /// Tracks user preferences and learning patterns
 class UserLearningProfile {
   final String userId;
+  final String name;
+  final int age;
+  final bool isMinor;
+  final bool isTeenager;
+  final String contentFilterLevel;
   final String preferredCoach;
-  final String learningStyle;
   final List<String> favoriteCategories;
   final List<String> difficultTopics;
   final int dailyGoalMinutes;
@@ -18,8 +22,12 @@ class UserLearningProfile {
 
   const UserLearningProfile({
     required this.userId,
+    required this.name,
+    required this.age,
+    required this.isMinor,
+    required this.isTeenager,
+    required this.contentFilterLevel,
     this.preferredCoach = 'Kai',
-    this.learningStyle = 'Balanced',
     this.favoriteCategories = const [],
     this.difficultTopics = const [],
     this.dailyGoalMinutes = 30,
@@ -34,10 +42,15 @@ class UserLearningProfile {
   });
 
   factory UserLearningProfile.fromJson(Map<String, dynamic> json) {
+    final age = json['age'] ?? 18;
     return UserLearningProfile(
       userId: json['user_id'],
+      name: json['name'] ?? '',
+      age: age,
+      isMinor: json['is_minor'] ?? (age < 18),
+      isTeenager: json['is_teenager'] ?? (age >= 13 && age < 18),
+      contentFilterLevel: json['content_filter_level'] ?? (age < 18 ? 'teen' : 'adult'),
       preferredCoach: json['preferred_coach'] ?? 'Kai',
-      learningStyle: json['learning_style'] ?? 'Balanced',
       favoriteCategories: List<String>.from(json['favorite_categories'] ?? []),
       difficultTopics: List<String>.from(json['difficult_topics'] ?? []),
       dailyGoalMinutes: json['daily_goal_minutes'] ?? 30,
@@ -55,8 +68,12 @@ class UserLearningProfile {
   Map<String, dynamic> toJson() {
     return {
       'user_id': userId,
+      'name': name,
+      'age': age,
+      'is_minor': isMinor,
+      'is_teenager': isTeenager,
+      'content_filter_level': contentFilterLevel,
       'preferred_coach': preferredCoach,
-      'learning_style': learningStyle,
       'favorite_categories': favoriteCategories,
       'difficult_topics': difficultTopics,
       'daily_goal_minutes': dailyGoalMinutes,
@@ -73,8 +90,12 @@ class UserLearningProfile {
 
   UserLearningProfile copyWith({
     String? userId,
+    String? name,
+    int? age,
+    bool? isMinor,
+    bool? isTeenager,
+    String? contentFilterLevel,
     String? preferredCoach,
-    String? learningStyle,
     List<String>? favoriteCategories,
     List<String>? difficultTopics,
     int? dailyGoalMinutes,
@@ -89,8 +110,12 @@ class UserLearningProfile {
   }) {
     return UserLearningProfile(
       userId: userId ?? this.userId,
+      name: name ?? this.name,
+      age: age ?? this.age,
+      isMinor: isMinor ?? this.isMinor,
+      isTeenager: isTeenager ?? this.isTeenager,
+      contentFilterLevel: contentFilterLevel ?? this.contentFilterLevel,
       preferredCoach: preferredCoach ?? this.preferredCoach,
-      learningStyle: learningStyle ?? this.learningStyle,
       favoriteCategories: favoriteCategories ?? this.favoriteCategories,
       difficultTopics: difficultTopics ?? this.difficultTopics,
       dailyGoalMinutes: dailyGoalMinutes ?? this.dailyGoalMinutes,
@@ -152,13 +177,16 @@ class UserLearningProfile {
 
   /// Get recommendation for next learning session
   Map<String, dynamic> get nextSessionRecommendation {
+    // Default difficulty for podcast-style learning
+    String suggestedDifficulty = 'Intermediate';
+    
     return {
       'suggested_category': weakestCategory ?? favoriteCategories.first,
       'suggested_duration': dailyGoalMinutes,
       'suggested_coach': preferredCoach,
-      'suggested_difficulty': learningStyle == 'Beginner' ? 'Basic' : 
-                             learningStyle == 'Advanced' ? 'Expert' : 'Intermediate',
+      'suggested_difficulty': suggestedDifficulty,
       'playback_speed': preferredPlaybackSpeed,
+      'content_type': 'podcast',
     };
   }
 }

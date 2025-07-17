@@ -72,7 +72,6 @@ class SupabaseService {
       'learning_streak': 0,
       'total_episodes_completed': 0,
       'preferred_coach': 'Kai',
-      'learning_style': 'Balanced',
     });
   }
 
@@ -180,7 +179,7 @@ class SupabaseService {
   static Future<List<Episode>> getRecommendedEpisodes() async {
     if (currentUser == null) return [];
 
-    // Get user's preferred categories and learning style
+    // Get user's preferred categories and interests
     final profile = await getUserProfile();
     final preferredCoach = profile?['preferred_coach'] ?? 'Kai';
 

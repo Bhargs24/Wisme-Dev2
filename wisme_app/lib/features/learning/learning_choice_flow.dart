@@ -68,7 +68,7 @@ class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
       knowledgeLevel: '🎯 Self-Development',
       confidence: 0.7,
       subtopics: [],
-      learningStyleHints: ['practical'],
+      contentHints: ['practical'],
       episodePlan: EpisodePlan(
         progressionPath: ['Introduction', 'Core Concepts', 'Application'],
         learningObjectives: ['Understand basics', 'Apply knowledge'],

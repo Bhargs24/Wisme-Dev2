@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
 import '../../shared/shared.dart';
-import '../../models/models.dart';
 import '../journey/learning_journey_screen.dart';
+import 'search_results_screen.dart';
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
@@ -73,6 +73,11 @@ class _SearchScreenState extends State<SearchScreen> {
           setState(() {
             _isSearching = value.isNotEmpty;
           });
+        },
+        onSubmitted: (value) {
+          if (value.trim().isNotEmpty) {
+            _navigateToSearchResults(value.trim());
+          }
         },
       ),
     );
@@ -160,6 +165,13 @@ class _SearchScreenState extends State<SearchScreen> {
       ('📚', 'Personal Development', '134 episodes'),
       ('🌍', 'History & Culture', '65 episodes'),
       ('🛠️', 'Skills & Tools', '89 episodes'),
+      ('💼', 'Career & Strategy', '112 episodes'),
+      ('⚖️', 'Law & Governance', '54 episodes'),
+      ('🌐', 'Geopolitics & Global Affairs', '72 episodes'),
+      ('🌱', 'Environment & Sustainability', '91 episodes'),
+      ('🧮', 'Mathematics & Logic', '43 episodes'),
+      ('🎮', 'Gaming & Interactive Media', '67 episodes'),
+      ('🏛️', 'Society & Ethics', '58 episodes'),
     ];
 
     return Column(
@@ -396,7 +408,7 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         'title': 'Why do we dream?',
         'description': 'Explore the fascinating world of sleep science',
-        'category': '🧠 Neuroscience',
+        'category': '🔬 Science & Nature',
         'difficulty': 'Beginner',
         'duration': '8 min',
         'gradient': [WismeColors.primaryBlue, WismeColors.wisdomPurple],
@@ -404,7 +416,7 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         'title': 'How Bitcoin actually works',
         'description': 'Demystify cryptocurrency in simple terms',
-        'category': '💰 Technology',
+        'category': '� Technology & AI',
         'difficulty': 'Intermediate',
         'duration': '12 min',
         'gradient': [WismeColors.kaiPrimary, WismeColors.primaryBlue],
@@ -412,7 +424,7 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         'title': 'The psychology of procrastination',
         'description': 'Understanding why we delay and how to overcome it',
-        'category': '🧠 Psychology',
+        'category': '🧠 Psychology & Mind',
         'difficulty': 'Beginner',
         'duration': '10 min',
         'gradient': [WismeColors.veePrimary, WismeColors.kaiPrimary],
@@ -420,7 +432,7 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         'title': 'Why octopuses are aliens',
         'description': 'The incredible intelligence of cephalopods',
-        'category': '🌊 Marine Biology',
+        'category': '🔬 Science & Nature',
         'difficulty': 'Beginner',
         'duration': '7 min',
         'gradient': [WismeColors.wisdomPurple, WismeColors.veePrimary],
@@ -428,7 +440,7 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         'title': 'The science of happiness',
         'description': 'What research tells us about joy and well-being',
-        'category': '😊 Psychology',
+        'category': '🧠 Psychology & Mind',
         'difficulty': 'Beginner',
         'duration': '11 min',
         'gradient': [WismeColors.success, WismeColors.primaryBlue],
@@ -436,7 +448,7 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         'title': 'How music affects your brain',
         'description': 'The neuroscience behind melodies and emotions',
-        'category': '🎵 Neuroscience',
+        'category': '🧠 Psychology & Mind',
         'difficulty': 'Intermediate',
         'duration': '9 min',
         'gradient': [WismeColors.primaryBlue, WismeColors.kaiPrimary],
@@ -642,6 +654,15 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void _navigateToSearchResults(String query) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchResultsScreen(query: query),
+      ),
     );
   }
 }

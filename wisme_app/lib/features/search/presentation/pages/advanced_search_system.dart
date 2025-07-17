@@ -49,19 +49,25 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
   // Search results
   List<Map<String, dynamic>> _searchResults = [];
   List<Map<String, dynamic>> _trendingTopics = [];
-  List<String> _searchSuggestions = [];
   List<String> _recentSearches = [];
   
   // Available categories
   final List<Map<String, dynamic>> _categories = [
-    {'name': 'Technology', 'icon': Icons.computer, 'color': WismeColors.primaryBlue},
-    {'name': 'Science', 'icon': Icons.science, 'color': WismeColors.kaiPrimary},
-    {'name': 'Business', 'icon': Icons.business, 'color': WismeColors.veePrimary},
-    {'name': 'Arts & Culture', 'icon': Icons.palette, 'color': WismeColors.wisdomPurple},
-    {'name': 'Health & Wellness', 'icon': Icons.favorite, 'color': WismeColors.success},
-    {'name': 'Personal Development', 'icon': Icons.psychology, 'color': WismeColors.info},
-    {'name': 'Languages', 'icon': Icons.translate, 'color': WismeColors.warning},
-    {'name': 'History', 'icon': Icons.history_edu, 'color': WismeColors.error},
+    {'name': 'Technology & AI', 'icon': Icons.computer, 'color': WismeColors.primaryBlue},
+    {'name': 'Business & Finance', 'icon': Icons.business, 'color': WismeColors.veePrimary},
+    {'name': 'Psychology & Mind', 'icon': Icons.psychology, 'color': WismeColors.kaiPrimary},
+    {'name': 'Science & Nature', 'icon': Icons.science, 'color': WismeColors.success},
+    {'name': 'Creativity & Design', 'icon': Icons.palette, 'color': WismeColors.wisdomPurple},
+    {'name': 'Personal Development', 'icon': Icons.self_improvement, 'color': WismeColors.info},
+    {'name': 'History & Culture', 'icon': Icons.history_edu, 'color': WismeColors.warning},
+    {'name': 'Skills & Tools', 'icon': Icons.build, 'color': WismeColors.error},
+    {'name': 'Career & Strategy', 'icon': Icons.work, 'color': WismeColors.primaryBlue},
+    {'name': 'Law & Governance', 'icon': Icons.gavel, 'color': WismeColors.kaiPrimary},
+    {'name': 'Geopolitics & Global Affairs', 'icon': Icons.public, 'color': WismeColors.veePrimary},
+    {'name': 'Environment & Sustainability', 'icon': Icons.eco, 'color': WismeColors.success},
+    {'name': 'Mathematics & Logic', 'icon': Icons.calculate, 'color': WismeColors.wisdomPurple},
+    {'name': 'Gaming & Interactive Media', 'icon': Icons.games, 'color': WismeColors.info},
+    {'name': 'Society & Ethics', 'icon': Icons.group, 'color': WismeColors.warning},
   ];
 
   @override
@@ -107,7 +113,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
       _trendingTopics = [
         {
           'title': 'AI & Machine Learning Fundamentals',
-          'category': 'Technology',
+          'category': '💻 Technology & AI',
           'popularity': 95,
           'difficulty': 'Intermediate',
           'duration': '6 hours',
@@ -115,7 +121,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
         },
         {
           'title': 'Digital Marketing Strategy',
-          'category': 'Business',
+          'category': '💼 Business & Finance',
           'popularity': 88,
           'difficulty': 'Beginner',
           'duration': '4 hours',
@@ -123,7 +129,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
         },
         {
           'title': 'Sustainable Living & Climate Action',
-          'category': 'Science',
+          'category': '🌿 Environment & Sustainability',
           'popularity': 82,
           'difficulty': 'Beginner',
           'duration': '3 hours',
@@ -131,7 +137,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
         },
         {
           'title': 'Creative Writing & Storytelling',
-          'category': 'Arts & Culture',
+          'category': '🎨 Creativity & Design',
           'popularity': 76,
           'difficulty': 'Intermediate',
           'duration': '5 hours',
@@ -959,7 +965,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
       ..._trendingTopics,
       {
         'title': 'JavaScript Fundamentals for Beginners',
-        'category': 'Technology',
+        'category': '💻 Technology & AI',
         'popularity': 92,
         'difficulty': 'Beginner',
         'duration': '4 hours',
@@ -967,7 +973,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
       },
       {
         'title': 'Personal Finance & Investment Basics',
-        'category': 'Business',
+        'category': '💼 Business & Finance',
         'popularity': 85,
         'difficulty': 'Beginner',
         'duration': '3 hours',
@@ -975,7 +981,7 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
       },
       {
         'title': 'Mindfulness & Stress Management',
-        'category': 'Health & Wellness',
+        'category': '🧠 Psychology & Mind',
         'popularity': 79,
         'difficulty': 'Beginner',
         'duration': '2 hours',

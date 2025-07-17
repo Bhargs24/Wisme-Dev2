@@ -31,7 +31,7 @@ class _CoachManagementSystemState extends State<CoachManagementSystem>
   
   int _currentPage = 0;
   Map<String, dynamic> _selectedCoach = {};
-  Map<String, dynamic> _coachCustomization = {};
+  final Map<String, dynamic> _coachCustomization = {};
   
   final PageController _pageController = PageController();
   
@@ -274,7 +274,7 @@ class _CoachManagementSystemState extends State<CoachManagementSystem>
           // Filter coaches based on topic category if available
           ..._getRecommendedCoaches().map((coach) => 
             _buildCoachCard(coach, isRecommended: true)
-          ).toList(),
+          ),
           
           if (_getRecommendedCoaches().length < _availableCoaches.length) ...[
             const SizedBox(height: 16),
@@ -289,7 +289,7 @@ class _CoachManagementSystemState extends State<CoachManagementSystem>
             const SizedBox(height: 12),
             ..._getOtherCoaches().map((coach) => 
               _buildCoachCard(coach, isRecommended: false)
-            ).toList(),
+            ),
           ],
           
           const SizedBox(height: 24),
@@ -927,7 +927,7 @@ class _CoachManagementSystemState extends State<CoachManagementSystem>
               ),
             ],
           ),
-        )).toList(),
+        )),
       ],
     );
   }
@@ -940,7 +940,7 @@ class _CoachManagementSystemState extends State<CoachManagementSystem>
         'personality': _coachCustomization['personality_traits']?.join(' & ') ?? 'Personalized',
         'avatar': '🤖',
         'color': WismeColors.wisdomPurple,
-        'description': 'Your personalized AI coach designed specifically for your learning style',
+        'description': 'Your personalized AI coach designed specifically for your goals and interests',
         'teachingStyle': _coachCustomization['teaching_style']?.join(', ') ?? 'Adaptive',
         'tone': _coachCustomization['communication_tone'] ?? 'Friendly',
         'specializations': _coachCustomization['specialization_focus'] ?? 'General',

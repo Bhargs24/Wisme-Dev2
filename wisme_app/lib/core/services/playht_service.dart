@@ -1,5 +1,6 @@
 /// PlayHT TTS Service with Audio Compression
 /// Handles text-to-speech generation and audio optimization
+library;
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;

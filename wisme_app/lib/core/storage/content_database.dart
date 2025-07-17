@@ -79,6 +79,11 @@ class InMemoryContentDatabase implements ContentDatabase {
   Future<UserLearningProfile> getUserProfile(String userId) async {
     return _userProfiles[userId] ?? UserLearningProfile(
       userId: userId,
+      name: 'User',
+      age: 18,
+      isMinor: false,
+      isTeenager: false,
+      contentFilterLevel: 'adult',
       favoriteCategories: [], // Use correct property name
       createdAt: DateTime.now(),
       lastUpdated: DateTime.now(),
@@ -142,7 +147,7 @@ class InMemoryContentDatabase implements ContentDatabase {
         id: 'ep1',
         title: 'Introduction to Flutter',
         content: 'Learn the basics of Flutter development...',
-        category: '💻 Programming',
+        category: '💻 Technology & AI',
         knowledgeLevel: '🔹 Core Concepts',
         coachPersonality: 'Kai', // Required parameter
         hashtags: ['flutter', 'mobile', 'development'],
@@ -153,8 +158,8 @@ class InMemoryContentDatabase implements ContentDatabase {
         id: 'ep2',
         title: 'Advanced Dart Features',
         content: 'Explore advanced Dart programming concepts...',
-        category: '💻 Programming',
-        knowledgeLevel: '🚀 Advanced',
+        category: '💻 Technology & AI',
+        knowledgeLevel: '� Tools & Trends',
         coachPersonality: 'Kai', // Required parameter
         hashtags: ['dart', 'programming', 'advanced'],
         durationMinutes: 25,

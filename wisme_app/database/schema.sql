@@ -18,7 +18,6 @@ CREATE TABLE user_profiles (
     learning_streak INTEGER DEFAULT 0,
     total_episodes_completed INTEGER DEFAULT 0,
     preferred_coach TEXT DEFAULT 'Kai',
-    learning_style TEXT DEFAULT 'Balanced',
     daily_goal_minutes INTEGER DEFAULT 30,
     
     -- Subscription & Billing

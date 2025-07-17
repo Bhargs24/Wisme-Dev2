@@ -3,7 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/components/modern_card.dart';
 
 /// Journey Generation System - Creates personalized learning journeys
-/// Based on user topic, learning style, coach, and goals
+/// Based on user topic, coach, and goals
 class JourneyGenerationSystem extends StatefulWidget {
   final Map<String, dynamic> learningChoices;
   final Function(Map<String, dynamic>) onJourneyGenerated;
@@ -92,37 +92,35 @@ class _JourneyGenerationSystemState extends State<JourneyGenerationSystem>
   Future<Map<String, dynamic>> _generateJourney() async {
     final choices = widget.learningChoices;
     final topic = choices['topic'] as String;
-    final learningStyle = choices['learningStyle'] as String;
     final coach = choices['coach'] as String;
     final goal = choices['goal'] as String;
     
     // Generate episode titles and descriptions based on learning choices
-    final episodes = _generateEpisodes(topic, learningStyle, goal);
+    final episodes = _generateEpisodes(topic, goal);
     
     return {
       'id': DateTime.now().millisecondsSinceEpoch.toString(),
       'title': _generateJourneyTitle(topic, goal),
-      'description': _generateJourneyDescription(topic, learningStyle, goal),
+      'description': _generateJourneyDescription(topic, goal),
       'topic': topic,
       'category': choices['category'],
-      'learningStyle': learningStyle,
       'coach': coach,
       'customCoachName': choices['customCoachName'],
       'goal': goal,
       'episodes': episodes,
       'estimatedDuration': episodes.length * 12, // 12 minutes per episode
       'totalEpisodes': episodes.length,
-      'difficulty': _getDifficultyLevel(topic, learningStyle),
-      'tags': _generateTags(topic, learningStyle),
+      'difficulty': _getDifficultyLevel(topic),
+      'tags': _generateTags(topic),
       'createdAt': DateTime.now().toIso8601String(),
       'status': 'ready',
     };
   }
 
-  List<Map<String, dynamic>> _generateEpisodes(String topic, String learningStyle, String goal) {
+  List<Map<String, dynamic>> _generateEpisodes(String topic, String goal) {
     final episodes = <Map<String, dynamic>>[];
     
-    // Episode structure based on learning style and goal
+    // Episode structure based on goal
     if (goal == 'Explore') {
       // 5 episodes for exploration
       episodes.addAll([
@@ -202,27 +200,23 @@ class _JourneyGenerationSystemState extends State<JourneyGenerationSystem>
     }
   }
 
-  String _generateJourneyDescription(String topic, String learningStyle, String goal) {
-    final styleText = learningStyle.toLowerCase();
+  String _generateJourneyDescription(String topic, String goal) {
     final goalText = goal.toLowerCase();
     
-    return 'A comprehensive learning journey focused on $styleText approach to help you $goalText $topic effectively. '
+    return 'A comprehensive podcast-style learning journey to help you $goalText $topic effectively. '
            'Each episode is carefully crafted to build upon previous knowledge and provide practical insights.';
   }
 
-  String _getDifficultyLevel(String topic, String learningStyle) {
-    if (learningStyle.contains('Advanced') || learningStyle.contains('Expert')) {
-      return 'Advanced';
-    } else if (learningStyle.contains('Intermediate') || learningStyle.contains('Case Studies')) {
-      return 'Intermediate';
-    }
-    return 'Beginner';
+  String _getDifficultyLevel(String topic) {
+    // Default to intermediate for podcast-style learning
+    return 'Intermediate';
   }
 
-  List<String> _generateTags(String topic, String learningStyle) {
+  List<String> _generateTags(String topic) {
     final tags = <String>[
       topic.toLowerCase(),
-      learningStyle.toLowerCase().replaceAll(' ', '_'),
+      'podcast',
+      'audio_learning',
     ];
     
     // Add topic-specific tags
@@ -567,7 +561,7 @@ class _JourneyGenerationSystemState extends State<JourneyGenerationSystem>
                 ),
               ),
             );
-          }).toList(),
+          }),
 
           const SizedBox(height: 32),
 

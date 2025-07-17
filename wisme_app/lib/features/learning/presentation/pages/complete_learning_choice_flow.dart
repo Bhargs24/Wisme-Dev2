@@ -3,7 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/components/modern_card.dart';
 
 /// Complete Learning Choice Flow - Post Topic Selection
-/// Handles learning style, coach selection, and goal setting
+/// Handles coach selection and goal setting
 class CompleteLearningChoiceFlow extends StatefulWidget {
   final String selectedTopic;
   final String topicCategory;
@@ -24,80 +24,9 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
   final PageController _pageController = PageController();
   
   int _currentPage = 0;
-  String? _selectedLearningStyle;
   String? _selectedCoach;
   String? _selectedGoal;
   String? _customCoachName;
-  
-  // Learning style options based on topic category
-  Map<String, List<Map<String, String>>> get _learningStylesByCategory => {
-    'Technology & AI': [
-      {
-        'title': 'Core Concepts',
-        'description': 'Fundamental principles and theory',
-        'icon': '🧠',
-      },
-      {
-        'title': 'Case Studies',
-        'description': 'Real-world applications and examples',
-        'icon': '📊',
-      },
-      {
-        'title': 'Tools & Trends',
-        'description': 'Latest tools and industry trends',
-        'icon': '⚡',
-      },
-      {
-        'title': 'Mixed Approach',
-        'description': 'Balanced mix of theory and practice',
-        'icon': '🎯',
-      },
-    ],
-    'Business & Finance': [
-      {
-        'title': 'Fundamentals',
-        'description': 'Core business principles',
-        'icon': '📚',
-      },
-      {
-        'title': 'Case Studies',
-        'description': 'Successful business examples',
-        'icon': '🏢',
-      },
-      {
-        'title': 'Growth Strategy',
-        'description': 'Scaling and expansion tactics',
-        'icon': '📈',
-      },
-      {
-        'title': 'Balanced Mix',
-        'description': 'Theory with practical application',
-        'icon': '⚖️',
-      },
-    ],
-    'Personal Development': [
-      {
-        'title': 'Philosophy',
-        'description': 'Core principles and mindset',
-        'icon': '🧘',
-      },
-      {
-        'title': 'Self-Development',
-        'description': 'Practical improvement techniques',
-        'icon': '🌱',
-      },
-      {
-        'title': 'Habits & Systems',
-        'description': 'Building lasting change',
-        'icon': '🔄',
-      },
-      {
-        'title': 'Holistic Approach',
-        'description': 'Mind, body, and spirit balance',
-        'icon': '🌟',
-      },
-    ],
-  };
   
   // Coach options with personalities
   final List<Map<String, dynamic>> _coaches = [
@@ -147,7 +76,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
   }
 
   void _nextPage() {
-    if (_currentPage < 2) {
+    if (_currentPage < 1) { // Changed from 2 to 1 (removed learning style page)
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -170,7 +99,6 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
     final choices = {
       'topic': widget.selectedTopic,
       'category': widget.topicCategory,
-      'learningStyle': _selectedLearningStyle,
       'coach': _selectedCoach,
       'customCoachName': _customCoachName,
       'goal': _selectedGoal,
@@ -183,10 +111,8 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
   bool get _canProceed {
     switch (_currentPage) {
       case 0:
-        return _selectedLearningStyle != null;
-      case 1:
         return _selectedCoach != null;
-      case 2:
+      case 1:
         return _selectedGoal != null;
       default:
         return false;
@@ -224,14 +150,14 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
               children: [
                 Expanded(
                   child: LinearProgressIndicator(
-                    value: (_currentPage + 1) / 3,
+                    value: (_currentPage + 1) / 2,
                     backgroundColor: Colors.grey[300],
                     valueColor: const AlwaysStoppedAnimation<Color>(WismeColors.primaryBlue),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Text(
-                  '${_currentPage + 1}/3',
+                  '${_currentPage + 1}/2',
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: WismeColors.primaryBlue,
@@ -251,7 +177,6 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                 });
               },
               children: [
-                _buildLearningStylePage(),
                 _buildCoachSelectionPage(),
                 _buildGoalSelectionPage(),
               ],
@@ -297,111 +222,6 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLearningStylePage() {
-    final styles = _learningStylesByCategory[widget.topicCategory] ?? 
-                   _learningStylesByCategory['Personal Development']!;
-    
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'How would you like to learn?',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: WismeColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Choose the learning approach that fits your style for ${widget.selectedTopic}',
-            style: const TextStyle(
-              fontSize: 16,
-              color: WismeColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 32),
-          
-          ...styles.map((style) {
-            final isSelected = _selectedLearningStyle == style['title'];
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedLearningStyle = style['title'];
-                  });
-                },
-                child: ModernCard(
-                  backgroundColor: isSelected 
-                    ? WismeColors.primaryBlue.withOpacity(0.1)
-                    : Colors.white,
-                  border: isSelected 
-                    ? Border.all(color: WismeColors.primaryBlue, width: 2)
-                    : Border.all(color: Colors.grey[300]!, width: 1),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: isSelected 
-                            ? WismeColors.primaryBlue.withOpacity(0.2)
-                            : Colors.grey[100],
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Center(
-                          child: Text(
-                            style['icon']!,
-                            style: const TextStyle(fontSize: 24),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              style['title']!,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: isSelected 
-                                  ? WismeColors.primaryBlue
-                                  : WismeColors.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              style['description']!,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: WismeColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (isSelected)
-                        const Icon(
-                          Icons.check_circle,
-                          color: WismeColors.primaryBlue,
-                          size: 24,
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
         ],
       ),
     );
@@ -593,7 +413,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                 ),
               ),
             );
-          }).toList(),
+          }),
           
           // Custom coach name input
           if (_selectedCoach != null) ...[
@@ -741,12 +561,12 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                 ),
               ),
             );
-          }).toList(),
+          }),
           
           const SizedBox(height: 32),
           
           // Summary card
-          if (_selectedLearningStyle != null && _selectedCoach != null && _selectedGoal != null)
+          if (_selectedCoach != null && _selectedGoal != null)
             ModernCard(
               backgroundColor: WismeColors.info.withOpacity(0.05),
               child: Column(
@@ -772,7 +592,6 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                   ),
                   const SizedBox(height: 16),
                   _buildSummaryRow('Topic', widget.selectedTopic),
-                  _buildSummaryRow('Learning Style', _selectedLearningStyle!),
                   _buildSummaryRow('Coach', _customCoachName ?? _selectedCoach!),
                   _buildSummaryRow('Goal', _selectedGoal!),
                 ],

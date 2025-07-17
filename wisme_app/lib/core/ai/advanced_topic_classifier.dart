@@ -41,7 +41,7 @@ class AdvancedTopicClassifier {
         knowledgeLevel: analysis['knowledgeLevel'] as String,
         confidence: (analysis['confidence'] as num).toDouble(),
         subtopics: _extractSubtopics(episodes),
-        learningStyleHints: _extractLearningHints(analysis),
+        contentHints: _extractLearningHints(analysis),
         episodePlan: EpisodePlan(
           progressionPath: episodes.map((e) => e['title'] as String).toList(),
           learningObjectives: _extractAllObjectives(episodes),
@@ -74,7 +74,7 @@ class AdvancedTopicClassifier {
     }).toList();
   }
 
-  /// Extract learning style hints from analysis
+  /// Extract content presentation hints from analysis
   static List<String> _extractLearningHints(Map<String, dynamic> analysis) {
     final coach = analysis['recommendedCoach'] as String;
     final knowledgeLevel = analysis['knowledgeLevel'] as String;
@@ -188,7 +188,7 @@ class AdvancedTopicClassifier {
           difficultyProgression: 0.8,
         ),
       ],
-      learningStyleHints: coach == 'Kai' 
+      contentHints: coach == 'Kai' 
           ? ['analytical', 'systematic', 'thoughtful'] 
           : ['practical', 'energetic', 'action-oriented'],
       episodePlan: EpisodePlan(

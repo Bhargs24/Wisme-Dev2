@@ -1,4 +1,5 @@
 /// Topic Classification Models for AI-powered learning system
+library;
 
 /// Main topic classification result from AI analysis
 class TopicClassification {
@@ -7,7 +8,7 @@ class TopicClassification {
   final String knowledgeLevel;
   final double confidence;
   final List<SubtopicResult> subtopics;
-  final List<String> learningStyleHints;
+  final List<String> contentHints;
   final EpisodePlan episodePlan;
   final String recommendedCoach;
   final int estimatedDuration;
@@ -21,7 +22,7 @@ class TopicClassification {
     required this.knowledgeLevel,
     required this.confidence,
     required this.subtopics,
-    required this.learningStyleHints,
+    required this.contentHints,
     required this.episodePlan,
     required this.recommendedCoach,
     required this.estimatedDuration,
@@ -39,7 +40,7 @@ class TopicClassification {
       subtopics: (json['subtopics'] as List? ?? [])
           .map((s) => SubtopicResult.fromJson(s))
           .toList(),
-      learningStyleHints: List<String>.from(json['learningStyleHints'] ?? []),
+      contentHints: List<String>.from(json['contentHints'] ?? json['learningStyleHints'] ?? []),
       episodePlan: EpisodePlan.fromJson(json['episodePlan'] ?? {}),
       recommendedCoach: json['recommendedCoach'] ?? 'Kai',
       estimatedDuration: json['estimatedDuration'] ?? 30,
@@ -55,7 +56,7 @@ class TopicClassification {
       'knowledgeLevel': knowledgeLevel,
       'confidence': confidence,
       'subtopics': subtopics.map((s) => s.toJson()).toList(),
-      'learningStyleHints': learningStyleHints,
+      'contentHints': contentHints,
       'episodePlan': episodePlan.toJson(),
       'recommendedCoach': recommendedCoach,
       'estimatedDuration': estimatedDuration,

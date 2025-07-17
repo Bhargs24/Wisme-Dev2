@@ -259,4 +259,35 @@ Each episode should be 8-12 minutes and build naturally on previous episodes.
       return false;
     }
   }
+
+  /// Moderate content using OpenAI's moderation API
+  Future<Map<String, dynamic>> moderateContent(String text) async {
+    if (!isConfigured) {
+      throw Exception('OpenAI API key not configured. Please set OPENAI_API_KEY in your environment.');
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/moderations'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${EnvironmentConfig.openaiApiKey}',
+        },
+        body: json.encode({
+          'input': text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
+      } else {
+        final error = json.decode(response.body);
+        throw Exception('OpenAI Moderation API Error (${response.statusCode}): ${error['error']['message']}');
+      }
+    } catch (e) {
+      print('❌ OpenAI Moderation API Error: $e');
+      rethrow;
+    }
+  }
 }

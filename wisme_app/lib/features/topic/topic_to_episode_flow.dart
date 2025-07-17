@@ -17,7 +17,7 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
   
   // Topic Input Data
   String _inputTopic = '';
-  String _selectedCoach = 'Kai';
+  final String _selectedCoach = 'Kai';
   
   // Generated Episode Data
   Episode? _generatedEpisode;
@@ -372,10 +372,10 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: Text(
-                _generatedEpisode!.content.substring(0, 
+                '${_generatedEpisode!.content.substring(0, 
                   _generatedEpisode!.content.length > 200 
                     ? 200 
-                    : _generatedEpisode!.content.length) + '...',
+                    : _generatedEpisode!.content.length)}...',
                 style: const TextStyle(
                   fontSize: 16,
                   height: 1.5,
@@ -478,8 +478,8 @@ By the end of this episode, you'll have a solid foundation in $_inputTopic and p
 
 Ready? Let's begin your learning journey!
       ''',
-      category: '💻 Technology',
-      knowledgeLevel: 'beginner',
+      category: 'Technology & AI',
+      knowledgeLevel: '🔹 Core Concepts',
       coachPersonality: _selectedCoach,
       hashtags: [_inputTopic.toLowerCase().replaceAll(' ', '_')],
       durationMinutes: 12,

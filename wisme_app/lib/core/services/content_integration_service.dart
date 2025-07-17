@@ -97,7 +97,7 @@ class ContentIntegrationService {
       final basicEpisode = Episode(
         title: 'Learning About: $topic',
         content: basicScript,
-        category: '💻 Programming', // Default category
+        category: 'Technology & AI', // Default category
         knowledgeLevel: '🔹 Core Concepts', // Default level
         coachPersonality: 'Kai', // Default coach
         hashtags: [topic.toLowerCase().replaceAll(' ', '_')],

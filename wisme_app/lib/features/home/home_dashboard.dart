@@ -517,7 +517,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                           MaterialPageRoute(
                             builder: (context) => const LearningJourneyScreen(
                               topic: 'Machine Learning Fundamentals',
-                              category: '💻 Technology',
+                              category: 'Technology & AI',
                             ),
                           ),
                         );
