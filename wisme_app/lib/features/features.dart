@@ -23,6 +23,8 @@ export 'learning/presentation/pages/journey_generation_system.dart';
 // Audio System
 export 'audio/audio_learning_engine.dart';
 export 'audio/audio_player_screen.dart';
+export 'audio/enhanced_audio_player_screen.dart';
+export 'audio/enhanced_audio_learning_engine.dart';
 export 'audio/presentation/pages/enhanced_audio_player_system.dart';
 
 // Library & Search

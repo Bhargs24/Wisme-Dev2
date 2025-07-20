@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../shared/shared.dart';
-import '../audio/audio_player_screen.dart';
+import '../audio/enhanced_audio_player_screen.dart';
 import 'presentation/pages/enhanced_journey_navigator.dart';
 
 /// Learning Journey Screen
@@ -402,11 +402,14 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AudioPlayerScreen(
+        builder: (context) => EnhancedAudioPlayerScreen(
           episodeTitle: episode.title,
           episodeContent: episode.content,
           coachPersonality: episode.coachPersonality,
           duration: Duration(minutes: episode.durationMinutes),
+          episode: episode, // Pass full episode for enhanced features
+          enableTwoSpeakerMode: episode.category.contains('Technology') || 
+                                episode.category.contains('Science'), // Smart detection
         ),
       ),
     ).then((_) {

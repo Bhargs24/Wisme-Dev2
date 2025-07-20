@@ -327,8 +327,8 @@ class WismeTheme {
         modalElevation: 24,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            topLeft: WismeSpacing.radiusXl,
-            topRight: WismeSpacing.radiusXl,
+            topLeft: Radius.circular(WismeSpacing.radiusXl),
+            topRight: Radius.circular(WismeSpacing.radiusXl),
           ),
         ),
         showDragHandle: true,

@@ -1,46 +1,42 @@
+/// Wisme App - Main Entry Point
+/// Flutter application for personalized podcast-style AI learning
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'core/core.dart';
-import 'features/features.dart';
+import 'package:provider/provider.dart';
+
+// Core services and providers
+import 'core/services/audio_service_registry.dart';
+import 'core/services/conversation_engine.dart';
+import 'providers/two_speaker_audio_provider.dart';
+
+// Shared themes and design system
+import 'shared/themes/app_theme.dart';
+
+// Navigation
+import 'core/navigation/main_navigation_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Initialize core audio services
   try {
-    // Initialize Environment Configuration
-    await EnvironmentConfig.initialize();
+    print('Initializing Wisme App...');
     
-    // Print configuration status for debugging
-    if (EnvironmentConfig.debugMode) {
-      EnvironmentConfig.printConfigurationStatus();
-    }
+    // Initialize audio service registry
+    final audioRegistry = AudioServiceRegistry.instance;
+    await audioRegistry.initializeServices();
+    print('Audio services initialized successfully');
     
-    // Initialize Supabase Backend
-    await SupabaseService.initialize();
+    // Initialize conversation engine - just verify it exists
+    ConversationEngine();
+    print('Conversation engine verified');
     
-    // Test OpenAI Integration (if configured)
-    if (EnvironmentConfig.openaiApiKey.isNotEmpty) {
-      print('🤖 Testing OpenAI integration...');
-      try {
-        final isWorking = await OpenAIService().testConnection();
-        print(isWorking ? '✅ OpenAI integration working!' : '⚠️ OpenAI connection issues');
-      } catch (e) {
-        print('⚠️ OpenAI test failed: $e');
-      }
-    } else {
-      print('⚠️ OpenAI API key not configured - using mock data');
-    }
-    
+    runApp(WismeApp());
   } catch (e) {
-    print('❌ Initialization Error: $e');
-    // In production, you might want to show an error screen
+    print('Error during app initialization: $e');
+    print('Starting app in degraded mode...');
+    runApp(WismeApp());
   }
-  
-  runApp(
-    ProviderScope(
-      child: const WismeApp(),
-    ),
-  );
 }
 
 class WismeApp extends StatelessWidget {
@@ -48,13 +44,20 @@ class WismeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wisme - AI-Powered Learning',
-      debugShowCheckedModeBanner: false,
-      home: const WelcomeScreen(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        // Audio system provider
+        ChangeNotifierProvider(
+          create: (context) => TwoSpeakerAudioProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Wisme - AI Learning Platform',
+        theme: WismeTheme.lightTheme,
+        darkTheme: WismeTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        home: const MainNavigationWrapper(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

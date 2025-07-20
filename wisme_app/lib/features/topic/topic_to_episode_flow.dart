@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/models.dart';
-import '../audio/audio_player_screen.dart';
+import '../audio/enhanced_audio_player_screen.dart';
 
 /// Complete Topic to Episode Flow
-/// The core user experience: Topic Input → AI Processing → Episode Generation → Audio Player
+/// The core user experience: Topic Input → AI Processing → Episode Generation → Enhanced Audio Player
 class TopicToEpisodeFlow extends ConsumerStatefulWidget {
   const TopicToEpisodeFlow({super.key});
 
@@ -422,15 +422,17 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
     );
   }
 
-  /// Screen 4: Audio Player
+  /// Screen 4: Enhanced Audio Player with Two-Speaker Support
   Widget _buildAudioPlayerScreen() {
     if (_generatedEpisode == null) return const SizedBox();
     
-    return AudioPlayerScreen(
+    return EnhancedAudioPlayerScreen(
       episodeTitle: _generatedEpisode!.title,
       episodeContent: _generatedEpisode!.content,
       coachPersonality: _generatedEpisode!.coachPersonality,
       duration: Duration(minutes: _generatedEpisode!.durationMinutes),
+      episode: _generatedEpisode, // Pass full episode for enhanced features
+      enableTwoSpeakerMode: true, // Enable new two-speaker system
     );
   }
 
