@@ -27,6 +27,7 @@ import 'shared/components/modern_ui_components.dart';
 
 // Navigation
 import 'core/navigation/main_navigation_wrapper.dart';
+import 'features/features.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -103,7 +104,8 @@ class WismeApp extends StatelessWidget {
         theme: WismeTheme.lightTheme,
         darkTheme: WismeTheme.darkTheme,
         themeMode: ThemeMode.system,
-        home: const MainNavigationWrapper(),
+        // home: const MainNavigationWrapper(),
+        home: const DemoAppFlow(), // Set demo flow as entry point for now
         debugShowCheckedModeBanner: false,
         
         // Global app configuration

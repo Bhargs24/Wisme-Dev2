@@ -36,3 +36,4 @@ export 'analytics/presentation/pages/learning_analytics_dashboard.dart';
 
 // Profile
 export 'profile/profile_screen.dart';
+export '../demo_app/demo_app_flow.dart';
