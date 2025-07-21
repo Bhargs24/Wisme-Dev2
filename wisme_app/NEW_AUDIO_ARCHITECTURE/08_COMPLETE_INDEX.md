@@ -11,8 +11,6 @@ NEW_AUDIO_ARCHITECTURE/
 ├── 01_TWO_SPEAKER_SYSTEM_DESIGN.md ✅  
 ├── 02_SMART_FRAGMENT_CACHING.md ✅
 ├── 03_INTEREST_DRIVEN_PERSONALIZATION.md ✅
-├── 04_ELEVENLABS_TO_XTTS_MIGRATION.md ✅
-├── 05_XTTS_MODEL_TRAINING_GUIDE.md ✅
 ├── 06_IMPLEMENTATION_PHASES_AND_TIMELINE.md ✅
 ├── 07_UPDATED_CODEX_MASTER_PLAN.md ✅
 └── 08_COMPLETE_INDEX.md ✅ (This File)
@@ -29,9 +27,6 @@ Master Plan (00)
     │   ├── Two-Speaker System (01)
     │   ├── Fragment Caching (02)  
     │   └── Personalization (03)
-    ├── Voice Technology (04-05)
-    │   ├── XTTS Migration Plan (04)
-    │   └── Model Training Guide (05)
     └── Implementation (06-07)
         ├── Phases & Timeline (06)
         └── Codex Integration (07)
@@ -41,8 +36,7 @@ Master Plan (00)
 
 **👨‍💼 Executive/CTO Level:**
 1. **00_OVERVIEW_AND_MASTER_PLAN.md** - Strategic overview and ROI
-2. **04_ELEVENLABS_TO_XTTS_MIGRATION.md** - Cost reduction strategy  
-3. **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** - Rollout plan and timeline
+2. **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** - Rollout plan and timeline
 
 **👨‍💻 Development Team Lead:**
 1. **07_UPDATED_CODEX_MASTER_PLAN.md** - Integration with existing system
@@ -51,9 +45,8 @@ Master Plan (00)
 4. **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** - Development phases
 
 **🔬 AI/ML Engineering Team:**
-1. **04_ELEVENLABS_TO_XTTS_MIGRATION.md** - Migration technical details
-2. **05_XTTS_MODEL_TRAINING_GUIDE.md** - Voice model training
-3. **03_INTEREST_DRIVEN_PERSONALIZATION.md** - ML personalization systems
+1. **01_TWO_SPEAKER_SYSTEM_DESIGN.md** - Voice system architecture
+2. **03_INTEREST_DRIVEN_PERSONALIZATION.md** - ML personalization systems
 
 **🎨 Product/UX Team:**
 1. **01_TWO_SPEAKER_SYSTEM_DESIGN.md** - User experience changes
@@ -67,8 +60,8 @@ Master Plan (00)
 ### **00_OVERVIEW_AND_MASTER_PLAN.md**
 **Purpose**: Executive summary and strategic overview of the entire audio architecture transformation
 **Key Sections**:
-- Business case and ROI projections ($75K → $8K monthly cost reduction)
-- 8-phase implementation timeline (20 weeks)
+- Business case and ROI projections through smart caching
+- 6-phase implementation timeline (17 weeks)
 - Technology stack overview and integration points  
 - Success metrics and validation criteria
 - Risk assessment and mitigation strategies
@@ -124,47 +117,17 @@ Master Plan (00)
 
 ---
 
-### **04_ELEVENLABS_TO_XTTS_MIGRATION.md**
-**Purpose**: Complete migration strategy for 99% cost reduction in TTS
-**Key Sections**:
-- Current cost analysis and XTTS ROI projections
-- Technical migration architecture and hybrid deployment
-- Voice quality validation and performance benchmarks
-- Gradual rollout strategy with fallback mechanisms
-- Cost monitoring and financial impact tracking
-
-**Target Audience**: AI engineers, infrastructure team, financial stakeholders
-**Dependencies**: Voice model training (05) and deployment infrastructure
-**Implementation Impact**: Massive cost reduction enabling unlimited scalability
-
----
-
-### **05_XTTS_MODEL_TRAINING_GUIDE.md**
-**Purpose**: End-to-end guide for training custom voice models
-**Key Sections**:
-- Professional voice recording requirements and data preparation
-- XTTS training pipeline with optimization techniques
-- Quality assurance and voice consistency validation
-- Production deployment and inference optimization
-- Monitoring and maintenance procedures for voice models
-
-**Target Audience**: AI/ML engineers, audio engineers, DevOps team
-**Dependencies**: Training infrastructure and voice recording resources
-**Implementation Impact**: Custom high-quality voices enabling XTTS migration
-
----
-
 ### **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md**
-**Purpose**: Systematic 20-week rollout plan with risk mitigation
+**Purpose**: Systematic 17-week rollout plan with risk mitigation
 **Key Sections**:
-- 8 detailed implementation phases with week-by-week execution
+- 6 detailed implementation phases with week-by-week execution
 - Success criteria and validation gates for each phase
 - Resource allocation and team coordination requirements
 - Rollback procedures and contingency planning
 - Performance monitoring and optimization strategies
 
 **Target Audience**: Project managers, engineering leads, QA teams
-**Dependencies**: All other technical documents (01-05)
+**Dependencies**: All other technical documents (01-03)
 **Implementation Impact**: Structured deployment minimizing risks and ensuring quality
 
 ---
@@ -225,9 +188,9 @@ Master Plan (00)
 
 ### **Scenario 2: AI Team Implementing XTTS Migration**
 **Reading Order**:
-1. **04_ELEVENLABS_TO_XTTS_MIGRATION.md** - Migration strategy and requirements
-2. **05_XTTS_MODEL_TRAINING_GUIDE.md** - Technical implementation details  
-3. **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** - Phases 5-6 specific to XTTS
+1. **01_TWO_SPEAKER_SYSTEM_DESIGN.md** - Core system architecture
+2. **02_SMART_FRAGMENT_CACHING.md** - Caching system implementation
+3. **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** - Development phases
 4. **00_OVERVIEW_AND_MASTER_PLAN.md** - Success metrics and validation
 
 ### **Scenario 3: Product Manager Planning Feature Rollout**
@@ -240,9 +203,9 @@ Master Plan (00)
 ### **Scenario 4: Infrastructure Team Capacity Planning**
 **Reading Order**:
 1. **02_SMART_FRAGMENT_CACHING.md** - Caching infrastructure requirements
-2. **04_ELEVENLABS_TO_XTTS_MIGRATION.md** - XTTS infrastructure needs
+2. **01_TWO_SPEAKER_SYSTEM_DESIGN.md** - Audio processing infrastructure
 3. **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** - Infrastructure deployment timeline
-4. **05_XTTS_MODEL_TRAINING_GUIDE.md** - Training infrastructure specifications
+4. **03_INTEREST_DRIVEN_PERSONALIZATION.md** - ML infrastructure specifications
 
 ---
 
@@ -260,13 +223,7 @@ Master Plan (00)
 - [ ] Personalization system developed per **03_INTEREST_DRIVEN_PERSONALIZATION.md**
 - [ ] Quality gates from all three documents operational
 
-### **Phase 3: Voice Technology Integration**
-- [ ] XTTS migration plan from **04_ELEVENLABS_TO_XTTS_MIGRATION.md** initiated
-- [ ] Voice models trained per **05_XTTS_MODEL_TRAINING_GUIDE.md**
-- [ ] Hybrid TTS architecture deployed and tested
-- [ ] Cost reduction targets validated
-
-### **Phase 4: Production Rollout**
+### **Phase 3: Production Rollout**
 - [ ] Implementation phases from **06_IMPLEMENTATION_PHASES_AND_TIMELINE.md** executed
 - [ ] System monitoring and optimization procedures active
 - [ ] User acceptance testing completed successfully  
@@ -280,11 +237,10 @@ Master Plan (00)
 - [ ] Fragment caching achieves 60-70% cost reduction
 - [ ] Two-speaker system increases user engagement by 25%+
 - [ ] Personalization system achieves 80%+ relevance rating
-- [ ] XTTS migration reduces TTS costs by 95%+
 - [ ] All systems pass performance and quality benchmarks
 
 ### **Business Success Indicators:**
-- [ ] Monthly TTS costs reduced from $75K to <$8K
+- [ ] Monthly TTS costs reduced through intelligent caching
 - [ ] User satisfaction scores maintain or improve
 - [ ] System supports 10x user growth without proportional cost increase
 - [ ] Implementation completed within 20-week timeline

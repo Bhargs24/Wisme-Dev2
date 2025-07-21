@@ -9,7 +9,7 @@ We are revolutionizing Wisme's audio learning system with:
 - **Two-speaker conversational format** (host + expert dialogue)
 - **Smart fragment caching** (60-70% cost reduction)
 - **Interest-driven personalization** (context-aware content)
-- **Migration to custom XTTS model** (99% cost reduction long-term)
+- **Migration to custom StyleTTS 2 models** (85-99% cost reduction long-term)
 
 ---
 
@@ -21,8 +21,6 @@ NEW_AUDIO_ARCHITECTURE/
 ├── 01_TWO_SPEAKER_SYSTEM_DESIGN.md ✅
 ├── 02_SMART_FRAGMENT_CACHING.md ✅
 ├── 03_INTEREST_DRIVEN_PERSONALIZATION.md ✅
-├── 04_ELEVENLABS_TO_XTTS_MIGRATION.md ✅
-├── 05_XTTS_MODEL_TRAINING_GUIDE.md ✅
 ├── 06_IMPLEMENTATION_PHASES_AND_TIMELINE.md ✅
 ├── 07_UPDATED_CODEX_MASTER_PLAN.md ✅
 └── 08_COMPLETE_INDEX.md ✅
@@ -33,7 +31,7 @@ NEW_AUDIO_ARCHITECTURE/
 ## 🎯 **CORE OBJECTIVES**
 
 ### **Primary Goals:**
-1. **Cost Optimization**: 60% immediate savings via caching, 99% savings post-XTTS
+1. **Cost Optimization**: 60% immediate savings via caching, 85-99% savings post-StyleTTS 2
 2. **User Experience**: Premium conversational learning format
 3. **Personalization**: Interest-aware content generation
 4. **Scalability**: System designed for 1M+ users
@@ -61,13 +59,13 @@ NEW_AUDIO_ARCHITECTURE/
 - [ ] Cache optimization algorithms
 - [ ] Quality assurance pipeline
 
-### **Phase 3: XTTS Preparation (Months 4-5)**
+### **Phase 3: StyleTTS 2 Preparation (Months 19-24)**
 - [ ] Voice data collection (20+ hours per speaker)
-- [ ] XTTS training infrastructure setup
+- [ ] StyleTTS 2 training infrastructure setup
 - [ ] Parallel system testing
 - [ ] Migration planning
 
-### **Phase 4: XTTS Migration (Months 6-8)**
+### **Phase 4: StyleTTS 2 Migration (Months 25-36)**
 - [ ] Custom model training
 - [ ] Gradual rollout (10% → 50% → 100%)
 - [ ] Performance optimization
@@ -148,7 +146,7 @@ NEW_AUDIO_ARCHITECTURE/
 - User choice preserved throughout migration
 
 ### **Risk Mitigation:**
-- Fallback to ElevenLabs if XTTS issues
+- Fallback to ElevenLabs if StyleTTS 2 issues
 - Quality rollback mechanisms
 - User preference reset options
 - Comprehensive monitoring and alerting
@@ -161,7 +159,7 @@ NEW_AUDIO_ARCHITECTURE/
 1. **Industry First**: Two-speaker AI-generated educational podcasts
 2. **Instant Delivery**: Cached content = zero loading time
 3. **Deep Personalization**: Interest-aware learning paths
-4. **Cost Leadership**: 95% cost reduction enables premium features at scale
+4. **Cost Leadership**: 85-99% cost reduction enables premium features at scale
 
 ### **Market Positioning:**
 - Premium learning experience at accessible pricing
@@ -177,7 +175,7 @@ NEW_AUDIO_ARCHITECTURE/
 2. **Cache Hit Optimization**: Balance reuse vs freshness
 3. **User Acceptance**: Two-speaker format adoption
 4. **Technical Execution**: Complex system integration
-5. **XTTS Training Success**: Quality matching ElevenLabs
+5. **StyleTTS 2 Training Success**: Quality matching ElevenLabs
 
 ---
 
