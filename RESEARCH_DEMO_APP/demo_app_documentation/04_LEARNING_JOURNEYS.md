@@ -3,9 +3,9 @@
 ## 🗺️ **Journey Structure Overview**
 
 ### **Total Content Plan**
-- **7 Strategic Journeys**
-- **44 Total Episodes** (5-8 episodes per journey)
-- **~400 Minutes** total listening time
+- **4 Strategic Journeys**
+- **16 Total Episodes** (5-8 episodes per journey)
+- **~160 Minutes** total listening time
 - **Conversational-Only Format** - no traditional method content
 
 ---
@@ -160,71 +160,7 @@
 
 ---
 
-## 🌐 **JOURNEY 4: COMPUTER NETWORKS**
-**Target**: Network engineers and full-stack developers
-**Duration**: 8 episodes × 9 minutes = 72 minutes
-
-### **Episode Breakdown:**
-
-**Episode 1: "Network Fundamentals"** (9 minutes)
-- **Analogy**: Postal service delivery system
-- **OSI Model**: The 7-layer communication stack
-- **IP Addresses**: Digital postal codes
-- **Real Example**: How your Netflix stream reaches you
-- **Troubleshooting**: ping, traceroute, and DNS lookup
-
-**Episode 2: "TCP vs UDP Showdown"** (9 minutes)
-- **Analogy**: Registered mail vs regular mail
-- **Reliability vs Speed**: The fundamental trade-off
-- **Real Applications**: HTTP uses TCP, gaming uses UDP
-- **Connection Management**: Three-way handshake story
-- **Performance Impact**: When to choose each protocol
-
-**Episode 3: "HTTP Protocol Deep Dive"** (8 minutes)
-- **Analogy**: Restaurant ordering system
-- **Request/Response**: The conversation flow
-- **Status Codes**: What 404, 500, 200 really mean
-- **Real Example**: How login systems work
-- **HTTP/2 vs HTTP/1.1**: Modern web performance
-
-**Episode 4: "DNS Resolution Magic"** (9 minutes)
-- **Analogy**: Phone book for the internet
-- **Resolution Process**: From domain to IP address
-- **Caching Layers**: Why some sites load instantly
-- **Real Scenario**: What happens when you type google.com
-- **Security**: DNS hijacking and protection
-
-**Episode 5: "Network Security Essentials"** (10 minutes)
-- **Analogy**: Secure communication in wartime
-- **Encryption in Transit**: HTTPS and TLS
-- **Firewalls**: The digital gatekeepers
-- **Real Example**: How online banking stays secure
-- **VPN Technology**: Secure tunnels through the internet
-
-**Episode 6: "Load Balancing & CDNs"** (9 minutes)
-- **Analogy**: Traffic distribution at toll booths
-- **Load Balancer Types**: Round-robin, weighted, least-connections
-- **CDN Magic**: Content closer to users
-- **Real Example**: How YouTube serves billions of videos
-- **Scaling Strategies**: Handling viral content spikes
-
-**Episode 7: "Wireless Networks"** (9 minutes)
-- **Analogy**: Radio broadcast vs point-to-point
-- **WiFi Standards**: Evolution from 802.11a to WiFi 6
-- **Mobile Networks**: 3G, 4G, 5G progression
-- **Real Scenario**: Why WiFi is slow in coffee shops
-- **IoT Networking**: Connecting smart home devices
-
-**Episode 8: "Network Troubleshooting"** (9 minutes)
-- **Analogy**: Detective solving connectivity mysteries
-- **Diagnostic Tools**: Wireshark, netstat, nslookup
-- **Common Issues**: Latency, packet loss, congestion
-- **Real Example**: Debugging video call quality issues
-- **Best Practices**: Systematic network problem solving
-
----
-
-## 💰 **JOURNEY 5: PERSONAL FINANCE**
+## 💰 **JOURNEY 4: PERSONAL FINANCE**
 **Target**: Young professionals and students
 **Duration**: 6 episodes × 9 minutes = 54 minutes
 
@@ -274,103 +210,17 @@
 
 ---
 
-## 📈 **JOURNEY 6: MARKETING MASTERY**
-**Target**: Entrepreneurs and marketing professionals
-**Duration**: 7 episodes × 9 minutes = 63 minutes
-
-### **Episode Breakdown:**
-
-**Episode 1: "Consumer Psychology"** (9 minutes)
-- **Story**: Why people buy emotional, justify logical
-- **Maslow's Hierarchy**: Needs-based marketing
-- **Social Proof**: Herd mentality in purchasing
-- **Real Example**: Apple's psychological pricing
-- **Scarcity Principle**: Limited time offers effectiveness
-
-**Episode 2: "Brand Building Secrets"** (9 minutes)
-- **Analogy**: Brand as personality vs product as feature
-- **Brand Identity**: Visual and emotional elements
-- **Storytelling**: Nike's "Just Do It" case study
-- **Real Example**: How Amul built Indian brand love
-- **Consistency**: Why McDonald's looks same everywhere
-
-**Episode 3: "Digital Marketing Fundamentals"** (10 minutes)
-- **Evolution**: Traditional to digital transformation
-- **Channel Overview**: SEO, SEM, social, email
-- **Customer Journey**: Awareness to advocacy
-- **Real Scenario**: E-commerce customer acquisition
-- **Metrics That Matter**: CAC, LTV, ROAS explained
-
-**Episode 4: "Social Media Strategy"** (9 minutes)
-- **Platform Psychology**: LinkedIn vs Instagram vs TikTok
-- **Content Types**: Educational, entertaining, inspiring
-- **Engagement Algorithms**: How feeds decide what to show
-- **Real Example**: Zomato's Twitter marketing genius
-- **Influencer Marketing**: Choosing right partnerships
-
-**Episode 5: "Content Marketing Magic"** (9 minutes)
-- **Analogy**: Teaching vs selling approach
-- **Value-First Strategy**: Helping before asking
-- **Content Formats**: Blog, video, podcast, infographic
-- **Real Example**: HubSpot's educational empire
-- **SEO Integration**: Content that ranks and converts
-
-**Episode 6: "Email Marketing Mastery"** (8 minutes)
-- **Personal Communication**: Inbox intimacy advantage
-- **List Building**: Ethical subscriber acquisition
-- **Automation Sequences**: Welcome, nurture, re-engagement
-- **Real Example**: Newsletter that built $10M business
-- **Analytics**: Open rates, click rates, conversion optimization
-
-**Episode 7: "Marketing Analytics"** (9 minutes)
-- **Story**: Data-driven vs gut-feeling marketing
-- **Key Metrics**: Awareness, engagement, conversion, retention
-- **Attribution Models**: First-click, last-click, multi-touch
-- **Real Dashboard**: Google Analytics walkthrough
-- **Optimization**: A/B testing for continuous improvement
+## 🎮 Gamified Milestones
+- Each journey completion unlocks a unique badge (e.g., 'DSA Master', 'Finance Guru').
+- Bonus XP for completing all episodes in a journey.
+- Streak badge for completing journeys on consecutive days.
 
 ---
 
-## ⚡ **JOURNEY 7: PRODUCTIVITY MASTERY**
-**Target**: Professionals and students wanting better efficiency
-**Duration**: 5 episodes × 9 minutes = 45 minutes
-
-### **Episode Breakdown:**
-
-**Episode 1: "Time Management Revolution"** (9 minutes)
-- **Reality Check**: Where your 24 hours actually go
-- **Eisenhower Matrix**: Urgent vs important decisions
-- **Time Blocking**: Calendar as productivity system
-- **Real Example**: CEO's daily schedule breakdown
-- **Energy Management**: Working with natural rhythms
-
-**Episode 2: "Focus & Deep Work"** (9 minutes)
-- **Attention Economy**: Why focus is the new currency
-- **Deep Work Principles**: Cal Newport's approach
-- **Distraction Elimination**: Phone, notifications, interruptions
-- **Real Scenario**: 4-hour focused coding session
-- **Flow State**: Accessing peak performance zone
-
-**Episode 3: "Goal Setting & Achievement"** (10 minutes)
-- **Story**: Olympic athlete's goal structure
-- **SMART Goals**: Specific, measurable, achievable framework
-- **Systems vs Goals**: Building habits for success
-- **Real Example**: Learning programming in 6 months
-- **Accountability**: Social commitment power
-
-**Episode 4: "Automation & Tools"** (8 minutes)
-- **Philosophy**: Automate repetitive, focus on creative
-- **Digital Tools**: Zapier, IFTTT, keyboard shortcuts
-- **Workflow Optimization**: Email, file management, scheduling
-- **Real Example**: Saving 2 hours daily through automation
-- **Tool Selection**: Choosing right productivity apps
-
-**Episode 5: "Stress Management & Burnout Prevention"** (9 minutes)
-- **Recognition**: Early burnout warning signs
-- **Stress Response**: Fight, flight, or strategic pause
-- **Recovery Strategies**: Active rest vs passive rest
-- **Real Story**: Startup founder's burnout recovery
-- **Sustainable Productivity**: Marathon vs sprint mindset
+## 🔊 Audio Content Sourcing for Demo App
+- Use scripts from this doc or 'LEARNING_JOURNEYS_PLAN.md' for audio.
+- Generate audio via AI, in-house, or freelance voiceover.
+- Mark all demo audio as 'Sample Content – Not Final'.
 
 ---
 
@@ -396,3 +246,52 @@
 - **Pacing**: Natural speech rhythm, strategic pauses
 - **Length Control**: 8-10 minutes target, +/- 1 minute acceptable
 - **Quality Assurance**: Multiple review rounds before release
+
+---
+
+## 🛠️ Update: Journey Scope Change
+- Only the following journeys remain:
+  - Data Structures & Algorithms (DSA)
+  - Operating Systems (OS)
+  - Database Management (DBMS)
+  - Personal Finance
+- Computer Networks, Marketing, and Productivity journeys are removed.
+- Update all totals and references accordingly.
+
+---
+
+# Audio Production Checklist for 4 Journeys
+
+## Data Structures & Algorithms (DSA)
+- [ ] Episode 1: Big O Notation Mastery
+- [ ] Episode 2: Arrays Deep Dive
+- [ ] Episode 3: Linked Lists Unleashed
+- [ ] Episode 4: Stacks & Queues in Action
+- [ ] Episode 5: Trees & Graph Fundamentals
+
+## Operating Systems (OS)
+- [ ] Episode 1: Process Management Mastery
+- [ ] Episode 2: Memory Management Magic
+- [ ] Episode 3: File Systems Decoded
+- [ ] Episode 4: Deadlock Prevention
+- [ ] Episode 5: Scheduling Algorithms
+- [ ] Episode 6: Synchronization Secrets
+
+## Database Management (DBMS)
+- [ ] Episode 1: Relational Database Foundations
+- [ ] Episode 2: SQL Query Mastery
+- [ ] Episode 3: Indexing Intelligence
+- [ ] Episode 4: Transaction Management
+- [ ] Episode 5: NoSQL Revolution
+- [ ] Episode 6: Database Design Principles
+- [ ] Episode 7: Performance Optimization
+
+## Personal Finance
+- [ ] Episode 1: Budgeting Breakthrough
+- [ ] Episode 2: Investment Fundamentals
+- [ ] Episode 3: Mutual Funds Decoded
+- [ ] Episode 4: Stock Market Basics
+- [ ] Episode 5: Insurance Essentials
+- [ ] Episode 6: Retirement Planning
+
+---

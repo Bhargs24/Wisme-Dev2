@@ -331,3 +331,12 @@ def integrate_research_data():
 - **Career Value**: Research publication for CV/graduate applications
 
 This dual-paper approach leverages your demo app research to create high-impact academic contributions while fulfilling your college coursework requirements with IEEE conference-level quality.
+
+---
+
+## 🛠️ Update: Journey Scope Change
+- Academic research now covers only 4 journeys: DSA, OS, DBMS, and Personal Finance.
+- Remove all references to Computer Networks, Marketing, and Productivity.
+- Update all totals and research focus accordingly.
+
+---

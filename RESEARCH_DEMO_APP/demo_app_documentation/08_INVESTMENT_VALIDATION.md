@@ -311,3 +311,12 @@ learning market, justifying our ₹60 crore pre-deployment valuation."
 - **Phase 4**: AI-powered personalization (Months 18-30)
 
 This validation framework provides concrete, data-driven evidence supporting Wisme's ₹60 crore valuation, making it compelling for investors who see both the massive market opportunity and the execution capability to capture it.
+
+---
+
+## 🛠️ Update: Journey Scope Change
+- Investment validation now covers only 4 journeys: DSA, OS, DBMS, and Personal Finance.
+- Remove all references to Computer Networks, Marketing, and Productivity.
+- Update all totals and validation logic accordingly.
+
+---

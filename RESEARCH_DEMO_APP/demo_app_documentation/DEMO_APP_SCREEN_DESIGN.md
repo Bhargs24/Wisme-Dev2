@@ -1097,6 +1097,49 @@ class FeedbackNavigationScreen extends StatefulWidget {
 
 ---
 
+## 🎮 Gamification & Engagement Screens
+
+**Badge Unlocked Screen:**
+- Shows badge icon, name, and what it was earned for.
+- Confetti animation and share option.
+
+**XP/Level Up Screen:**
+- Shows XP bar, new level, and next reward.
+- Motivational message from AI coach.
+
+**Streak Reminder Popup:**
+- "You’re on a 3-day streak! Keep it up for a bonus badge."
+
+**Leaderboard Screen (Optional):**
+- Anonymized top learners, your rank, and encouragement to climb higher.
+
+---
+
+## 🛎️ Notification Popups
+- **New Journey Available:** "Your AI coach has a new episode for you!"
+- **Feedback Nudge:** "Share your thoughts for a surprise reward!"
+- **Streak Reminder:** "Don’t break your streak—listen today for a bonus!"
+
+---
+
+## 🏆 'Your Impact' / Thank You Screen
+- Celebrates user’s progress, badges, and XP.
+- Shows a summary of their impact (e.g., "You’ve helped shape 3 new features!").
+- CTA to join waitlist or share feedback.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- **How to get audio for episodes:**
+  - Use AI voice tools (e.g., ElevenLabs, Play.ht, Amazon Polly) to generate natural-sounding audio from scripts.
+  - Record in-house voiceovers for a personal touch.
+  - Commission freelancers for key episodes if needed.
+- **Script Source:** Use scripts from 'LEARNING_JOURNEYS_PLAN.md' or '04_LEARNING_JOURNEYS.md'.
+- **Editing:** Keep it short, clear, and consistent. Add light background music if possible.
+- **Label:** All demo audio should be marked as 'Sample Content – Not Final'.
+
+---
+
 ## 🎯 **KEY FEATURES SUMMARY**
 
 ### **Professional Research Design:**

@@ -16,6 +16,13 @@
 
 ---
 
+## 🛠️ Update: Journey Scope Change
+- The research now covers only 4 journeys: DSA, OS, DBMS, and Personal Finance.
+- All references to Computer Networks, Marketing, and Productivity are removed.
+- Update all totals and research design accordingly.
+
+---
+
 ## 👥 **Target Demographics**
 
 ### **Primary Participants**
@@ -279,3 +286,18 @@ learning_effectiveness = {
 - Business report generation
 
 This methodology ensures rigorous scientific standards while generating actionable business insights for Wisme's growth and investor validation.
+
+---
+
+## 🎮 Gamification & Notifications in Research
+- Gamification (badges, XP, streaks) will be used to increase user engagement, session length, and feedback rates.
+- Smart notifications will nudge users to return, complete journeys, and give feedback, improving data completeness and retention.
+- Analytics will track the impact of these features on research metrics.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- Audio for episodes will be generated using AI voice, in-house, or freelance voiceover, based on scripts from journey docs.
+- All demo audio will be labeled as 'Sample Content – Not Final'.
+
+---

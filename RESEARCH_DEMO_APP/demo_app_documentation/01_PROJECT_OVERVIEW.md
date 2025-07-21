@@ -36,3 +36,9 @@ Research data will support ₹60 crore pre-deployment valuation through:
 - Learning effectiveness data  
 - Market demand validation
 - Competitive advantage proof
+
+## 🛠️ Update: Journey Scope Change
+- The demo app will now focus on 4 core journeys: DSA, OS, DBMS, and Personal Finance.
+- Computer Networks, Marketing, and Productivity journeys are removed for this phase.
+- Total journeys: 4
+- Adjust episode and content planning throughout the doc to match the new scope.

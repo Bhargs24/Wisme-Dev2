@@ -224,66 +224,7 @@ Ready for arrays? Let's see how these concepts apply to real data structures!
 
 ---
 
-## **Journey 4: Computer Networks (CN) Fundamentals**
-**Target Audience**: CSE students + Network engineering enthusiasts
-**Total Journey Duration**: 60-75 minutes (Traditional) | 60-75 minutes (Conversational)
-**Episodes**: 8 episodes per method
-**Episode Duration**: 7-10 minutes each
-**Difficulty**: Intermediate
-
-### **Learning Objectives:**
-- Understand OSI model and TCP/IP stack
-- Learn routing protocols and network topology
-- Master HTTP/HTTPS and web communication
-- Apply networking concepts to distributed system design
-
-### **Episode Breakdown:**
-
-**Episode 1: OSI Model & Network Basics** (9 minutes)
-- 7-layer OSI model explained
-- Network topology concepts
-- Physical vs logical addressing
-
-**Episode 2: TCP vs UDP Deep Dive** (8 minutes)
-- Connection-oriented vs connectionless
-- Reliability vs speed tradeoffs
-- Real-world application examples
-
-**Episode 3: IP Addressing & Subnetting** (10 minutes)
-- IPv4 addressing scheme
-- Subnet masks and CIDR notation
-- Network address translation (NAT)
-
-**Episode 4: Routing Protocols** (9 minutes)
-- Static vs dynamic routing
-- RIP, OSPF, BGP overview
-- Routing table concepts
-
-**Episode 5: HTTP/HTTPS & Web Communication** (8 minutes)
-- HTTP request/response cycle
-- HTTPS and SSL/TLS security
-- RESTful API communication
-
-**Episode 6: DNS & Domain Resolution** (7 minutes)
-- Domain name system hierarchy
-- DNS lookup process
-- Caching and performance
-
-**Episode 7: Network Security Basics** (9 minutes)
-- Common network attacks
-- Firewalls and security protocols
-- VPN concepts
-
-**Episode 8: Modern Networking (CDN, Load Balancers)** (10 minutes)
-- Content delivery networks
-- Load balancing strategies
-- Scalable network architecture
-
----
-
----
-
-## **Journey 5: Personal Finance & Investment Basics**
+## **Journey 4: Personal Finance & Investment Basics**
 **Target Audience**: Young professionals, college students, general public
 **Total Journey Duration**: 45-55 minutes (Traditional) | 45-55 minutes (Conversational)
 **Episodes**: 6 episodes per method
@@ -330,112 +271,15 @@ Ready for arrays? Let's see how these concepts apply to real data structures!
 
 ---
 
-## **Journey 6: Digital Marketing & Personal Branding**
-**Target Audience**: Entrepreneurs, working professionals, content creators
-**Total Journey Duration**: 50-60 minutes (Traditional) | 50-60 minutes (Conversational)
-**Episodes**: 7 episodes per method
-**Episode Duration**: 7-9 minutes each
-**Difficulty**: Beginner to Intermediate
-
-### **Learning Objectives:**
-- Understand social media algorithms and content strategy
-- Learn personal branding and online presence building
-- Master basic SEO and digital marketing funnels
-- Apply marketing concepts to career growth and business
-
-### **Episode Breakdown:**
-
-**Episode 1: Personal Branding Fundamentals** (9 minutes)
-- Defining your unique value proposition
-- Building authentic online presence
-- Brand consistency across platforms
-
-**Episode 2: Social Media Algorithm Mastery** (8 minutes)
-- Instagram, LinkedIn, Twitter algorithms
-- Content optimization strategies
-- Engagement tactics that work
-
-**Episode 3: Content Strategy & Creation** (8 minutes)
-- Content pillars and themes
-- Storytelling for engagement
-- Content calendar planning
-
-**Episode 4: SEO & Online Visibility** (7 minutes)
-- Keyword research basics
-- On-page SEO fundamentals
-- Building online authority
-
-**Episode 5: Digital Marketing Funnels** (8 minutes)
-- Awareness to conversion funnel
-- Lead generation strategies
-- Email marketing basics
-
-**Episode 6: Professional Networking Online** (7 minutes)
-- LinkedIn optimization strategies
-- Building meaningful connections
-- Thought leadership development
-
-**Episode 7: Measuring & Optimizing Results** (9 minutes)
-- Key metrics to track
-- Analytics tools and insights
-- Continuous improvement strategies
-
----
-
-## **Journey 7: Productivity & Time Management Mastery**
-**Target Audience**: Students, working professionals, entrepreneurs
-**Total Journey Duration**: 40-50 minutes (Traditional) | 40-50 minutes (Conversational)
-**Episodes**: 5 episodes per method
-**Episode Duration**: 8-10 minutes each
-**Difficulty**: Beginner
-
-### **Learning Objectives:**
-- Understand different productivity methodologies (GTD, Pomodoro, Eisenhower Matrix)
-- Learn focus techniques and distraction management
-- Master goal setting and habit formation
-- Apply productivity systems to personal and professional life
-
-### **Episode Breakdown:**
-
-**Episode 1: Priority Management & Eisenhower Matrix** (10 minutes)
-- Urgent vs Important concept
-- Four quadrants of task management
-- Strategic time allocation
-
-**Episode 2: Pomodoro Technique & Deep Work** (9 minutes)
-- 25-minute focus sessions
-- Managing distractions effectively
-- Creating flow states
-
-**Episode 3: Goal Setting & Habit Formation** (8 minutes)
-- SMART goals framework
-- Habit loop psychology
-- Building consistent routines
-
-**Episode 4: Time Blocking & Calendar Management** (9 minutes)
-- Time blocking methodology
-- Energy management principles
-- Optimizing daily schedules
-
-**Episode 5: Digital Productivity & Tool Management** (8 minutes)
-- Productivity app ecosystem
-- Automation strategies
-- Maintaining work-life balance
-
----
-
 ## 🎯 **IMPLEMENTATION STRATEGY**
 
 ### **Audio Production Priority:**
 1. **Journey 1 (DSA)** - 5 episodes × 2 methods = 10 audio files
-2. **Journey 5 (Finance)** - 6 episodes × 2 methods = 12 audio files
-3. **Journey 7 (Productivity)** - 5 episodes × 2 methods = 10 audio files
-4. **Journey 2 (OS)** - 6 episodes × 2 methods = 12 audio files
-5. **Journey 6 (Digital Marketing)** - 7 episodes × 2 methods = 14 audio files
-6. **Journey 3 (DBMS)** - 7 episodes × 2 methods = 14 audio files
-7. **Journey 4 (Networks)** - 8 episodes × 2 methods = 16 audio files
+2. **Journey 4 (Finance)** - 6 episodes × 2 methods = 12 audio files
+3. **Journey 2 (OS)** - 6 episodes × 2 methods = 12 audio files
+4. **Journey 3 (DBMS)** - 7 episodes × 2 methods = 14 audio files
 
-**Total Audio Content**: 88 individual episode recordings
+**Total Audio Content**: 50 individual episode recordings
 
 ### **Episode Duration Standards:**
 - **Short Episodes**: 7-9 minutes (Intro concepts, Quick tips)
@@ -454,7 +298,7 @@ Ready for arrays? Let's see how these concepts apply to real data structures!
 - **Knowledge Retention**: Pre/post journey assessments + 1-week follow-up
 
 ### **User Experience Flow:**
-1. **Journey Selection**: User chooses from 7 available journeys
+1. **Journey Selection**: User chooses from 4 available journeys
 2. **Method Assignment**: Random assignment to Traditional or Conversational first
 3. **Episode Progression**: Sequential episode unlocking within journey
 4. **Cross-Method Experience**: After completing one method, option to try the other
@@ -531,7 +375,16 @@ Ready for arrays? Let's see how these concepts apply to real data structures!
       - [6 traditional episodes]
     /conversational/
       - [6 conversational episodes]
-  [... remaining journeys]
+  /journey_03_dbms/
+    /traditional/
+      - [7 traditional episodes]
+    /conversational/
+      - [7 conversational episodes]
+  /journey_04_finance/
+    /traditional/
+      - [6 traditional episodes]
+    /conversational/
+      - [6 conversational episodes]
 ```
 
 ---
@@ -540,23 +393,17 @@ Ready for arrays? Let's see how these concepts apply to real data structures!
 
 ### **Week 1-2: Foundation Setup**
 - Journey 1 (DSA) - 5 episodes × 2 methods = 10 recordings
-- Journey 5 (Finance) - 6 episodes × 2 methods = 12 recordings  
+- Journey 4 (Finance) - 6 episodes × 2 methods = 12 recordings  
 - **Milestone**: 22 audio files, 2 complete journeys ready for testing
 
 ### **Week 3-4: Core Content Expansion**  
-- Journey 7 (Productivity) - 5 episodes × 2 methods = 10 recordings
 - Journey 2 (OS) - 6 episodes × 2 methods = 12 recordings
+- Journey 3 (DBMS) - 7 episodes × 2 methods = 14 recordings  
 - **Milestone**: 44 total audio files, 4 complete journeys
 
 ### **Week 5-6: Advanced Content**
-- Journey 6 (Marketing) - 7 episodes × 2 methods = 14 recordings
-- Journey 3 (DBMS) - 7 episodes × 2 methods = 14 recordings  
-- **Milestone**: 72 total audio files, 6 complete journeys
-
-### **Week 7-8: Final Content & Polish**
-- Journey 4 (Networks) - 8 episodes × 2 methods = 16 recordings
 - Quality review, timing adjustments, final polish
-- **Milestone**: 88 total audio files, all 7 journeys complete
+- **Milestone**: 50 total audio files, all 4 journeys complete
 
 ### **Target Outcomes for Investor Pitch:**
 
@@ -566,3 +413,55 @@ Ready for arrays? Let's see how these concepts apply to real data structures!
 ✅ **Confirm Scalability**: Multiple topic areas with consistent format success  
 ✅ **Establish Content Moat**: Proprietary episodic conversational learning methodology  
 ✅ **Justify ₹60 Crore Valuation**: Comprehensive user engagement + learning outcome data
+
+---
+
+## 🎮 Gamified Milestones
+- Each journey completion unlocks a badge (e.g., 'OS Explorer', 'Marketing Maven').
+- Bonus XP for finishing all episodes in a journey.
+- Streak badge for consecutive day completions.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- Use scripts from this doc or '04_LEARNING_JOURNEYS.md' for audio.
+- Generate audio via AI, in-house, or freelance voiceover.
+- Mark all demo audio as 'Sample Content – Not Final'.
+
+---
+
+# Audio Production Checklist for 4 Journeys
+
+## Data Structures & Algorithms (DSA)
+- [ ] Episode 1: Big O Notation Mastery
+- [ ] Episode 2: Arrays Deep Dive
+- [ ] Episode 3: Linked Lists Unleashed
+- [ ] Episode 4: Stacks & Queues in Action
+- [ ] Episode 5: Trees & Graph Fundamentals
+
+## Operating Systems (OS)
+- [ ] Episode 1: Process Management Mastery
+- [ ] Episode 2: Memory Management Magic
+- [ ] Episode 3: File Systems Decoded
+- [ ] Episode 4: Deadlock Prevention
+- [ ] Episode 5: Scheduling Algorithms
+- [ ] Episode 6: Synchronization Secrets
+
+## Database Management (DBMS)
+- [ ] Episode 1: Relational Database Foundations
+- [ ] Episode 2: SQL Query Mastery
+- [ ] Episode 3: Indexing Intelligence
+- [ ] Episode 4: Transaction Management
+- [ ] Episode 5: NoSQL Revolution
+- [ ] Episode 6: Database Design Principles
+- [ ] Episode 7: Performance Optimization
+
+## Personal Finance
+- [ ] Episode 1: Budgeting Breakthrough
+- [ ] Episode 2: Investment Fundamentals
+- [ ] Episode 3: Mutual Funds Decoded
+- [ ] Episode 4: Stock Market Basics
+- [ ] Episode 5: Insurance Essentials
+- [ ] Episode 6: Retirement Planning
+
+---

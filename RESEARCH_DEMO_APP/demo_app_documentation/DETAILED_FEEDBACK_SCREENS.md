@@ -3,6 +3,13 @@
 
 ---
 
+## 🛠️ Update: Journey Scope Change
+- Feedback screens and logic now cover only 4 journeys: DSA, OS, DBMS, and Personal Finance.
+- Remove all references to Computer Networks, Marketing, and Productivity.
+- Update all totals and feedback flows accordingly.
+
+---
+
 ## **Screen 11: Journey Comparison Screen**
 ```dart
 class JourneyComparisonScreen extends StatefulWidget {
@@ -958,3 +965,18 @@ class StudyCompletionScreen extends StatefulWidget {
 This professional research app will generate bulletproof data to justify your ₹60 crore valuation! 🚀
 
 **Ready to start implementation?** Which screens should we build first?
+
+---
+
+## 🎮 Feedback Streak Badge
+- Users who give feedback after every journey for 3+ journeys unlock a 'Feedback Hero' badge.
+- XP bonus for consistent feedback.
+- Confetti animation on badge unlock.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- Feedback screens may include sample audio prompts or responses.
+- All demo audio labeled as 'Sample Content – Not Final'.
+
+---

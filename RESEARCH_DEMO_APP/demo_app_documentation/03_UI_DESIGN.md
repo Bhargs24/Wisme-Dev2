@@ -458,3 +458,20 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
 - Clear consent and privacy information
 - Professional branding building trust
 - Smooth user experience encouraging completion
+
+---
+
+## 🎮 Gamification UI Elements
+- **Badge Widget:** Icon, name, and description. Appears on unlock and in profile.
+- **XP Bar:** Shows progress to next level. Animated on XP gain.
+- **Streak Indicator:** Flame or calendar icon with current streak count.
+- **Notification Banner:** Top-of-screen banner for reminders, new content, or rewards.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- Use AI voice, in-house, or freelance voiceover for episode audio.
+- Scripts from 'LEARNING_JOURNEYS_PLAN.md' or '04_LEARNING_JOURNEYS.md'.
+- All demo audio labeled as 'Sample Content – Not Final'.
+
+---

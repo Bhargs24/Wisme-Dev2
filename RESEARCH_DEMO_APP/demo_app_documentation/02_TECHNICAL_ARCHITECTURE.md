@@ -229,3 +229,26 @@ class ResearchAnalytics {
 - **Storage**: Unlimited audio content scaling
 - **Analytics**: Real-time data processing
 - **Backup**: Daily automated backups
+
+---
+
+## 🎮 Gamification & Notification Technical Hooks
+- **Gamification:**
+  - XP and badge state stored in user profile (Firestore or local DB).
+  - Badge/XP logic triggered on journey completion, feedback, streaks.
+  - Leaderboard data (if used) stored in a separate collection.
+- **Notifications:**
+  - In-app notification system for reminders, streaks, and new content.
+  - Optional push notification integration for mobile.
+- **Analytics:**
+  - Track badge unlocks, XP earned, notification click-throughs.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- **Audio for episodes:**
+  - Use AI voice generation, in-house recording, or freelancers.
+  - Scripts from 'LEARNING_JOURNEYS_PLAN.md' or '04_LEARNING_JOURNEYS.md'.
+  - Mark all demo audio as 'Sample Content – Not Final'.
+
+---

@@ -377,4 +377,30 @@ class AlertingSystem {
 - **Market Expansion**: Geographic and demographic targeting
 - **Partnership Opportunities**: Collaboration potential with educational institutions
 
+---
+
+## 🎮 Gamification & Notification Metrics
+- Badges earned per user
+- XP gained per session
+- Streaks maintained (days/weeks)
+- Notification open/click-through rates
+- Impact of gamification on engagement and retention
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- Track which episodes use AI, in-house, or freelance audio.
+- All demo audio labeled as 'Sample Content – Not Final'.
+
+---
+
 This comprehensive analytics framework ensures every aspect of the research demo app is measured, optimized, and contributes to both academic research goals and business validation objectives.
+
+---
+
+## 🛠️ Update: Journey Scope Change
+- Analytics and metrics now cover only 4 journeys: DSA, OS, DBMS, and Personal Finance.
+- Remove all references to Computer Networks, Marketing, and Productivity.
+- Update all totals and metric breakdowns accordingly.
+
+---

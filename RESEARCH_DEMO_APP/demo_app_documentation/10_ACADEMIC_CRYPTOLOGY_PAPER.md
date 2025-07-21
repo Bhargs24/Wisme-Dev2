@@ -1,64 +1,50 @@
-# 🔒 ACADEMIC CRYPTOLOGY RESEARCH PAPER
-
-## Title
-**"Multi-Layer Cryptographic Security in EdTech: A Case Study of the Wisme Conversational Learning Platform"**
-
----
+# Research Proposal: Integrating Cryptography into Conversational Learning Apps
 
 ## Abstract
-This paper details the design and implementation of a multi-layer cryptographic security architecture for the Wisme EdTech platform. It addresses the unique privacy and security challenges of educational technology, demonstrating how advanced cryptology concepts (TLS, AES, field-level encryption, privacy-preserving analytics) are practically applied in a real-world app. Results show robust protection with minimal performance overhead, fulfilling both academic and practical requirements.
+This paper proposes a novel approach to integrating advanced cryptographic techniques into audio-first, cloud-based educational apps like Wisme. The goal is to address both user privacy/security and create a research contribution suitable for IEEE publication, while remaining aligned with the app's vision of adaptive, personalized learning.
 
----
+## Introduction
+- The rise of cloud-based, AI-driven educational platforms brings new privacy and security challenges.
+- Most e-learning apps focus on content delivery, but few address end-to-end data protection, user anonymity, and secure assessment.
+- This work explores how cryptographic methods can be embedded in the Wisme app to protect user data, enable secure assessments, and support research on privacy-preserving learning analytics.
 
-## 1. Introduction
-- Security and privacy challenges in EdTech
-- Motivation for robust cryptographic solutions
-- Wisme app as a case study
-- Research objectives: Implement and evaluate cryptology in a live platform
+## Related Work
+- Review of cryptographic techniques in e-learning (see: "A Study of Security Impacts and Cryptographic Techniques in Cloud-based e-Learning Technologies", IEEE, 2022).
+- Existing tools for teaching cryptography concepts (e.g., interactive cipher tools, visual cryptography curricula).
 
-## 2. Background & Related Work
-- Overview of cryptographic techniques in EdTech
-- Regulatory requirements (GDPR, COPPA)
-- Review of existing platforms and their limitations
+## Proposed System
+### 1. Privacy-Preserving Learning Analytics
+- Use homomorphic encryption or secure multi-party computation to analyze user engagement and learning outcomes without exposing raw user data.
+- Enable research on learning patterns while guaranteeing user privacy.
 
-## 3. Threat Model & Security Requirements
-- Data categories: personal info, learning analytics, behavioral data
-- Threat actors and attack vectors
-- Security goals: confidentiality, integrity, availability, privacy
+### 2. Secure, Anonymous Feedback and Assessment
+- Implement pseudonymization and attribute-based encryption for user feedback and quiz results.
+- Allow users to participate in research studies and assessments without linking responses to their real identity.
 
-## 4. Cryptographic Architecture in Wisme
-- Layer 1: Transport Security (TLS 1.3, certificate pinning)
-- Layer 2: Application Encryption (AES-256-GCM, key management)
-- Layer 3: Database Security (field-level encryption, audit logging)
-- Layer 4: Privacy-Preserving Analytics (zero-knowledge proofs, anonymization)
+### 3. End-to-End Encrypted Content Delivery
+- All audio content, transcripts, and user progress data are encrypted at rest and in transit.
+- Explore the use of convergent encryption for deduplication and efficient storage.
 
-## 5. Implementation & Testing
-- How cryptology was integrated into the Wisme app
-- Security testing: penetration, vulnerability, compliance
-- Performance impact: latency, user experience
+### 4. In-App Cryptography Learning Module (Optional)
+- Add an interactive module where users can learn about classical and modern ciphers (e.g., Caesar, Vigenère, AES) through gamified, conversational lessons.
+- Users can encrypt/decrypt sample messages, see visualizations, and understand real-world applications of cryptography.
 
-## 6. Results & Evaluation
-- Security metrics: attack resistance, encryption strength
-- User acceptance and transparency
-- Compliance validation
+## Research Questions
+- How does the integration of advanced cryptography affect user trust, engagement, and willingness to participate in research?
+- Can privacy-preserving analytics yield actionable insights without compromising user confidentiality?
+- Does exposure to cryptography concepts within the app improve digital literacy among learners?
 
-## 7. Discussion & Future Work
-- Scalability and emerging threats (quantum, AI-powered attacks)
-- Lessons learned and recommendations
-- Potential for broader EdTech adoption
+## Methodology
+- Implement cryptographic features in a pilot version of the app.
+- Recruit participants for a controlled study (e.g., A/B test with and without crypto features).
+- Collect quantitative and qualitative data on usability, trust, learning outcomes, and privacy perceptions.
 
-## 8. Conclusion
-- Summary of cryptology implementation and impact
-- Academic and practical contributions
-
----
+## Expected Contributions
+- A practical framework for secure, privacy-preserving educational apps.
+- Empirical data on the impact of cryptography on user experience and research quality.
+- A blueprint for future educational platforms seeking IEEE-level security and privacy standards.
 
 ## References
-- [To be populated with cryptology, EdTech, and regulatory sources]
-
----
-
-## Appendix
-- Code snippets
-- Security test results
-- Compliance checklists
+- [1] Lavanya-Nehan Degambur et al., "A Study of Security Impacts and Cryptographic Techniques in Cloud-based e-Learning Technologies," 2022.
+- [2] Celedonio Arroyo-Serrano et al., "Teaching Basic Cryptography Concepts Through The Creation of a Cryptographic Learning Tool," LACCEI, 2016.
+- [3] Pranathi Rayavaram et al., "Designing a Visual Cryptography Curriculum for K-12 Education," IEEE EDUCON, 2022.

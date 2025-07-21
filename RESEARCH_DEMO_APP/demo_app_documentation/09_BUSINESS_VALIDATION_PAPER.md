@@ -10,6 +10,13 @@ This paper presents the business case and empirical validation for Wisme, an aud
 
 ---
 
+## 🛠️ Update: Journey Scope Change
+- Business validation now covers only 4 journeys: DSA, OS, DBMS, and Personal Finance.
+- Remove all references to Computer Networks, Marketing, and Productivity.
+- Update all totals and business logic accordingly.
+
+---
+
 ## 1. Introduction
 - EdTech market landscape and challenges
 - The engagement/retention problem in online learning

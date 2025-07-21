@@ -1010,6 +1010,25 @@ class ResearchAnalyticsEngine {
 
 ---
 
+## 🎮 Gamification & Notification System Architecture
+- **Gamification:**
+  - Badge/XP logic implemented in the app layer, with state stored in user profiles (Firestore/local DB).
+  - Streaks tracked via daily activity logs.
+  - Leaderboard (if used) as a separate collection.
+- **Notifications:**
+  - In-app notification system for reminders, streaks, and new content.
+  - Optional push notification integration for mobile.
+- **Analytics:**
+  - Track badge unlocks, XP, streaks, notification engagement.
+
+---
+
+## 🔊 Audio Content Sourcing for Demo App
+- Audio for episodes generated via AI, in-house, or freelance voiceover, using scripts from journey docs.
+- All demo audio labeled as 'Sample Content – Not Final'.
+
+---
+
 ## 🔒 **CRYPTOGRAPHIC IMPLEMENTATION FOR RESEARCH**
 
 ### **Multi-Tier Encryption System**
