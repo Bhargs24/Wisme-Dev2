@@ -9,13 +9,11 @@ import '../services/hybrid_tts_service.dart';
 class VoiceConfiguration {
   final String speakerId;
   final String voiceId;
-  final String personality;
   final Map<String, dynamic> settings;
 
   const VoiceConfiguration({
     required this.speakerId,
     required this.voiceId,
-    required this.personality,
     this.settings = const {},
   });
 }
@@ -24,14 +22,12 @@ class VoiceConfiguration {
 class ConversationAudioData {
   final String speakerId;
   final String text;
-  final AudioQuality quality;
   final Duration timestamp;
   final Map<String, dynamic> metadata;
 
   const ConversationAudioData({
     required this.speakerId,
     required this.text,
-    required this.quality,
     required this.timestamp,
     this.metadata = const {},
   });
@@ -43,32 +39,26 @@ class TwoSpeakerAudioSystem {
     'Kai': VoiceConfiguration(
       speakerId: 'kai',
       voiceId: 'kai_voice_id',
-      personality: 'thoughtful_mentor',
     ),
     'Alex': VoiceConfiguration(
       speakerId: 'alex',
       voiceId: 'alex_voice_id', 
-      personality: 'dynamic_coach',
     ),
     'Maya': VoiceConfiguration(
       speakerId: 'maya',
       voiceId: 'maya_voice_id',
-      personality: 'empathetic_guide',
     ),
     'David': VoiceConfiguration(
       speakerId: 'david',
       voiceId: 'david_voice_id',
-      personality: 'analytical_expert',
     ),
     'Sara': VoiceConfiguration(
       speakerId: 'sara', 
       voiceId: 'sara_voice_id',
-      personality: 'creative_facilitator',
     ),
     'Zoe': VoiceConfiguration(
       speakerId: 'zoe',
       voiceId: 'zoe_voice_id',
-      personality: 'encouraging_supporter',
     ),
   };
 
@@ -77,7 +67,6 @@ class TwoSpeakerAudioSystem {
     required List<Map<String, dynamic>> exchanges,
     required String primarySpeaker,
     required String secondarySpeaker,
-    AudioQuality quality = AudioQuality.medium,
   }) async {
     final conversationData = <ConversationAudioData>[];
     
@@ -90,19 +79,16 @@ class TwoSpeakerAudioSystem {
         final audioResult = await HybridTTSService.generateAudio(
           text: exchange['text'] ?? '',
           voiceId: voiceConfig.voiceId,
-          quality: quality,
         );
         
         if (audioResult['success'] == true) {
           conversationData.add(ConversationAudioData(
             speakerId: speaker,
             text: exchange['text'] ?? '',
-            quality: quality,
             timestamp: Duration(seconds: i * 10), // Simple timing
             metadata: {
               'audioPath': audioResult['audioPath'],
               'duration': audioResult['duration'],
-              'personality': voiceConfig.personality,
             },
           ));
         }

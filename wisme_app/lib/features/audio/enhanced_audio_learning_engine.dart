@@ -5,13 +5,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'dart:io';
 import '../../core/core.dart';
 import '../../models/episode.dart';
-import '../../models/conversation_models.dart';
-import '../services/conversation_engine.dart';
-import '../services/hybrid_tts_service.dart';
-import '../services/personalization_engine.dart';
 
 /// Enhanced Audio Learning Engine with Two-Speaker Support
 class EnhancedAudioLearningEngine extends StatefulWidget {
@@ -45,18 +40,14 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
   bool _isGenerating = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
-  final double _playbackSpeed = 1.0;
   
   // Conversation system
   GeneratedConversation? _conversation;
   ConversationAudio? _conversationAudio;
   List<String> _transcriptSentences = [];
-  final int _currentSentenceIndex = 0;
   int _currentSegmentIndex = 0;
   
   // Services
-  final ConversationEngine _conversationEngine = ConversationEngine();
-  final HybridTTSService _ttsService = HybridTTSService.instance;
   final PersonalizationEngine _personalizationEngine = PersonalizationEngine.instance;
 
   @override
@@ -114,7 +105,7 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
   }
 
   Future<void> _initializeServices() async {
-    await _ttsService.initialize();
+    await HybridTTSService.initialize();
     await _personalizationEngine.initialize();
   }
 
@@ -131,7 +122,6 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
         await _generateSingleSpeakerContent();
       }
     } catch (e) {
-      print('Audio generation failed: $e');
       _showErrorDialog('Failed to generate audio content: $e');
     } finally {
       setState(() {
@@ -143,35 +133,45 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
   /// Generate two-speaker conversation content
   Future<void> _generateTwoSpeakerContent() async {
     // Generate conversation structure
-    _conversation = await _conversationEngine.createLearningConversation(
-      episode: widget.episode,
+    _conversation = await ConversationEngine.generateConversation(
+      topic: widget.episode.title,
+      category: widget.episode.category,
       format: ConversationFormat.dialogue,
-      userId: widget.userId,
+      targetDuration: Duration(minutes: widget.episode.durationMinutes),
     );
 
     // Generate audio from conversation
-    _conversationAudio = await _ttsService.generateConversationAudio(
-      conversation: _conversation!,
-      quality: AudioQuality.medium,
-      useCache: true,
+    final audioResult = await HybridTTSService.generateConversationAudio(
+      exchanges: _conversation!.exchanges.map((e) => e.toJson()).toList(),
+      speakerVoiceMap: {for (var s in _conversation!.speakers) s.id: s.voiceId},
+      speed: 1.0,
     );
+    if (audioResult['success'] == true) {
+      _conversationAudio = ConversationAudio(
+        id: _conversation!.id,
+        conversationId: _conversation!.id,
+        segments: (audioResult['segments'] as List)
+            .map((s) => ConversationAudioSegment.fromJson(s))
+            .toList(),
+        totalDuration: _conversation!.estimatedDuration,
+        format: 'mp3',
+        metadata: {},
+        cacheHitRate: 0.0,
+      );
+    } else {
+      _conversationAudio = null;
+      _showErrorDialog('Failed to generate conversation audio: ${audioResult['error']}');
+      return;
+    }
 
     // Prepare transcript
     _prepareTranscript();
 
     // Track generation event
     if (widget.userId != null) {
-      await _personalizationEngine.trackInteraction(
-        userId: widget.userId!,
-        episodeId: widget.episode.id,
-        conversationId: _conversation!.id,
-        action: InteractionType.play,
-        context: {
-          'topic': widget.episode.title,
-          'category': widget.episode.category,
-          'mode': 'two_speaker',
-          'cache_hit_rate': _conversationAudio!.cacheHitRate,
-        },
+      await _personalizationEngine.trackEngagement(
+        widget.userId!,
+        'audio_played',
       );
     }
 
@@ -189,7 +189,7 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
       widget.episode.title,
       widget.episode.content,
       widget.episode.coachPersonality,
-      widget.episode.knowledgeLevel,
+      widget.episode.knowledgeType,
       personalContext: null,
     );
 
@@ -224,11 +224,13 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
 
     _transcriptSentences = [];
     for (final exchange in _conversation!.exchanges) {
-      final sentences = exchange.content.split(RegExp(r'[.!?]+'))
-          .where((sentence) => sentence.trim().isNotEmpty)
-          .map((sentence) => sentence.trim())
-          .toList();
-      _transcriptSentences.addAll(sentences);
+      if (exchange.content != null) {
+        final sentences = exchange.content!.split(RegExp(r'[.!?]+'))
+            .where((sentence) => sentence.trim().isNotEmpty)
+            .map((sentence) => sentence.trim())
+            .toList();
+        _transcriptSentences.addAll(sentences);
+      }
     }
   }
 
@@ -276,8 +278,8 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
     
     if (_conversationAudio!.segments.isNotEmpty) {
       final currentSegment = _conversationAudio!.segments[_currentSegmentIndex];
-      if (currentSegment.audioFilePath != null) {
-        await _audioPlayer.play(DeviceFileSource(currentSegment.audioFilePath!));
+      if (currentSegment.audioPath != null) {
+        await _audioPlayer.play(DeviceFileSource(currentSegment.audioPath!));
       }
     }
   }
@@ -285,16 +287,9 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
   /// Track play event
   void _trackPlayEvent() {
     if (widget.userId != null) {
-      _personalizationEngine.trackInteraction(
-        userId: widget.userId!,
-        episodeId: widget.episode.id,
-        conversationId: _conversation?.id,
-        action: InteractionType.play,
-        context: {
-          'topic': widget.episode.title,
-          'category': widget.episode.category,
-          'position_seconds': _position.inSeconds,
-        },
+      _personalizationEngine.trackEngagement(
+        widget.userId!,
+        'episode_play',
       );
     }
   }
@@ -302,16 +297,9 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
   /// Track pause event
   void _trackPauseEvent() {
     if (widget.userId != null) {
-      _personalizationEngine.trackInteraction(
-        userId: widget.userId!,
-        episodeId: widget.episode.id,
-        conversationId: _conversation?.id,
-        action: InteractionType.pause,
-        durationListened: _position.inSeconds,
-        context: {
-          'topic': widget.episode.title,
-          'category': widget.episode.category,
-        },
+      _personalizationEngine.trackEngagement(
+        widget.userId!,
+        'episode_pause',
       );
     }
   }
@@ -319,22 +307,9 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
   /// Track completion
   void _trackCompletion() {
     if (widget.userId != null) {
-      final completionPercentage = _duration.inSeconds > 0 
-          ? _position.inSeconds / _duration.inSeconds 
-          : 0.0;
-      
-      _personalizationEngine.trackInteraction(
-        userId: widget.userId!,
-        episodeId: widget.episode.id,
-        conversationId: _conversation?.id,
-        action: InteractionType.complete,
-        durationListened: _position.inSeconds,
-        completionPercentage: completionPercentage,
-        context: {
-          'topic': widget.episode.title,
-          'category': widget.episode.category,
-          'mode': widget.useTwoSpeakerMode ? 'two_speaker' : 'single_speaker',
-        },
+      _personalizationEngine.trackEngagement(
+        widget.userId!,
+        'episode_completed',
       );
     }
   }
@@ -627,7 +602,7 @@ class _EnhancedAudioLearningEngineState extends State<EnhancedAudioLearningEngin
               ),
               const SizedBox(height: 4),
               Text(
-                exchange.content,
+                exchange.content ?? exchange.text,
                 style: TextStyle(
                   color: isCurrentSegment ? Colors.white : Colors.grey[400],
                   fontSize: 16,

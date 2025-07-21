@@ -42,7 +42,6 @@ class CleanTwoSpeakerAudioProvider extends ChangeNotifier {
     required String topic,
     required String category,
     required List<Map<String, dynamic>> exchanges,
-    AudioQuality quality = AudioQuality.medium,
   }) async {
     try {
       _setState(AudioGenerationState.generating);
@@ -67,7 +66,6 @@ class CleanTwoSpeakerAudioProvider extends ChangeNotifier {
         exchanges: exchanges,
         primarySpeaker: primarySpeaker,
         secondarySpeaker: secondarySpeaker,
-        quality: quality,
       );
       
       _audioData = conversationData;

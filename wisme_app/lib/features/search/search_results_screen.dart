@@ -27,7 +27,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   String _selectedFilter = 'all';
   String _selectedCategory = 'all';
   String _selectedDuration = 'all';
-  String _selectedLevel = 'all';
+  String _selectedKnowledgeType = 'all';
   
   final List<String> _categories = [
     'all',
@@ -57,7 +57,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     '20+ minutes',
   ];
   
-  final List<String> _levels = [
+  final List<String> _knowledgeTypes = [
     'all',
     '🔹 Core Concepts',
     '💼 Case Studies',
@@ -201,11 +201,11 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     () => _updateCategory('all'),
                     isRemovable: true,
                   ),
-                if (_selectedLevel != 'all')
+                if (_selectedKnowledgeType != 'all')
                   _buildFilterChip(
-                    _selectedLevel.toUpperCase(),
+                    _selectedKnowledgeType.toUpperCase(),
                     true,
-                    () => _updateLevel('all'),
+                    () => _updateKnowledgeType('all'),
                     isRemovable: true,
                   ),
               ],
@@ -376,7 +376,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     ),
                     const SizedBox(width: 8),
                     _buildInfoChip(
-                      journey.knowledgeLevel.toUpperCase(),
+                      journey.knowledgeType.toUpperCase(),
                       Icons.school,
                     ),
                     const SizedBox(width: 8),
@@ -491,7 +491,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                     ),
                     const SizedBox(width: 8),
                     _buildInfoChip(
-                      episode.knowledgeLevel.toUpperCase(),
+                      episode.knowledgeType.toUpperCase(),
                       Icons.school,
                     ),
                     const SizedBox(width: 8),
@@ -669,13 +669,13 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: _levels.map((level) {
+                children: _knowledgeTypes.map((knowledgeType) {
                   return _buildFilterChip(
-                    level == 'all' ? 'All Levels' : level.toUpperCase(),
-                    _selectedLevel == level,
+                    knowledgeType == 'all' ? 'All Levels' : knowledgeType.toUpperCase(),
+                    _selectedKnowledgeType == knowledgeType,
                     () {
                       setModalState(() {
-                        _selectedLevel = level;
+                        _selectedKnowledgeType = knowledgeType;
                       });
                     },
                   );
@@ -755,7 +755,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         title: 'Introduction to ${widget.query}',
         content: 'Learn the fundamentals of ${widget.query} in this comprehensive introduction.',
         category: 'Technology & AI',
-        knowledgeLevel: '🔹 Core Concepts',
+        knowledgeType: '🔹 Core Concepts',
         coachPersonality: 'Kai',
         hashtags: ['#${widget.query.toLowerCase()}', '#fundamentals', '#introduction'],
         durationMinutes: 12,
@@ -767,7 +767,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         title: 'Advanced ${widget.query} Techniques',
         content: 'Master advanced concepts and techniques in ${widget.query}.',
         category: 'Technology & AI',
-        knowledgeLevel: '🛠 Tools & Trends',
+        knowledgeType: '🛠 Tools & Trends',
         coachPersonality: 'Vee',
         hashtags: ['#${widget.query.toLowerCase()}', '#advanced', '#techniques'],
         durationMinutes: 18,
@@ -779,7 +779,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         title: '${widget.query} Best Practices',
         content: 'Industry best practices and real-world applications of ${widget.query}.',
         category: 'Business & Finance',
-        knowledgeLevel: '💼 Case Studies',
+        knowledgeType: '💼 Case Studies',
         coachPersonality: 'Kai',
         hashtags: ['#${widget.query.toLowerCase()}', '#bestpractices', '#industry'],
         durationMinutes: 15,
@@ -797,7 +797,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         title: 'Complete ${widget.query} Mastery',
         description: 'A comprehensive 5-episode journey to master ${widget.query} from beginner to expert.',
         category: 'Technology & AI',
-        knowledgeLevel: '🔹 Core Concepts',
+        knowledgeType: '🔹 Core Concepts',
         episodes: _generateMockEpisodes(),
         currentEpisodeIndex: 0,
         completionPercentage: 0.0,
@@ -812,7 +812,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       if (_selectedCategory != 'all' && episode.category != _selectedCategory) {
         return false;
       }
-      if (_selectedLevel != 'all' && episode.knowledgeLevel != _selectedLevel) {
+      if (_selectedKnowledgeType != 'all' && episode.knowledgeType != _selectedKnowledgeType) {
         return false;
       }
       if (_selectedDuration != 'all') {
@@ -844,7 +844,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       if (_selectedCategory != 'all' && journey.category != _selectedCategory) {
         return false;
       }
-      if (_selectedLevel != 'all' && journey.knowledgeLevel != _selectedLevel) {
+      if (_selectedKnowledgeType != 'all' && journey.knowledgeType != _selectedKnowledgeType) {
         return false;
       }
       return true;
@@ -853,14 +853,14 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
 
   bool _hasActiveFilters() {
     return _selectedCategory != 'all' ||
-        _selectedLevel != 'all' ||
+        _selectedKnowledgeType != 'all' ||
         _selectedDuration != 'all';
   }
 
   void _clearFilters() {
     setState(() {
       _selectedCategory = 'all';
-      _selectedLevel = 'all';
+      _selectedKnowledgeType = 'all';
       _selectedDuration = 'all';
     });
   }
@@ -877,9 +877,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     });
   }
 
-  void _updateLevel(String level) {
+  void _updateKnowledgeType(String knowledgeType) {
     setState(() {
-      _selectedLevel = level;
+      _selectedKnowledgeType = knowledgeType;
     });
   }
 

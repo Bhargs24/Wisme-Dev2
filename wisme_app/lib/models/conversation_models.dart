@@ -6,6 +6,7 @@ import 'dart:typed_data';
 
 /// Speaker roles for conversation
 enum SpeakerRole {
+  host,
   narrator,
   expert,
   interviewer,
@@ -23,6 +24,23 @@ enum ExchangeType {
   conclusion,
   question,
   answer,
+}
+
+/// Interaction types for user engagement tracking
+enum InteractionType {
+  play,
+  pause,
+  skip,
+  rewind,
+  fastForward,
+  speedChange,
+  complete,
+  share,
+  like,
+  dislike,
+  comment,
+  search,
+  bookmark,
 }
 
 /// Conversation format types
@@ -46,6 +64,7 @@ class ConversationExchange {
   final ExchangeType? type;
   final Duration? estimatedDuration;
   final Map<String, dynamic> metadata;
+  final List<ConversationAudioSegment>? audioSegments;
 
   const ConversationExchange({
     required this.id,
@@ -57,6 +76,7 @@ class ConversationExchange {
     this.type,
     this.estimatedDuration,
     this.metadata = const {},
+    this.audioSegments,
   });
 
   Map<String, dynamic> toJson() => {
@@ -69,6 +89,7 @@ class ConversationExchange {
     'type': type?.name,
     'estimatedDuration': estimatedDuration?.inMilliseconds,
     'metadata': metadata,
+    'audioSegments': audioSegments?.map((s) => s.toJson()).toList(),
   };
 
   factory ConversationExchange.fromJson(Map<String, dynamic> json) {
@@ -94,6 +115,11 @@ class ConversationExchange {
           ? Duration(milliseconds: json['estimatedDuration'] as int)
           : null,
       metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
+      audioSegments: json['audioSegments'] != null
+          ? (json['audioSegments'] as List)
+              .map((s) => ConversationAudioSegment.fromJson(s))
+              .toList()
+          : null,
     );
   }
 }
@@ -299,6 +325,49 @@ class SpeakerVoice {
       voiceId: json['voiceId'] as String,
       characteristics: VoiceCharacteristics.fromJson(json['characteristics']),
       isActive: json['isActive'] as bool? ?? true,
+    );
+  }
+}
+
+/// Audio data for a conversation
+class ConversationAudio {
+  final String id;
+  final String conversationId;
+  final List<ConversationAudioSegment> segments;
+  final Duration totalDuration;
+  final String format;
+  final Map<String, dynamic> metadata;
+  final double cacheHitRate;
+
+  const ConversationAudio({
+    required this.id,
+    required this.conversationId,
+    required this.segments,
+    required this.totalDuration,
+    this.format = 'mp3',
+    this.metadata = const {},
+    this.cacheHitRate = 0.0,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'conversationId': conversationId,
+    'segments': segments.map((s) => s.toJson()).toList(),
+    'totalDuration': totalDuration.inMilliseconds,
+    'format': format,
+    'metadata': metadata,
+  };
+
+  factory ConversationAudio.fromJson(Map<String, dynamic> json) {
+    return ConversationAudio(
+      id: json['id'] as String,
+      conversationId: json['conversationId'] as String,
+      segments: (json['segments'] as List)
+          .map((s) => ConversationAudioSegment.fromJson(s))
+          .toList(),
+      totalDuration: Duration(milliseconds: json['totalDuration'] as int),
+      format: json['format'] as String? ?? 'mp3',
+      metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
     );
   }
 }

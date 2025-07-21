@@ -2,7 +2,6 @@
 /// Handles local SQLite database setup for development and caching
 library;
 
-import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/services.dart';

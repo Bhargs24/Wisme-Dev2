@@ -14,7 +14,6 @@ class AdvancedTopicClassifier {
     String? learningIntent,
     String? personalContext,
     List<String>? previousTopics,
-    String? preferredCoach,
     String? learningGoal,
   }) async {
     try {
@@ -25,7 +24,6 @@ class AdvancedTopicClassifier {
         learningIntent: learningIntent,
         personalContext: personalContext,
         previousTopics: previousTopics,
-        preferredCoach: preferredCoach,
         learningGoal: learningGoal,
       );
 
@@ -38,7 +36,7 @@ class AdvancedTopicClassifier {
       return TopicClassification(
         originalTopic: topic,
         category: analysis['category'] as String,
-        knowledgeLevel: analysis['knowledgeLevel'] as String,
+        knowledgeType: analysis['knowledgeType'] as String,
         confidence: (analysis['confidence'] as num).toDouble(),
         subtopics: _extractSubtopics(episodes),
         contentHints: _extractLearningHints(analysis),
@@ -47,7 +45,6 @@ class AdvancedTopicClassifier {
           learningObjectives: _extractAllObjectives(episodes),
           totalEpisodes: episodes.length,
         ),
-        recommendedCoach: analysis['recommendedCoach'] as String,
         estimatedDuration: analysis['estimatedTotalDuration'] as int,
         prerequisiteTopics: previousTopics ?? [],
         personalContext: personalContext,
@@ -55,7 +52,6 @@ class AdvancedTopicClassifier {
         completeLearningExperience: completeExperience,
       );
     } catch (e) {
-      print('⚠️ Optimized OpenAI analysis failed, using fallback: $e');
       return _createFallbackClassification(topic, personalContext);
     }
   }
@@ -77,7 +73,7 @@ class AdvancedTopicClassifier {
   /// Extract content presentation hints from analysis
   static List<String> _extractLearningHints(Map<String, dynamic> analysis) {
     final coach = analysis['recommendedCoach'] as String;
-    final knowledgeLevel = analysis['knowledgeLevel'] as String;
+    final knowledgeType = analysis['knowledgeType'] as String;
     
     final hints = <String>[];
     
@@ -89,11 +85,11 @@ class AdvancedTopicClassifier {
     }
     
     // Knowledge level-based hints
-    if (knowledgeLevel.contains('Core Concepts')) {
+    if (knowledgeType.contains('Core Concepts')) {
       hints.addAll(['foundational', 'systematic']);
-    } else if (knowledgeLevel.contains('Case Studies')) {
+    } else if (knowledgeType.contains('Case Studies')) {
       hints.addAll(['example-driven', 'real-world']);
-    } else if (knowledgeLevel.contains('Tools & Trends')) {
+    } else if (knowledgeType.contains('Tools & Trends')) {
       hints.addAll(['cutting-edge', 'practical-tools']);
     } else {
       hints.addAll(['comprehensive', 'balanced']);
@@ -116,7 +112,7 @@ class AdvancedTopicClassifier {
   static TopicClassification _createFallbackClassification(String topic, String? personalContext) {
     // Smart category detection based on keywords
     String category = 'Personal Development'; // Default
-    String knowledgeLevel = '🔹 Core Concepts';
+    String knowledgeType = '🔹 Core Concepts';
     String coach = 'Kai';
     
     final topicLower = topic.toLowerCase();
@@ -124,46 +120,46 @@ class AdvancedTopicClassifier {
     // Advanced keyword matching with context awareness
     if (topicLower.contains(RegExp(r'tech|ai|program|code|software|data|machine|algorithm|computer'))) {
       category = 'Technology & AI';
-      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'beginner|new|start')) ?? false 
+      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'beginner|new|start')) ?? false 
           ? '🔹 Core Concepts' : '🛠 Tools & Trends';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'business|money|finance|market|startup|entrepreneur|strategy'))) {
       category = 'Business & Finance';
-      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'example|case|company')) ?? false 
+      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'example|case|company')) ?? false 
           ? '💼 Case Studies' : '💡 Fundamentals';
       coach = 'Vee';
     } else if (topicLower.contains(RegExp(r'psychology|mind|behavior|emotion|mental|cognitive'))) {
       category = 'Psychology & Mind';
-      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'practical|apply|real')) ?? false 
+      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'practical|apply|real')) ?? false 
           ? '💬 Real-Life Application' : '🧠 Theories & Experiments';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'science|physics|chemistry|biology|research|study'))) {
       category = 'Science & Nature';
-      knowledgeLevel = '🔬 Scientific Concepts';
+      knowledgeType = '🔬 Scientific Concepts';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'design|art|creative|music|visual|aesthetic'))) {
       category = 'Creativity & Design';
-      knowledgeLevel = personalContext?.toLowerCase().contains(RegExp(r'tool|software|technique')) ?? false 
+      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'tool|software|technique')) ?? false 
           ? '🛠 Frameworks & Tools' : '🎨 Design Fundamentals';
       coach = 'Vee';
     } else if (topicLower.contains(RegExp(r'career|job|work|professional|skill|leadership'))) {
       category = 'Career & Strategy';
-      knowledgeLevel = '🪞 Identity & Purpose';
+      knowledgeType = '🪞 Identity & Purpose';
       coach = 'Vee';
     } else if (topicLower.contains(RegExp(r'history|culture|society|social|political'))) {
       category = 'History & Culture';
-      knowledgeLevel = '🗺️ Timelines';
+      knowledgeType = '🗺️ Timelines';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'environment|climate|sustainability|green|eco'))) {
       category = 'Environment & Sustainability';
-      knowledgeLevel = '🌱 Climate & Ecology';
+      knowledgeType = '🌱 Climate & Ecology';
       coach = 'Kai';
     }
 
     return TopicClassification(
       originalTopic: topic,
       category: category,
-      knowledgeLevel: knowledgeLevel,
+      knowledgeType: knowledgeType,
       confidence: 0.6, // Lower confidence for fallback
       subtopics: [
         SubtopicResult(
@@ -200,7 +196,6 @@ class AdvancedTopicClassifier {
         ],
         totalEpisodes: 3,
       ),
-      recommendedCoach: coach,
       estimatedDuration: 30,
       prerequisiteTopics: const [],
       personalContext: personalContext,
@@ -217,7 +212,6 @@ class AdvancedTopicClassifier {
     try {
       return await OptimizedOpenAIService().testConnection();
     } catch (e) {
-      print('Topic classifier connection test failed: $e');
       return false;
     }
   }

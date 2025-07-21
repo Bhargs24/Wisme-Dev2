@@ -325,14 +325,14 @@ class _WismeButtonState extends State<WismeButton>
           gradient = null;
           shadow = [
             BoxShadow(
-              color: WismeColors.primaryBlue.withOpacity(0.3),
+              color: WismeColors.primaryBlue.withValues(alpha: 0.3),
               offset: const Offset(0, 4),
               blurRadius: 12,
               spreadRadius: 0,
             ),
           ];
-          splashColor = Colors.white.withOpacity(0.2);
-          highlightColor = Colors.white.withOpacity(0.1);
+          splashColor = Colors.white.withValues(alpha: 0.2);
+          highlightColor = Colors.white.withValues(alpha: 0.1);
           break;
 
         case WismeButtonVariant.secondary:
@@ -350,10 +350,10 @@ class _WismeButtonState extends State<WismeButton>
           shadow = null;
           splashColor = (isDark 
               ? WismeColors.darkTextPrimary 
-              : WismeColors.textPrimary).withOpacity(0.1);
+              : WismeColors.textPrimary).withValues(alpha: 0.1);
           highlightColor = (isDark 
               ? WismeColors.darkTextPrimary 
-              : WismeColors.textPrimary).withOpacity(0.05);
+              : WismeColors.textPrimary).withValues(alpha: 0.05);
           break;
 
         case WismeButtonVariant.outline:
@@ -365,8 +365,8 @@ class _WismeButtonState extends State<WismeButton>
           );
           gradient = null;
           shadow = null;
-          splashColor = WismeColors.primaryBlue.withOpacity(0.1);
-          highlightColor = WismeColors.primaryBlue.withOpacity(0.05);
+          splashColor = WismeColors.primaryBlue.withValues(alpha: 0.1);
+          highlightColor = WismeColors.primaryBlue.withValues(alpha: 0.05);
           break;
 
         case WismeButtonVariant.ghost:
@@ -375,8 +375,8 @@ class _WismeButtonState extends State<WismeButton>
           border = null;
           gradient = null;
           shadow = null;
-          splashColor = WismeColors.primaryBlue.withOpacity(0.1);
-          highlightColor = WismeColors.primaryBlue.withOpacity(0.05);
+          splashColor = WismeColors.primaryBlue.withValues(alpha: 0.1);
+          highlightColor = WismeColors.primaryBlue.withValues(alpha: 0.05);
           break;
 
         case WismeButtonVariant.gradient:
@@ -386,14 +386,14 @@ class _WismeButtonState extends State<WismeButton>
           gradient = WismeColors.primaryGradient;
           shadow = [
             BoxShadow(
-              color: WismeColors.primaryBlue.withOpacity(0.3),
+              color: WismeColors.primaryBlue.withValues(alpha: 0.3),
               offset: const Offset(0, 4),
               blurRadius: 12,
               spreadRadius: 0,
             ),
           ];
-          splashColor = Colors.white.withOpacity(0.2);
-          highlightColor = Colors.white.withOpacity(0.1);
+          splashColor = Colors.white.withValues(alpha: 0.2);
+          highlightColor = Colors.white.withValues(alpha: 0.1);
           break;
 
         case WismeButtonVariant.destructive:
@@ -403,14 +403,14 @@ class _WismeButtonState extends State<WismeButton>
           gradient = null;
           shadow = [
             BoxShadow(
-              color: WismeColors.error.withOpacity(0.3),
+              color: WismeColors.error.withValues(alpha: 0.3),
               offset: const Offset(0, 4),
               blurRadius: 12,
               spreadRadius: 0,
             ),
           ];
-          splashColor = Colors.white.withOpacity(0.2);
-          highlightColor = Colors.white.withOpacity(0.1);
+          splashColor = Colors.white.withValues(alpha: 0.2);
+          highlightColor = Colors.white.withValues(alpha: 0.1);
           break;
       }
     }

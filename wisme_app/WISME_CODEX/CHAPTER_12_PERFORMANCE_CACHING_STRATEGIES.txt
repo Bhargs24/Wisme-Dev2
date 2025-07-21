@@ -1,0 +1,50 @@
+CHAPTER 12: PERFORMANCE & CACHING STRATEGIES
+
+INTRODUCTION
+Performance and caching are critical to WISME’s user experience and cost management. This chapter details the strategies and systems that ensure speed, reliability, and scalability.
+
+1. PERFORMANCE OPTIMIZATION STRATEGIES
+- Modular, multi-layer caching (memory, disk, network, audio, content)
+- Proactive preloading and cache eviction for freshness and efficiency
+- Database query optimization and schema tuning
+- Frontend performance: lazy loading, widget optimization, and animation tuning
+
+2. INTELLIGENT CACHING ARCHITECTURE
+- Semantic fragment caching for audio and content
+- Tagging and metadata for rapid lookup and dynamic assembly
+- Tiered cache management for free vs. premium users
+
+3. DATABASE OPTIMIZATION
+- Normalized schema for analytics and content
+- Indexing and query optimization for speed
+- Scalable cloud database (Supabase)
+
+4. FRONTEND PERFORMANCE TUNING
+- Widget and state management optimization (Provider/Riverpod)
+- Efficient image and audio loading
+- Responsive design for all platforms
+
+5. AUDIO GENERATION OPTIMIZATION
+- Smart caching and reuse to minimize TTS costs
+- Preloading and streaming for seamless playback
+- Automated quality checks and fallback mechanisms
+
+6. SCALABILITY & LOAD BALANCING
+- Microservices-ready architecture for future scaling
+- Load balancing and horizontal scaling strategies
+- Continuous monitoring and auto-scaling triggers
+
+CHALLENGES & SOLUTIONS
+- Challenge: Cache staleness → Solution: Proactive eviction and freshness checks
+- Challenge: Database bottlenecks → Solution: Query optimization and indexing
+- Challenge: Frontend lag → Solution: Widget and asset optimization
+
+FUTURE CONSIDERATIONS
+- Predictive caching and prefetching
+- Real-time performance analytics and auto-tuning
+- Expansion to multi-region and enterprise scale
+
+SUMMARY & KEY TAKEAWAYS
+- WISME’s performance and caching systems are modular, proactive, and scalable
+- Intelligent caching and optimization ensure speed and cost-efficiency
+- The architecture is future-proofed for growth and enterprise needs 

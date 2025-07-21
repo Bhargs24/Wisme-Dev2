@@ -5,12 +5,11 @@ library;
 class TopicClassification {
   final String originalTopic;
   final String category;
-  final String knowledgeLevel;
+  final String knowledgeType;
   final double confidence;
   final List<SubtopicResult> subtopics;
   final List<String> contentHints;
   final EpisodePlan episodePlan;
-  final String recommendedCoach;
   final int estimatedDuration;
   final List<String> prerequisiteTopics;
   final String? personalContext;
@@ -19,12 +18,11 @@ class TopicClassification {
   const TopicClassification({
     required this.originalTopic,
     required this.category,
-    required this.knowledgeLevel,
+    required this.knowledgeType,
     required this.confidence,
     required this.subtopics,
     required this.contentHints,
     required this.episodePlan,
-    required this.recommendedCoach,
     required this.estimatedDuration,
     required this.prerequisiteTopics,
     this.personalContext,
@@ -35,14 +33,13 @@ class TopicClassification {
     return TopicClassification(
       originalTopic: json['originalTopic'] ?? '',
       category: json['category'] ?? '',
-      knowledgeLevel: json['knowledgeLevel'] ?? '',
+      knowledgeType: json['knowledgeType'] ?? '',
       confidence: (json['confidence'] ?? 0.0).toDouble(),
       subtopics: (json['subtopics'] as List? ?? [])
           .map((s) => SubtopicResult.fromJson(s))
           .toList(),
       contentHints: List<String>.from(json['contentHints'] ?? json['learningStyleHints'] ?? []),
       episodePlan: EpisodePlan.fromJson(json['episodePlan'] ?? {}),
-      recommendedCoach: json['recommendedCoach'] ?? 'Kai',
       estimatedDuration: json['estimatedDuration'] ?? 30,
       prerequisiteTopics: List<String>.from(json['prerequisiteTopics'] ?? []),
       personalContext: json['personalContext'],
@@ -53,12 +50,11 @@ class TopicClassification {
     return {
       'originalTopic': originalTopic,
       'category': category,
-      'knowledgeLevel': knowledgeLevel,
+      'knowledgeType': knowledgeType,
       'confidence': confidence,
       'subtopics': subtopics.map((s) => s.toJson()).toList(),
       'contentHints': contentHints,
       'episodePlan': episodePlan.toJson(),
-      'recommendedCoach': recommendedCoach,
       'estimatedDuration': estimatedDuration,
       'prerequisiteTopics': prerequisiteTopics,
       if (personalContext != null) 'personalContext': personalContext,

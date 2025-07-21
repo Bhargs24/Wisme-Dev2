@@ -19,6 +19,7 @@ export 'services/hybrid_tts_service.dart';
 export 'services/local_database_migration.dart';
 export 'services/optimized_openai_service.dart';
 export 'services/personalization_engine.dart';
+export 'services/phase1_conversation_engine.dart';
 export 'services/playht_service.dart';
 export 'services/prompt_engineering_audit_service.dart';
 export 'services/smart_fragment_cache.dart';

@@ -9,8 +9,6 @@ class ContentModerationService {
   factory ContentModerationService() => _instance;
   ContentModerationService._internal();
 
-  final OpenAIService _openaiService = OpenAIService();
-
   /// Age-based moderation thresholds
   static const Map<String, Map<String, double>> ageBasedThresholds = {
     'strict': { // Under 13
@@ -77,7 +75,7 @@ class ContentModerationService {
   /// Moderate text content with age-based filtering
   Future<ModerationResult> moderateText(String text, {UserLearningProfile? userProfile}) async {
     try {
-      final response = await _openaiService.moderateContent(text);
+      final response = await OpenAIService.moderateContent(content: text);
       
       final moderation = response['results'][0];
       final categories = moderation['categories'] as Map<String, dynamic>;

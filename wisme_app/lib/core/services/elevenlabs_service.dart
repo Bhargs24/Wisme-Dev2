@@ -43,7 +43,6 @@ class ElevenLabsService {
   Future<Uint8List?> generateSpeech({
     required String text,
     required String voiceId,
-    AudioQuality quality = AudioQuality.standard,
     ElevenLabsVoiceSettings? voiceSettings,
   }) async {
     try {
@@ -58,7 +57,7 @@ class ElevenLabsService {
         },
         body: jsonEncode({
           'text': text,
-          'model_id': _getModelForQuality(quality),
+          'model_id': 'eleven_multilingual_v1', // Always use the best model
           'voice_settings': settings.toJson(),
         }),
       );

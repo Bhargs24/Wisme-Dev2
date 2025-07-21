@@ -17,7 +17,6 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
   
   // Topic Input Data
   String _inputTopic = '';
-  final String _selectedCoach = 'Kai';
   
   // Generated Episode Data
   Episode? _generatedEpisode;
@@ -429,7 +428,6 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
     return EnhancedAudioPlayerScreen(
       episodeTitle: _generatedEpisode!.title,
       episodeContent: _generatedEpisode!.content,
-      coachPersonality: _generatedEpisode!.coachPersonality,
       duration: Duration(minutes: _generatedEpisode!.durationMinutes),
       episode: _generatedEpisode, // Pass full episode for enhanced features
       enableTwoSpeakerMode: true, // Enable new two-speaker system
@@ -460,7 +458,7 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
       content: '''
 Welcome to your personalized learning session about $_inputTopic!
 
-I'm your coach $_selectedCoach, and I'm excited to guide you through this topic. We'll explore the fundamentals, break down complex concepts, and help you build practical understanding.
+I'm your coach, and I'm excited to guide you through this topic. We'll explore the fundamentals, break down complex concepts, and help you build practical understanding.
 
 [PAUSE]
 
@@ -481,8 +479,8 @@ By the end of this episode, you'll have a solid foundation in $_inputTopic and p
 Ready? Let's begin your learning journey!
       ''',
       category: 'Technology & AI',
-      knowledgeLevel: '🔹 Core Concepts',
-      coachPersonality: _selectedCoach,
+      knowledgeType: '🔹 Core Concepts',
+      coachPersonality: 'Coach', // Default coach personality
       hashtags: [_inputTopic.toLowerCase().replaceAll(' ', '_')],
       durationMinutes: 12,
       createdAt: DateTime.now(),

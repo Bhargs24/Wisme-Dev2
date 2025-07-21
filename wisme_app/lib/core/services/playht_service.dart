@@ -17,7 +17,6 @@ class PlayHTService {
   static Future<Map<String, dynamic>> generateAudio({
     required String text,
     required String voiceId,
-    String quality = 'medium',
     double speed = 1.0,
   }) async {
     if (!ApiConfig.isPlayHtConfigured) {
@@ -26,7 +25,7 @@ class PlayHTService {
 
     try {
       // Use HTTP streaming endpoint for real-time generation
-      final audioBytes = await _streamAudioGeneration(text, voiceId, quality, speed);
+      final audioBytes = await _streamAudioGeneration(text, voiceId, speed);
       
       // Apply compression to the audio
       final compressedAudio = await _compressAudio(audioBytes);
@@ -43,7 +42,6 @@ class PlayHTService {
         'duration': duration,
         'fileSize': compressedAudio.length,
         'compression': 'mp3_optimized',
-        'quality': quality,
         'model': ApiConfig.playHtModel,
       };
     } catch (e) {
@@ -58,7 +56,6 @@ class PlayHTService {
   static Future<Uint8List> _streamAudioGeneration(
     String text,
     String voiceId, 
-    String quality,
     double speed,
   ) async {
     final url = Uri.parse('${ApiConfig.playHtBaseUrl}/tts/stream');
@@ -78,10 +75,6 @@ class PlayHTService {
         'output_format': 'mp3',
         'sample_rate': ApiConfig.audioConfig['sample_rate'],
         'speed': speed,
-        'quality': quality,
-        // PlayDialog specific settings for personality
-        'emotion': _getEmotionForPersonality(voiceId),
-        'style': _getStyleForPersonality(voiceId),
       }),
     );
 
@@ -90,32 +83,6 @@ class PlayHTService {
     }
 
     return response.bodyBytes;
-  }
-
-  /// Get emotion setting based on voice personality
-  static String _getEmotionForPersonality(String voiceId) {
-    // Kai (Arthur Meditation): calm, thoughtful
-    if (voiceId.contains('arthurmeditationsaad')) {
-      return 'calm';
-    }
-    // Vee (Ariana): energetic, enthusiastic  
-    if (voiceId.contains('arianasaad2')) {
-      return 'excited';
-    }
-    return 'neutral';
-  }
-
-  /// Get style setting based on voice personality
-  static String _getStyleForPersonality(String voiceId) {
-    // Kai: meditation/narrative style
-    if (voiceId.contains('arthurmeditationsaad')) {
-      return 'meditation';
-    }
-    // Vee: advertising/energetic style
-    if (voiceId.contains('arianasaad2')) {
-      return 'advertising';
-    }
-    return 'narrative';
   }
 
   /// Estimate audio duration based on text and speech rate

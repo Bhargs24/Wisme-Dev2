@@ -1,0 +1,837 @@
+CHAPTER 7: AUTHENTICATION & SECURITY
+
+INTRODUCTION: PROTECTING THE LEARNING JOURNEY
+
+Security and authentication are fundamental to WISME's success. Users need to trust that their learning data, preferences, and progress are safe and private. This chapter covers our comprehensive security implementation, from user authentication to data protection, ensuring that both free and premium users have a secure, trustworthy experience.
+
+The security architecture is designed to be robust yet user-friendly, supporting the freemium model while maintaining the highest standards of data protection and privacy compliance.
+
+AUTHENTICATION SYSTEM DESIGN
+
+WISME implements a multi-layered authentication system that supports both free and premium users with different security requirements.
+
+**Multi-Provider Authentication:**
+
+```dart
+// lib/core/auth/multi_provider_auth.dart
+class MultiProviderAuth {
+  final SupabaseClient _supabase;
+  final Map<AuthProvider, AuthProviderService> _providers;
+  
+  MultiProviderAuth(this._supabase) : _providers = {
+    AuthProvider.email: EmailAuthProvider(_supabase),
+    AuthProvider.google: GoogleAuthProvider(_supabase),
+    AuthProvider.apple: AppleAuthProvider(_supabase),
+    AuthProvider.phone: PhoneAuthProvider(_supabase),
+  };
+  
+  /// Authenticates user with any supported provider
+  Future<AuthResult> authenticate({
+    required AuthProvider provider,
+    required Map<String, dynamic> credentials,
+  }) async {
+    try {
+      final authService = _providers[provider];
+      if (authService == null) {
+        throw AuthException('Unsupported authentication provider');
+      }
+      
+      final result = await authService.authenticate(credentials);
+      
+      // Track authentication event
+      await _trackAuthEvent(provider, result.success);
+      
+      return result;
+    } catch (e) {
+      return AuthResult.error(e.toString());
+    }
+  }
+  
+  /// Handles anonymous authentication for free users
+  Future<AuthResult> authenticateAnonymously() async {
+    try {
+      final response = await _supabase.auth.signInAnonymously();
+      
+      if (response.user != null) {
+        // Create anonymous user profile
+        await _createAnonymousProfile(response.user!.id);
+        
+        return AuthResult.success(
+          user: response.user!,
+          isAnonymous: true,
+          tier: UserTier.FREE,
+        );
+      }
+      
+      return AuthResult.error('Anonymous authentication failed');
+    } catch (e) {
+      return AuthResult.error(e.toString());
+    }
+  }
+  
+  /// Creates anonymous user profile for free tier
+  Future<void> _createAnonymousProfile(String userId) async {
+    final profile = UserProfile(
+      id: userId,
+      email: 'anonymous_$userId@wisme.app',
+      name: 'Anonymous User',
+      tier: UserTier.FREE,
+      interests: [],
+      topicProficiency: {},
+      preferences: LearningPreferences.defaults(),
+      createdAt: DateTime.now(),
+      lastActive: DateTime.now(),
+      totalSessions: 0,
+      totalEpisodesCompleted: 0,
+    );
+    
+    await _supabase.from('users').insert(profile.toJson());
+  }
+}
+
+enum AuthProvider { email, google, apple, phone }
+
+class AuthResult {
+  final bool success;
+  final User? user;
+  final bool isAnonymous;
+  final UserTier tier;
+  final String? error;
+  
+  AuthResult.success({
+    required this.user,
+    this.isAnonymous = false,
+    this.tier = UserTier.FREE,
+  }) : success = true,
+       error = null;
+  
+  AuthResult.error(this.error)
+      : success = false,
+        user = null,
+        isAnonymous = false,
+        tier = UserTier.FREE;
+}
+```
+
+**Session Management:**
+
+```dart
+// lib/core/auth/session_manager.dart
+class SessionManager {
+  static const Duration sessionTimeout = Duration(hours: 24);
+  static const Duration refreshThreshold = Duration(minutes: 30);
+  
+  final SupabaseClient _supabase;
+  final SecureStorage _secureStorage;
+  
+  SessionManager(this._supabase, this._secureStorage);
+  
+  /// Manages user session lifecycle
+  Future<void> manageSession() async {
+    final session = _supabase.auth.currentSession;
+    
+    if (session == null) {
+      // No active session, redirect to login
+      await _redirectToLogin();
+      return;
+    }
+    
+    // Check if session is about to expire
+    if (_isSessionExpiringSoon(session)) {
+      await _refreshSession();
+    }
+    
+    // Update last active timestamp
+    await _updateLastActive(session.user.id);
+  }
+  
+  /// Refreshes session token
+  Future<void> _refreshSession() async {
+    try {
+      final response = await _supabase.auth.refreshSession();
+      
+      if (response.session != null) {
+        // Store new session securely
+        await _secureStorage.storeSession(response.session!);
+        
+        // Track session refresh
+        await _trackSessionRefresh();
+      }
+    } catch (e) {
+      // Session refresh failed, redirect to login
+      await _redirectToLogin();
+    }
+  }
+  
+  /// Checks if session is expiring soon
+  bool _isSessionExpiringSoon(Session session) {
+    final expiresAt = session.expiresAt;
+    final now = DateTime.now();
+    final timeUntilExpiry = expiresAt.difference(now);
+    
+    return timeUntilExpiry < refreshThreshold;
+  }
+  
+  /// Updates user's last active timestamp
+  Future<void> _updateLastActive(String userId) async {
+    await _supabase
+      .from('users')
+      .update({'last_active': DateTime.now().toIso8601String()})
+      .eq('id', userId);
+  }
+}
+```
+
+USER TIER MANAGEMENT
+
+The authentication system supports different security levels for free and premium users.
+
+**Tier-Based Security:**
+
+```dart
+// lib/core/auth/tier_security_manager.dart
+class TierSecurityManager {
+  /// Determines security requirements based on user tier
+  SecurityRequirements getSecurityRequirements(UserTier tier) {
+    switch (tier) {
+      case UserTier.FREE:
+        return SecurityRequirements(
+          requiresEmailVerification: false,
+          requiresPhoneVerification: false,
+          requiresTwoFactor: false,
+          sessionTimeout: Duration(hours: 24),
+          passwordComplexity: PasswordComplexity.basic,
+        );
+      
+      case UserTier.PREMIUM:
+        return SecurityRequirements(
+          requiresEmailVerification: true,
+          requiresPhoneVerification: true,
+          requiresTwoFactor: true,
+          sessionTimeout: Duration(hours: 12),
+          passwordComplexity: PasswordComplexity.strong,
+        );
+    }
+  }
+  
+  /// Validates user access to premium features
+  Future<bool> validatePremiumAccess(String userId) async {
+    final user = await _getUser(userId);
+    
+    if (user.tier != UserTier.PREMIUM) {
+      return false;
+    }
+    
+    // Check if premium subscription is active
+    final subscription = await _getSubscription(userId);
+    if (subscription == null || !subscription.isActive) {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /// Handles tier upgrade security requirements
+  Future<void> handleTierUpgrade(String userId) async {
+    final user = await _getUser(userId);
+    
+    if (user.tier == UserTier.FREE) {
+      // Enforce premium security requirements
+      await _enforcePremiumSecurity(userId);
+      
+      // Update user tier
+      await _updateUserTier(userId, UserTier.PREMIUM);
+      
+      // Track upgrade event
+      await _trackTierUpgrade(userId);
+    }
+  }
+  
+  /// Enforces premium security requirements
+  Future<void> _enforcePremiumSecurity(String userId) async {
+    final user = await _getUser(userId);
+    
+    // Require email verification
+    if (!user.emailVerified) {
+      await _sendEmailVerification(user.email);
+      throw SecurityException('Email verification required for premium tier');
+    }
+    
+    // Require phone verification
+    if (!user.phoneVerified) {
+      await _sendPhoneVerification(user.phone);
+      throw SecurityException('Phone verification required for premium tier');
+    }
+    
+    // Require two-factor authentication
+    if (!user.twoFactorEnabled) {
+      await _setupTwoFactor(userId);
+      throw SecurityException('Two-factor authentication required for premium tier');
+    }
+  }
+}
+
+class SecurityRequirements {
+  final bool requiresEmailVerification;
+  final bool requiresPhoneVerification;
+  final bool requiresTwoFactor;
+  final Duration sessionTimeout;
+  final PasswordComplexity passwordComplexity;
+  
+  SecurityRequirements({
+    required this.requiresEmailVerification,
+    required this.requiresPhoneVerification,
+    required this.requiresTwoFactor,
+    required this.sessionTimeout,
+    required this.passwordComplexity,
+  });
+}
+
+enum PasswordComplexity { basic, strong }
+```
+
+DATA PROTECTION AND ENCRYPTION
+
+**Local Data Encryption:**
+
+```dart
+// lib/core/security/local_encryption.dart
+class LocalEncryption {
+  static const String _algorithm = 'AES-256-GCM';
+  static const int _keyLength = 32;
+  static const int _ivLength = 12;
+  
+  late final FlutterSecureStorage _secureStorage;
+  late final String _encryptionKey;
+  
+  LocalEncryption() {
+    _secureStorage = const FlutterSecureStorage();
+    _encryptionKey = _generateEncryptionKey();
+  }
+  
+  /// Encrypts sensitive data for local storage
+  Future<String> encryptData(String data) async {
+    try {
+      final key = base64Decode(_encryptionKey);
+      final iv = _generateIV();
+      
+      final encrypter = Encrypter(AES(key, mode: AESMode.gcm));
+      final encrypted = encrypter.encrypt(data, iv: iv);
+      
+      // Combine IV and encrypted data
+      final combined = iv + encrypted.bytes;
+      return base64Encode(combined);
+    } catch (e) {
+      throw EncryptionException('Failed to encrypt data: $e');
+    }
+  }
+  
+  /// Decrypts data from local storage
+  Future<String> decryptData(String encryptedData) async {
+    try {
+      final key = base64Decode(_encryptionKey);
+      final combined = base64Decode(encryptedData);
+      
+      // Extract IV and encrypted data
+      final iv = combined.sublist(0, _ivLength);
+      final encryptedBytes = combined.sublist(_ivLength);
+      
+      final encrypter = Encrypter(AES(key, mode: AESMode.gcm));
+      final encrypted = Encrypted(encryptedBytes);
+      
+      return encrypter.decrypt(encrypted, iv: iv);
+    } catch (e) {
+      throw EncryptionException('Failed to decrypt data: $e');
+    }
+  }
+  
+  /// Securely stores sensitive data
+  Future<void> storeSecureData(String key, String value) async {
+    final encryptedValue = await encryptData(value);
+    await _secureStorage.write(key: key, value: encryptedValue);
+  }
+  
+  /// Retrieves and decrypts sensitive data
+  Future<String?> getSecureData(String key) async {
+    final encryptedValue = await _secureStorage.read(key: key);
+    if (encryptedValue == null) return null;
+    
+    return await decryptData(encryptedValue);
+  }
+  
+  /// Generates encryption key
+  String _generateEncryptionKey() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(_keyLength, (i) => random.nextInt(256));
+    return base64Encode(bytes);
+  }
+  
+  /// Generates initialization vector
+  Uint8List _generateIV() {
+    final random = Random.secure();
+    return Uint8List.fromList(
+      List<int>.generate(_ivLength, (i) => random.nextInt(256))
+    );
+  }
+}
+```
+
+**API Security:**
+
+```dart
+// lib/core/security/api_security.dart
+class ApiSecurity {
+  final SupabaseClient _supabase;
+  final LocalEncryption _encryption;
+  
+  ApiSecurity(this._supabase, this._encryption);
+  
+  /// Secures API requests with authentication and encryption
+  Future<ApiResponse<T>> secureApiCall<T>({
+    required String endpoint,
+    required HttpMethod method,
+    Map<String, dynamic>? data,
+    bool requiresAuth = true,
+  }) async {
+    try {
+      // Add authentication headers
+      final headers = await _getAuthHeaders(requiresAuth);
+      
+      // Encrypt sensitive data
+      final encryptedData = data != null 
+        ? await _encryptRequestData(data)
+        : null;
+      
+      // Make API call
+      final response = await _makeApiCall(
+        endpoint: endpoint,
+        method: method,
+        headers: headers,
+        data: encryptedData,
+      );
+      
+      // Decrypt response if needed
+      final decryptedResponse = await _decryptResponseData(response);
+      
+      return ApiResponse.success(decryptedResponse as T);
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
+  }
+  
+  /// Gets authentication headers
+  Future<Map<String, String>> _getAuthHeaders(bool requiresAuth) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      'User-Agent': 'WISME-App/1.0',
+    };
+    
+    if (requiresAuth) {
+      final session = _supabase.auth.currentSession;
+      if (session != null) {
+        headers['Authorization'] = 'Bearer ${session.accessToken}';
+      }
+    }
+    
+    return headers;
+  }
+  
+  /// Encrypts request data
+  Future<Map<String, dynamic>> _encryptRequestData(Map<String, dynamic> data) async {
+    final encryptedData = <String, dynamic>{};
+    
+    for (final entry in data.entries) {
+      if (_isSensitiveField(entry.key)) {
+        encryptedData[entry.key] = await _encryption.encryptData(entry.value.toString());
+      } else {
+        encryptedData[entry.key] = entry.value;
+      }
+    }
+    
+    return encryptedData;
+  }
+  
+  /// Determines if a field contains sensitive data
+  bool _isSensitiveField(String fieldName) {
+    const sensitiveFields = [
+      'password',
+      'email',
+      'phone',
+      'personal_data',
+      'payment_info',
+    ];
+    
+    return sensitiveFields.any((field) => 
+      fieldName.toLowerCase().contains(field)
+    );
+  }
+}
+
+enum HttpMethod { get, post, put, delete }
+```
+
+PRIVACY AND COMPLIANCE
+
+**Privacy Management:**
+
+```dart
+// lib/core/privacy/privacy_manager.dart
+class PrivacyManager {
+  /// Implements GDPR compliance features
+  Future<void> handleGdprRequest(String userId, GdprRequestType type) async {
+    switch (type) {
+      case GdprRequestType.dataExport:
+        await _exportUserData(userId);
+        break;
+      
+      case GdprRequestType.dataDeletion:
+        await _deleteUserData(userId);
+        break;
+      
+      case GdprRequestType.dataRectification:
+        await _rectifyUserData(userId);
+        break;
+      
+      case GdprRequestType.dataPortability:
+        await _exportUserData(userId, format: 'json');
+        break;
+    }
+  }
+  
+  /// Exports user data in requested format
+  Future<void> _exportUserData(String userId, {String format = 'json'}) async {
+    final userData = await _collectUserData(userId);
+    
+    switch (format) {
+      case 'json':
+        await _exportAsJson(userData);
+        break;
+      case 'csv':
+        await _exportAsCsv(userData);
+        break;
+      case 'pdf':
+        await _exportAsPdf(userData);
+        break;
+    }
+  }
+  
+  /// Deletes user data completely
+  Future<void> _deleteUserData(String userId) async {
+    // Anonymize user data first
+    await _anonymizeUserData(userId);
+    
+    // Delete from all tables
+    await _supabase.from('users').delete().eq('id', userId);
+    await _supabase.from('learning_sessions').delete().eq('user_id', userId);
+    await _supabase.from('user_analytics').delete().eq('user_id', userId);
+    
+    // Delete from Supabase Auth
+    await _supabase.auth.admin.deleteUser(userId);
+    
+    // Track deletion for audit
+    await _trackDataDeletion(userId);
+  }
+  
+  /// Collects all user data for export
+  Future<Map<String, dynamic>> _collectUserData(String userId) async {
+    final user = await _getUser(userId);
+    final sessions = await _getUserSessions(userId);
+    final analytics = await _getUserAnalytics(userId);
+    final preferences = await _getUserPreferences(userId);
+    
+    return {
+      'user_profile': user.toJson(),
+      'learning_sessions': sessions.map((s) => s.toJson()).toList(),
+      'analytics': analytics.toJson(),
+      'preferences': preferences.toJson(),
+      'exported_at': DateTime.now().toIso8601String(),
+    };
+  }
+}
+
+enum GdprRequestType {
+  dataExport,
+  dataDeletion,
+  dataRectification,
+  dataPortability,
+}
+```
+
+**Privacy Settings Management:**
+
+```dart
+// lib/core/privacy/privacy_settings.dart
+class PrivacySettings {
+  final String userId;
+  final bool allowAnalytics;
+  final bool allowPersonalization;
+  final bool allowDataSharing;
+  final bool allowNotifications;
+  final List<String> dataCategories;
+  
+  PrivacySettings({
+    required this.userId,
+    required this.allowAnalytics,
+    required this.allowPersonalization,
+    required this.allowDataSharing,
+    required this.allowNotifications,
+    required this.dataCategories,
+  });
+  
+  /// Updates privacy settings
+  Future<void> updateSettings(PrivacySettings newSettings) async {
+    await _supabase
+      .from('privacy_settings')
+      .upsert(newSettings.toJson())
+      .eq('user_id', userId);
+    
+    // Apply settings immediately
+    await _applyPrivacySettings(newSettings);
+    
+    // Track settings change
+    await _trackPrivacySettingsChange(newSettings);
+  }
+  
+  /// Applies privacy settings to data collection
+  Future<void> _applyPrivacySettings(PrivacySettings settings) async {
+    if (!settings.allowAnalytics) {
+      // Disable analytics tracking
+      await _disableAnalyticsTracking(userId);
+    }
+    
+    if (!settings.allowPersonalization) {
+      // Use generic content instead of personalized
+      await _disablePersonalization(userId);
+    }
+    
+    if (!settings.allowDataSharing) {
+      // Anonymize data for sharing
+      await _anonymizeSharedData(userId);
+    }
+  }
+}
+```
+
+SECURITY MONITORING AND INCIDENT RESPONSE
+
+**Security Monitoring:**
+
+```dart
+// lib/core/security/security_monitor.dart
+class SecurityMonitor {
+  /// Monitors for security threats and anomalies
+  Future<void> monitorSecurity() async {
+    // Monitor authentication attempts
+    await _monitorAuthAttempts();
+    
+    // Monitor API usage patterns
+    await _monitorApiUsage();
+    
+    // Monitor data access patterns
+    await _monitorDataAccess();
+    
+    // Check for suspicious activities
+    await _detectSuspiciousActivity();
+  }
+  
+  /// Monitors authentication attempts for suspicious patterns
+  Future<void> _monitorAuthAttempts() async {
+    final recentAttempts = await _getRecentAuthAttempts();
+    
+    for (final attempt in recentAttempts) {
+      // Check for brute force attempts
+      if (_isBruteForceAttempt(attempt)) {
+        await _handleBruteForceAttempt(attempt);
+      }
+      
+      // Check for suspicious locations
+      if (_isSuspiciousLocation(attempt)) {
+        await _handleSuspiciousLocation(attempt);
+      }
+      
+      // Check for unusual patterns
+      if (_isUnusualPattern(attempt)) {
+        await _handleUnusualPattern(attempt);
+      }
+    }
+  }
+  
+  /// Detects brute force attempts
+  bool _isBruteForceAttempt(AuthAttempt attempt) {
+    // Check for multiple failed attempts from same IP
+    final failedAttempts = _getFailedAttemptsFromIp(attempt.ipAddress);
+    return failedAttempts.length >= 5; // 5 failed attempts threshold
+  }
+  
+  /// Handles brute force attempts
+  Future<void> _handleBruteForceAttempt(AuthAttempt attempt) async {
+    // Block IP address temporarily
+    await _blockIpAddress(attempt.ipAddress, Duration(minutes: 30));
+    
+    // Send security alert
+    await _sendSecurityAlert(
+      SecurityAlertType.bruteForce,
+      attempt.ipAddress,
+      attempt.userId,
+    );
+    
+    // Log security event
+    await _logSecurityEvent(
+      SecurityEventType.bruteForceDetected,
+      attempt.toJson(),
+    );
+  }
+  
+  /// Sends security alerts
+  Future<void> _sendSecurityAlert(
+    SecurityAlertType type,
+    String ipAddress,
+    String? userId,
+  ) async {
+    final alert = SecurityAlert(
+      type: type,
+      ipAddress: ipAddress,
+      userId: userId,
+      timestamp: DateTime.now(),
+      severity: _getAlertSeverity(type),
+    );
+    
+    // Send to security team
+    await _notifySecurityTeam(alert);
+    
+    // Send to user if applicable
+    if (userId != null) {
+      await _notifyUser(userId, alert);
+    }
+  }
+}
+
+enum SecurityAlertType {
+  bruteForce,
+  suspiciousLocation,
+  unusualPattern,
+  dataBreach,
+  unauthorizedAccess,
+}
+
+enum SecurityEventType {
+  bruteForceDetected,
+  suspiciousActivity,
+  dataAccessViolation,
+  authenticationFailure,
+  sessionHijacking,
+}
+```
+
+**Incident Response:**
+
+```dart
+// lib/core/security/incident_response.dart
+class IncidentResponse {
+  /// Handles security incidents
+  Future<void> handleSecurityIncident(SecurityIncident incident) async {
+    // Assess incident severity
+    final severity = _assessIncidentSeverity(incident);
+    
+    // Execute response plan based on severity
+    switch (severity) {
+      case IncidentSeverity.low:
+        await _handleLowSeverityIncident(incident);
+        break;
+      
+      case IncidentSeverity.medium:
+        await _handleMediumSeverityIncident(incident);
+        break;
+      
+      case IncidentSeverity.high:
+        await _handleHighSeverityIncident(incident);
+        break;
+      
+      case IncidentSeverity.critical:
+        await _handleCriticalIncident(incident);
+        break;
+    }
+    
+    // Document incident
+    await _documentIncident(incident);
+    
+    // Update incident status
+    await _updateIncidentStatus(incident.id, IncidentStatus.resolved);
+  }
+  
+  /// Handles critical security incidents
+  Future<void> _handleCriticalIncident(SecurityIncident incident) async {
+    // Immediate response actions
+    await _takeImmediateActions(incident);
+    
+    // Notify stakeholders
+    await _notifyStakeholders(incident);
+    
+    // Implement containment measures
+    await _implementContainment(incident);
+    
+    // Begin recovery process
+    await _beginRecovery(incident);
+  }
+  
+  /// Takes immediate actions for critical incidents
+  Future<void> _takeImmediateActions(SecurityIncident incident) async {
+    // Block affected accounts
+    if (incident.affectedUsers.isNotEmpty) {
+      for (final userId in incident.affectedUsers) {
+        await _temporarilyBlockUser(userId);
+      }
+    }
+    
+    // Block affected IP addresses
+    if (incident.affectedIps.isNotEmpty) {
+      for (final ip in incident.affectedIps) {
+        await _blockIpAddress(ip, Duration(hours: 24));
+      }
+    }
+    
+    // Disable affected services if necessary
+    if (incident.affectedServices.isNotEmpty) {
+      for (final service in incident.affectedServices) {
+        await _disableService(service);
+      }
+    }
+  }
+}
+
+enum IncidentSeverity { low, medium, high, critical }
+enum IncidentStatus { open, investigating, contained, resolved }
+```
+
+IMPLEMENTATION ROADMAP
+
+**Phase 1: Core Security (Immediate)**
+1. Implement multi-provider authentication
+2. Set up session management
+3. Implement local data encryption
+4. Create basic privacy controls
+
+**Phase 2: Advanced Security (Medium-term)**
+1. Implement two-factor authentication
+2. Add security monitoring
+3. Create incident response system
+4. Enhance privacy compliance
+
+**Phase 3: Enterprise Security (Long-term)**
+1. Advanced threat detection
+2. Real-time security monitoring
+3. Automated incident response
+4. Advanced compliance features
+
+CONCLUSION: SECURE BY DESIGN
+
+The authentication and security implementation for WISME is designed to protect users while supporting the freemium business model. By implementing tier-based security requirements and comprehensive privacy controls, we ensure that both free and premium users have a secure, trustworthy experience.
+
+The security architecture is built to scale with the platform, from basic authentication for free users to enterprise-grade security for premium users. This approach ensures that security enhances rather than hinders the user experience.
+
+**Implementation Notes for Development Team:**
+- Start with basic authentication for free users
+- Implement tier-based security requirements
+- Focus on privacy compliance from day one
+- Set up security monitoring early
+- Plan for enterprise security features as user base grows 

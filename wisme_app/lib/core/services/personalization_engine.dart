@@ -235,6 +235,7 @@ class PersonalizationEngine extends ChangeNotifier {
   }
 
   /// Cleanup resources
+  @override
   Future<void> dispose() async {
     await _database?.close();
     _userProfiles.clear();

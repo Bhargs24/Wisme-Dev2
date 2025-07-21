@@ -20,14 +20,6 @@ class ApiConfig {
   static String get elevenlabsApiKey => EnvironmentConfig.elevenlabsApiKey;
   static const String elevenlabsBaseUrl = 'https://api.elevenlabs.io/v1';
   
-  // Voice IDs for coach personalities (PlayHT voices optimized for personalities)
-  static const Map<String, String> voiceIds = {
-    // Kai: Thoughtful, analytical mentor - calm, meditation-focused voice
-    'Kai': 's3://voice-cloning-zero-shot/38a41ac2-f574-421c-adb9-ce1bcb6f4a84/arthurmeditationsaad/manifest.json',
-    // Vee: Energetic, motivating coach - youthful, high-energy voice  
-    'Vee': 's3://voice-cloning-zero-shot/f2863f63-5334-4f65-9d30-438feb79c2ec/arianasaad2/manifest.json',
-  };
-  
   // Model configurations (using PlayDialog for best emotional expression)
   static const String gptModel = 'gpt-4';
   static const String claudeModel = 'claude-3-sonnet-20240229';

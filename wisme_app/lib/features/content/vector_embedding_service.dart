@@ -115,7 +115,7 @@ class VectorEmbeddingService {
     Title: ${episode.title}
     Content: ${episode.content}
     Category: ${episode.category}
-    Knowledge Level: ${episode.knowledgeLevel}
+    Knowledge Type: ${episode.knowledgeType}
     Coach: ${episode.coachPersonality}
     Hashtags: ${episode.hashtags.join(', ')}
     ''';
@@ -130,7 +130,7 @@ class VectorEmbeddingService {
         'type': 'episode',
         'title': episode.title,
         'category': episode.category,
-        'knowledge_level': episode.knowledgeLevel,
+        'knowledge_type': episode.knowledgeType,
         'coach_personality': episode.coachPersonality,
         'duration_minutes': episode.durationMinutes,
         'hashtags': episode.hashtags,
@@ -144,7 +144,7 @@ class VectorEmbeddingService {
     int limit = 10,
     double threshold = 0.7,
     List<String>? categories,
-    String? knowledgeLevel,
+    String? knowledgeType,
   }) async {
     if (!_isInitialized) await initialize();
 
@@ -173,8 +173,8 @@ class VectorEmbeddingService {
         continue;
       }
       
-      if (knowledgeLevel != null && 
-          metadataMap['knowledge_level'] != knowledgeLevel) {
+      if (knowledgeType != null && 
+          metadataMap['knowledge_type'] != knowledgeType) {
         continue;
       }
 
@@ -267,7 +267,7 @@ class VectorEmbeddingService {
       limit: limit,
       threshold: threshold,
       categories: filters?['categories'],
-      knowledgeLevel: filters?['knowledge_level'],
+      knowledgeType: filters?['knowledge_type'],
     );
   }
 
@@ -461,7 +461,7 @@ class SimilarityResult {
 
   String get title => metadata['title'] ?? '';
   String get category => metadata['category'] ?? '';
-  String get knowledgeLevel => metadata['knowledge_level'] ?? '';
+  String get knowledgeType => metadata['knowledge_type'] ?? '';
   String get coachPersonality => metadata['coach_personality'] ?? '';
   int get durationMinutes => metadata['duration_minutes'] ?? 0;
   List<String> get hashtags => List<String>.from(metadata['hashtags'] ?? []);

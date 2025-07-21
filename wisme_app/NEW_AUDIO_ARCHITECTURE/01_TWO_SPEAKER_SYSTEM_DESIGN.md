@@ -8,7 +8,7 @@
 Transform Wisme from single-speaker monologues to dynamic two-speaker conversations that enhance engagement, comprehension, and retention through natural dialogue patterns.
 
 **PHASE 1**: Predetermined ElevenLabs voices with 15-category coverage
-**PHASE 2**: XTTS integration with full user customization
+**PHASE 2**: Custom StyleTTS 2 models with podcast-quality voices
 
 ---
 
@@ -25,12 +25,12 @@ Transform Wisme from single-speaker monologues to dynamic two-speaker conversati
 ```dart
 class VoicePool {
   static const Map<String, String> elevenLabsVoices = {
-    'kai': 'ElevenLabsVoiceID1',      // Versatile, thoughtful male voice
-    'alex': 'ElevenLabsVoiceID2',     // Authoritative, clear male expert
-    'maya': 'ElevenLabsVoiceID3',     // Energetic, engaging female host
-    'david': 'ElevenLabsVoiceID4',    // Strategic, professional male expert
-    'sara': 'ElevenLabsVoiceID5',     // Thoughtful, warm female expert
-    'zoe': 'ElevenLabsVoiceID6',      // Creative, dynamic female host
+    'kai': 'pNInz6obpgDQGcFmaJgB',      // Adam - Versatile, thoughtful male voice
+    'alex': '21m00Tcm4TlvDq8ikWAM',     // Rachel - Authoritative, clear male expert
+    'maya': 'AZnzlk1XvdvUeBnXmlld',     // Domi - Energetic, engaging female host
+    'david': 'EXAVitQu4vr4xnSDxMaL',    // Bella - Strategic, professional male expert
+    'sara': 'ErXwobaYiN019PkySvjV',     // Antoni - Thoughtful, warm female expert
+    'zoe': 'MF3mGyEYCl7XYWbV9V6O',      // Elli - Creative, dynamic female host
   };
 }
 ```
@@ -55,20 +55,16 @@ enum ContentCategory {
   gaming,        // Zoe (host) + Sara (expert)
   society,       // Kai (host) + Sara (expert)
 }
-  technical_programming, 
-  general_knowledge,
-  // All 15 categories supported in Phase 1
-}
 
 class Phase1VoiceSystem {
   // PRODUCTION-READY: 6 ElevenLabs Voice IDs for all categories
   static const Map<String, String> voicePool = {
-    'kai': 'ElevenLabsVoiceID1',     // Warm, curious, questioning style
-    'alex': 'ElevenLabsVoiceID2',   // Clear, authoritative, explanatory  
-    'maya': 'ElevenLabsVoiceID3',   // Dynamic, enthusiastic, engaging
-    'david': 'ElevenLabsVoiceID4',  // Wise, measured, advisory
-    'sara': 'ElevenLabsVoiceID5',   // Empathetic, creative, nurturing
-    'zoe': 'ElevenLabsVoiceID6',    // Energetic, curious, story-driven
+    'kai': 'pNInz6obpgDQGcFmaJgB',     // Warm, curious, questioning style
+    'alex': '21m00Tcm4TlvDq8ikWAM',   // Clear, authoritative, explanatory  
+    'maya': 'AZnzlk1XvdvUeBnXmlld',   // Dynamic, enthusiastic, engaging
+    'david': 'EXAVitQu4vr4xnSDxMaL',  // Wise, measured, advisory
+    'sara': 'ErXwobaYiN019PkySvjV',   // Empathetic, creative, nurturing
+    'zoe': 'MF3mGyEYCl7XYWbV9V6O',    // Energetic, curious, story-driven
   };
   
   // COMPLETE: All 15 categories mapped to voice pairs
@@ -99,595 +95,519 @@ class Phase1VoiceSystem {
       
       ContentCategory.skills: ConversationPair(
         host: SpeakerProfile(id: 'maya', voiceId: voicePool['maya']!,
-                            personality: 'practical_skills_host'),
+                            personality: 'energetic_skills_host'),
         expert: SpeakerProfile(id: 'david', voiceId: voicePool['david']!,
-                             personality: 'skills_mastery_expert'),
+                             personality: 'practical_skills_expert'),
       ),
       
       ContentCategory.career: ConversationPair(
         host: SpeakerProfile(id: 'maya', voiceId: voicePool['maya']!,
-                            personality: 'career_focused_host'),
+                            personality: 'motivational_career_host'),
         expert: SpeakerProfile(id: 'david', voiceId: voicePool['david']!,
-                             personality: 'career_strategy_expert'),
+                             personality: 'strategic_career_expert'),
       ),
       
       ContentCategory.environment: ConversationPair(
         host: SpeakerProfile(id: 'maya', voiceId: voicePool['maya']!,
-                            personality: 'environmental_advocate'),
+                            personality: 'passionate_environment_host'),
         expert: SpeakerProfile(id: 'alex', voiceId: voicePool['alex']!,
-                             personality: 'environmental_scientist'),
+                             personality: 'scientific_environment_expert'),
       ),
       
-      // SCIENCE + MATHEMATICS = Maya + Alex  
+      // SCIENCE + MATHEMATICS = Maya/Kai + Alex
       ContentCategory.science: ConversationPair(
         host: SpeakerProfile(id: 'maya', voiceId: voicePool['maya']!,
-                            personality: 'excited_science_host'),
+                            personality: 'curious_science_host'),
         expert: SpeakerProfile(id: 'alex', voiceId: voicePool['alex']!,
-                             personality: 'scientific_authority'),
+                             personality: 'analytical_science_expert'),
       ),
       
       ContentCategory.mathematics: ConversationPair(
         host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
-                            personality: 'math_curious_host'),
+                            personality: 'logical_math_host'),
         expert: SpeakerProfile(id: 'alex', voiceId: voicePool['alex']!,
-                             personality: 'mathematical_expert'),
+                             personality: 'precise_math_expert'),
       ),
       
       // CREATIVITY + GAMING = Zoe + Sara
       ContentCategory.creativity: ConversationPair(
         host: SpeakerProfile(id: 'zoe', voiceId: voicePool['zoe']!,
-                            personality: 'creative_catalyst'),
+                            personality: 'imaginative_creativity_host'),
         expert: SpeakerProfile(id: 'sara', voiceId: voicePool['sara']!,
-                             personality: 'artistic_wisdom'),
+                             personality: 'artistic_creativity_expert'),
       ),
       
       ContentCategory.gaming: ConversationPair(
         host: SpeakerProfile(id: 'zoe', voiceId: voicePool['zoe']!,
-                            personality: 'gaming_enthusiast'),
+                            personality: 'enthusiastic_gaming_host'),
         expert: SpeakerProfile(id: 'sara', voiceId: voicePool['sara']!,
-                             personality: 'gaming_design_expert'),
-      ),
-      
-      // SELF-GROWTH + LAW + SOCIETY = Kai + David/Sara
-      ContentCategory.selfGrowth: ConversationPair(
-        host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
-                            personality: 'introspective_growth_seeker'),
-        expert: SpeakerProfile(id: 'david', voiceId: voicePool['david']!,
-                             personality: 'transformational_coach'),
-      ),
-      
-      ContentCategory.law: ConversationPair(
-        host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
-                            personality: 'analytical_law_host'),
-        expert: SpeakerProfile(id: 'david', voiceId: voicePool['david']!,
-                             personality: 'legal_authority'),
-      ),
-      
-      ContentCategory.society: ConversationPair(
-        host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
-                            personality: 'social_observer'),
-        expert: SpeakerProfile(id: 'sara', voiceId: voicePool['sara']!,
-                             personality: 'sociological_expert'),
+                             personality: 'strategic_gaming_expert'),
       ),
       
       // HISTORY + GEOPOLITICS = Zoe + Alex
       ContentCategory.history: ConversationPair(
         host: SpeakerProfile(id: 'zoe', voiceId: voicePool['zoe']!,
-                            personality: 'story_driven_historian'),
+                            personality: 'storytelling_history_host'),
         expert: SpeakerProfile(id: 'alex', voiceId: voicePool['alex']!,
-                             personality: 'scholarly_historian'),
+                             personality: 'analytical_history_expert'),
       ),
       
       ContentCategory.geopolitics: ConversationPair(
         host: SpeakerProfile(id: 'zoe', voiceId: voicePool['zoe']!,
-                            personality: 'global_affairs_host'),
+                            personality: 'curious_geopolitics_host'),
         expert: SpeakerProfile(id: 'alex', voiceId: voicePool['alex']!,
-                             personality: 'geopolitical_analyst'),
+                             personality: 'strategic_geopolitics_expert'),
+      ),
+      
+      // SELF-GROWTH + LAW = Kai + David
+      ContentCategory.selfGrowth: ConversationPair(
+        host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
+                            personality: 'reflective_growth_host'),
+        expert: SpeakerProfile(id: 'david', voiceId: voicePool['david']!,
+                             personality: 'wise_growth_expert'),
+      ),
+      
+      ContentCategory.law: ConversationPair(
+        host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
+                            personality: 'thoughtful_law_host'),
+        expert: SpeakerProfile(id: 'david', voiceId: voicePool['david']!,
+                             personality: 'authoritative_law_expert'),
+      ),
+      
+      // SOCIETY = Kai + Sara
+      ContentCategory.society: ConversationPair(
+        host: SpeakerProfile(id: 'kai', voiceId: voicePool['kai']!,
+                            personality: 'reflective_society_host'),
+        expert: SpeakerProfile(id: 'sara', voiceId: voicePool['sara']!,
+                             personality: 'empathetic_society_expert'),
       ),
     };
   }
-  
-  // SMART REUSE: Same voices, different personalities per category
-  static ConversationPair getVoicesForCategory(ContentCategory category) {
-    final categoryVoices = getCategoryVoices();
-    return categoryVoices[category] ?? categoryVoices[ContentCategory.business]!;
-  }
-  
-  // PHASE 1: All mappings predetermined - no ML classification needed
-  static ContentCategory mapTopicToCategory(String topic) {
-    // Simplified category detection for Phase 1
-    // Advanced ML classification comes in Phase 2
-    final topicLower = topic.toLowerCase();
-    
-    if (topicLower.contains('tech') || topicLower.contains('programming') || topicLower.contains('software')) {
-      return ContentCategory.technology;
-    } else if (topicLower.contains('business') || topicLower.contains('finance') || topicLower.contains('money')) {
-      return ContentCategory.business;
-    } else if (topicLower.contains('creative') || topicLower.contains('art') || topicLower.contains('design')) {
-      return ContentCategory.creativity;
-    } else if (topicLower.contains('science') || topicLower.contains('research')) {
-      return ContentCategory.science;
-    } else if (topicLower.contains('history') || topicLower.contains('historical')) {
-      return ContentCategory.history;
-    }
-    // Default fallback
-    return ContentCategory.business;
-  }
 }
 ```
-
-### **ElevenLabs Natural Speech Integration:**
-```dart
-// EXPERIMENTAL - Natural speech enhancement still being refined
-class NaturalSpeechProcessor {
-  
-  String enhanceWithNaturalSpeech(String baseText, VoiceProfile voice) {
-    // WARNING: This approach is under testing - may need significant changes
-    
-    String enhanced = baseText;
-    
-    // Add personality-specific speech patterns
-    enhanced = _addSpeechFillers(enhanced, voice.naturalSpeechPatterns);
-    
-    // Insert natural hesitations and pauses
-    enhanced = _addConversationalHesitations(enhanced);
-    
-    // Wrap with SSML for ElevenLabs emotion control
-    enhanced = _wrapWithEmotionalSSML(enhanced, voice.emotionSettings);
-    
-    return enhanced;
-  }
-  
-  String _addConversationalHesitations(String text) {
-    // PROTOTYPE - Hesitation insertion logic needs refinement
-    // Current rules are basic and may sound robotic
-    
-    // Add thinking pauses before complex concepts
-    text = text.replaceAllMapped(
-      RegExp(r'(explain|understand|basically|think about)'),
-      (match) => 'umm... ${match.group(0)}',
-    );
-    
-    // Add natural breaks in long sentences
-    text = text.replaceAllMapped(
-      RegExp(r'([.!?])\s+([A-Z])'),
-      (match) => '${match.group(1)} <break time="0.3s"/> ${match.group(2)}',
-    );
-    
-    return text;
-  }
-  
-  String _wrapWithEmotionalSSML(String text, EmotionProfile emotions) {
-    // EXPERIMENTAL - SSML emotion integration
-    // ElevenLabs SSML support varies - needs extensive testing
-    
-    return '''
-    <speak>
-      <prosody rate="medium" pitch="normal">
-        <voice stability="${emotions.stability}" 
-               similarity_boost="${emotions.similarity_boost}" 
-               style="${emotions.style}">
-          $text
-        </voice>
-      </prosody>
-    </speak>
-    ''';
-  }
-}
-```
-
-### **CRITICAL UNCERTAINTIES REQUIRING DISCUSSION:**
-
-1. **Voice Selection & Cloning:**
-   - How many voices per category? (2-3 host/expert pairs vs single pair)
-   - Voice actor selection criteria and budget
-   - ElevenLabs vs custom XTTS timeline for voice cloning
-
-2. **Natural Speech Implementation:**
-   - Text-level enhancement vs SSML-level vs voice model training
-   - Optimal balance between naturalness and educational clarity
-   - A/B testing framework for speech pattern effectiveness
-
-3. **Category-Voice Mapping:**
-   - Manual rule-based vs ML classification for topic-to-voice matching
-   - Fallback strategies when topics span multiple categories
-   - User preference overrides (e.g., preferred voice selection)
-
-4. **Emotion & Engagement:**
-   - How much emotional variation without compromising educational focus
-   - Context-aware emotion (excited for breakthroughs, concerned for problems)
-   - Conversation flow emotion consistency between speakers
 
 ---
 
-## 💬 **CONVERSATION ARCHITECTURE**
+## 🎭 **PHASE 2: STYLETTS 2 CUSTOM VOICES**
 
-### **Conversation Flow Templates:**
+### **Future Implementation - Placeholder Architecture**
+
+**Voice Archetypes (6 Total Voices):**
 
 ```dart
-class ConversationTemplate {
-  final String templateId;
-  final List<ConversationBlock> blocks;
-  final Duration targetDuration;
+class Phase2VoiceSystem {
+  // PHASE 2: Custom StyleTTS 2 Models (Placeholder)
+  static const Map<String, String> styleTTS2Models = {
+    'professor': 'styletts2_professor_model',           // Authoritative educator
+    'mentor': 'styletts2_mentor_model',                 // Warm, supportive mentor
+    'curious_host': 'styletts2_curious_host_model',     // Energetic, inquisitive host
+    'thoughtful_analyst': 'styletts2_analyst_model',    // Analytical, reflective expert
+    'innovator': 'styletts2_innovator_model',           // Dynamic, forward-thinking expert
+    'storyteller': 'styletts2_storyteller_model',       // Expressive, narrative expert
+  };
   
-  static final Map<String, ConversationTemplate> templates = {
-    'concept_explanation': ConversationTemplate(
-      templateId: 'concept_explanation',
-      blocks: [
-        // Opening
-        ConversationBlock(
-          speaker: SpeakerRole.host,
-          type: BlockType.introduction,
-          template: "Hey everyone! I'm {host_name}, and today I'm joined by {expert_name}. We're diving into {topic} - something I know many of you have questions about. {expert_name}, can you start by explaining what {main_concept} actually means?",
-          duration: Duration(seconds: 20),
-        ),
-        
-        ConversationBlock(
-          speaker: SpeakerRole.expert,
-          type: BlockType.conceptIntro,
-          template: "Thanks {host_name}! {main_concept} is essentially {core_definition}. Think of it like {primary_analogy}...",
-          duration: Duration(seconds: 45),
-        ),
-        
-        // Deep dive with natural questions
-        ConversationBlock(
-          speaker: SpeakerRole.host,
-          type: BlockType.clarifyingQuestion,
-          template: "Wait, so you're saying {key_point}? Can you give us a concrete example of how that works in practice?",
-          duration: Duration(seconds: 15),
-        ),
-        
-        ConversationBlock(
-          speaker: SpeakerRole.expert,
-          type: BlockType.detailedExample,
-          template: "Absolutely! Let me walk you through {real_world_example}. Here's exactly what happens: {step_by_step_explanation}",
-          duration: Duration(seconds: 60),
-        ),
-        
-        // Follow-up and deeper questions
-        ConversationBlock(
-          speaker: SpeakerRole.host,
-          type: BlockType.followUp,
-          template: "That makes sense! Now I'm wondering - what if someone is just getting started? Is there a simpler approach they could take?",
-          duration: Duration(seconds: 12),
-        ),
-        
-        ConversationBlock(
-          speaker: SpeakerRole.expert,
-          type: BlockType.beginnerGuidance,
-          template: "Great question! For beginners, I always recommend {simplified_approach}. The key is to start with {first_step}, then gradually {progression}",
-          duration: Duration(seconds: 55),
-        ),
-        
-        // Wrap-up
-        ConversationBlock(
-          speaker: SpeakerRole.host,
-          type: BlockType.summary,
-          template: "This has been super helpful, {expert_name}! Let me summarize what we covered: {key_takeaways}. What's the one thing you want our listeners to do after this episode?",
-          duration: Duration(seconds: 25),
-        ),
-        
-        ConversationBlock(
-          speaker: SpeakerRole.expert,
-          type: BlockType.callToAction,
-          template: "If you take away just one thing, {primary_action}. Start with {specific_first_step} this week, and you'll be on the right track!",
-          duration: Duration(seconds: 20),
-        ),
-      ],
-      targetDuration: Duration(minutes: 4, seconds: 30),
+  // Phase 2 voice characteristics
+  static const Map<String, VoiceCharacteristics> phase2Characteristics = {
+    'professor': VoiceCharacteristics(
+      pitch: 'medium',
+      speed: 'measured',
+      tone: 'authoritative',
+      accent: 'neutral',
+      emotionalRange: ['confident', 'patient', 'educational'],
+    ),
+    'mentor': VoiceCharacteristics(
+      pitch: 'medium',
+      speed: 'calm',
+      tone: 'warm',
+      accent: 'neutral',
+      emotionalRange: ['supportive', 'encouraging', 'wise'],
+    ),
+    'curious_host': VoiceCharacteristics(
+      pitch: 'medium',
+      speed: 'energetic',
+      tone: 'enthusiastic',
+      accent: 'neutral',
+      emotionalRange: ['excited', 'curious', 'engaging'],
+    ),
+    'thoughtful_analyst': VoiceCharacteristics(
+      pitch: 'medium',
+      speed: 'thoughtful',
+      tone: 'analytical',
+      accent: 'neutral',
+      emotionalRange: ['reflective', 'balanced', 'insightful'],
+    ),
+    'innovator': VoiceCharacteristics(
+      pitch: 'medium',
+      speed: 'dynamic',
+      tone: 'visionary',
+      accent: 'neutral',
+      emotionalRange: ['dynamic', 'forward-thinking', 'inspiring'],
+    ),
+    'storyteller': VoiceCharacteristics(
+      pitch: 'medium',
+      speed: 'expressive',
+      tone: 'narrative',
+      accent: 'neutral',
+      emotionalRange: ['expressive', 'engaging', 'emotional'],
     ),
   };
 }
 ```
 
-### **Dynamic Conversation Generation:**
+### **Phase 2 Category Mapping:**
 
 ```dart
-class ConversationScriptGenerator {
-  Future<ConversationScript> generateScript({
+class Phase2CategoryMapping {
+  static Map<ContentCategory, ConversationPair> getPhase2Voices() {
+    return {
+      // Technology: Curious Host + Professor
+      ContentCategory.technology: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'professor', voiceId: 'styletts2_professor_model'),
+      ),
+      
+      // Business: Curious Host + Thoughtful Analyst
+      ContentCategory.business: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'thoughtful_analyst', voiceId: 'styletts2_analyst_model'),
+      ),
+      
+      // Psychology: Curious Host + Mentor
+      ContentCategory.psychology: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'mentor', voiceId: 'styletts2_mentor_model'),
+      ),
+      
+      // Science: Curious Host + Professor
+      ContentCategory.science: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'professor', voiceId: 'styletts2_professor_model'),
+      ),
+      
+      // Creativity: Storyteller + Innovator
+      ContentCategory.creativity: ConversationPair(
+        host: SpeakerProfile(id: 'storyteller', voiceId: 'styletts2_storyteller_model'),
+        expert: SpeakerProfile(id: 'innovator', voiceId: 'styletts2_innovator_model'),
+      ),
+      
+      // Self-Growth: Storyteller + Mentor
+      ContentCategory.selfGrowth: ConversationPair(
+        host: SpeakerProfile(id: 'storyteller', voiceId: 'styletts2_storyteller_model'),
+        expert: SpeakerProfile(id: 'mentor', voiceId: 'styletts2_mentor_model'),
+      ),
+      
+      // History: Storyteller + Thoughtful Analyst
+      ContentCategory.history: ConversationPair(
+        host: SpeakerProfile(id: 'storyteller', voiceId: 'styletts2_storyteller_model'),
+        expert: SpeakerProfile(id: 'thoughtful_analyst', voiceId: 'styletts2_analyst_model'),
+      ),
+      
+      // Skills: Curious Host + Professor
+      ContentCategory.skills: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'professor', voiceId: 'styletts2_professor_model'),
+      ),
+      
+      // Career: Curious Host + Mentor
+      ContentCategory.career: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'mentor', voiceId: 'styletts2_mentor_model'),
+      ),
+      
+      // Law: Thoughtful Analyst + Professor
+      ContentCategory.law: ConversationPair(
+        host: SpeakerProfile(id: 'thoughtful_analyst', voiceId: 'styletts2_analyst_model'),
+        expert: SpeakerProfile(id: 'professor', voiceId: 'styletts2_professor_model'),
+      ),
+      
+      // Geopolitics: Thoughtful Analyst + Innovator
+      ContentCategory.geopolitics: ConversationPair(
+        host: SpeakerProfile(id: 'thoughtful_analyst', voiceId: 'styletts2_analyst_model'),
+        expert: SpeakerProfile(id: 'innovator', voiceId: 'styletts2_innovator_model'),
+      ),
+      
+      // Environment: Curious Host + Thoughtful Analyst
+      ContentCategory.environment: ConversationPair(
+        host: SpeakerProfile(id: 'curious_host', voiceId: 'styletts2_curious_host_model'),
+        expert: SpeakerProfile(id: 'thoughtful_analyst', voiceId: 'styletts2_analyst_model'),
+      ),
+      
+      // Mathematics: Professor + Thoughtful Analyst
+      ContentCategory.mathematics: ConversationPair(
+        host: SpeakerProfile(id: 'professor', voiceId: 'styletts2_professor_model'),
+        expert: SpeakerProfile(id: 'thoughtful_analyst', voiceId: 'styletts2_analyst_model'),
+      ),
+      
+      // Gaming: Storyteller + Innovator
+      ContentCategory.gaming: ConversationPair(
+        host: SpeakerProfile(id: 'storyteller', voiceId: 'styletts2_storyteller_model'),
+        expert: SpeakerProfile(id: 'innovator', voiceId: 'styletts2_innovator_model'),
+      ),
+      
+      // Society: Storyteller + Mentor
+      ContentCategory.society: ConversationPair(
+        host: SpeakerProfile(id: 'storyteller', voiceId: 'styletts2_storyteller_model'),
+        expert: SpeakerProfile(id: 'mentor', voiceId: 'styletts2_mentor_model'),
+      ),
+    };
+  }
+}
+```
+
+---
+
+## 🎭 **CONVERSATION FLOW ARCHITECTURE**
+
+### **Dynamic Dialogue Generation**
+
+```dart
+class ConversationFlowEngine {
+  static Future<ConversationDialogue> generateDialogue({
     required String topic,
-    required String category,
+    required ContentCategory category,
     required ConversationPair speakers,
-    required List<String> keyPoints,
-    required UserInterestProfile? userProfile,
+    required Duration targetDuration,
   }) async {
     
-    final template = ConversationTemplate.templates['concept_explanation']!;
-    final script = ConversationScript();
+    // Phase 1: Use predetermined ElevenLabs voices
+    final hostVoice = speakers.host;
+    final expertVoice = speakers.expert;
     
-    // Generate contextual content for each block
-    for (final block in template.blocks) {
-      final content = await _generateBlockContent(
-        block: block,
-        topic: topic,
-        speakers: speakers,
-        keyPoints: keyPoints,
-        userProfile: userProfile,
-      );
+    // Generate conversation structure
+    final dialogue = await _generateConversationStructure(
+      topic: topic,
+      category: category,
+      hostVoice: hostVoice,
+      expertVoice: expertVoice,
+      targetDuration: targetDuration,
+    );
+    
+    return dialogue;
+  }
+  
+  static Future<ConversationDialogue> _generateConversationStructure({
+    required String topic,
+    required ContentCategory category,
+    required SpeakerVoice hostVoice,
+    required SpeakerVoice expertVoice,
+    required Duration targetDuration,
+  }) async {
+    
+    // Calculate segments based on target duration
+    final segmentCount = (targetDuration.inMinutes * 2).clamp(4, 12);
+    final segments = <DialogueSegment>[];
+    
+    // Introduction segment
+    segments.add(DialogueSegment(
+      speakerId: hostVoice.id,
+      speakerName: hostVoice.name,
+      text: _generateIntroduction(topic, category),
+      duration: Duration(seconds: 30),
+      emotionalTone: 'curious',
+    ));
+    
+    // Main content segments
+    for (int i = 0; i < segmentCount - 2; i++) {
+      final isHostTurn = i % 2 == 0;
+      final speaker = isHostTurn ? hostVoice : expertVoice;
       
-      script.addBlock(ConversationBlock(
-        speaker: block.speaker,
-        type: block.type,
-        content: content,
-        speakerId: _getSpeakerIdForRole(block.speaker, speakers),
-        duration: block.duration,
-        metadata: {
-          'template_id': block.templateId,
-          'personalized': userProfile != null,
-          'category': category,
-        },
+      segments.add(DialogueSegment(
+        speakerId: speaker.id,
+        speakerName: speaker.name,
+        text: _generateContentSegment(topic, category, i, isHostTurn),
+        duration: Duration(seconds: 45),
+        emotionalTone: _getEmotionalTone(speaker, i),
       ));
     }
     
-    return script;
-  }
-  
-  Future<String> _generateBlockContent({
-    required ConversationBlock block,
-    required String topic,
-    required ConversationPair speakers,
-    required List<String> keyPoints,
-    required UserInterestProfile? userProfile,
-  }) async {
+    // Conclusion segment
+    segments.add(DialogueSegment(
+      speakerId: hostVoice.id,
+      speakerName: hostVoice.name,
+      text: _generateConclusion(topic, category),
+      duration: Duration(seconds: 30),
+      emotionalTone: 'satisfied',
+    ));
     
-    final prompt = _buildConversationPrompt(
-      template: block.template,
+    return ConversationDialogue(
       topic: topic,
-      speakers: speakers,
-      userProfile: userProfile,
+      category: category,
+      segments: segments,
+      totalDuration: targetDuration,
+      speakers: [hostVoice, expertVoice],
     );
-    
-    // Generate content using GPT with conversation-aware prompting
-    final content = await _gptService.generateContent(prompt);
-    
-    return content;
   }
 }
 ```
 
 ---
 
-## 🎙️ **CONVERSATION DYNAMICS**
+## 🎭 **VOICE PERSONALITY SYSTEM**
 
-### **Natural Flow Elements:**
+### **Phase 1: ElevenLabs Personality Mapping**
 
 ```dart
-class ConversationDynamics {
-  // Transition phrases for natural flow
-  static final Map<SpeakerRole, List<String>> transitionPhrases = {
-    SpeakerRole.host: [
-      "Wait, so you're saying...",
-      "That's interesting! What about...",
-      "I think our listeners are wondering...",
-      "Can you break that down a bit more?",
-      "So if I understand correctly...",
-    ],
-    
-    SpeakerRole.expert: [
-      "Exactly! And here's why...",
-      "That's a great question. Let me explain...",
-      "You're absolutely right, and another point is...",
-      "Building on that...",
-      "Here's the key thing to understand...",
-    ],
-  };
-  
-  // Agreement and acknowledgment phrases
-  static final List<String> agreementPhrases = [
-    "Absolutely!",
-    "Exactly right!",
-    "That's a perfect example!",
-    "You've hit the nail on the head!",
-    "Precisely!",
-  ];
-  
-  // Question types for natural inquiry
-  static final Map<String, List<String>> questionTemplates = {
-    'clarification': [
-      "What exactly do you mean by {concept}?",
-      "Can you explain that in simpler terms?",
-      "How does that work in practice?",
-    ],
-    'application': [
-      "Where would someone actually use this?",
-      "What's a real-world example of this?",
-      "How would a beginner approach this?",
-    ],
-    'deeper_insight': [
-      "What's the most important thing to understand here?",
-      "What do people usually get wrong about this?",
-      "What would you say to someone who's skeptical?",
-    ],
+class VoicePersonalitySystem {
+  // Phase 1: ElevenLabs voice personalities
+  static const Map<String, VoicePersonality> phase1Personalities = {
+    'kai': VoicePersonality(
+      name: 'Versatile Host',
+      traits: ['curious', 'thoughtful', 'reflective', 'patient'],
+      speakingStyle: 'conversational',
+      emotionalRange: ['curious', 'thoughtful', 'surprised', 'satisfied'],
+      optimalFor: ['technology', 'psychology', 'selfGrowth', 'law', 'mathematics', 'society'],
+    ),
+    'alex': VoicePersonality(
+      name: 'Authoritative Expert',
+      traits: ['confident', 'clear', 'precise', 'knowledgeable'],
+      speakingStyle: 'educational',
+      emotionalRange: ['confident', 'patient', 'enthusiastic', 'thoughtful'],
+      optimalFor: ['technology', 'science', 'history', 'geopolitics', 'environment', 'mathematics'],
+    ),
+    'maya': VoicePersonality(
+      name: 'Energetic Host',
+      traits: ['enthusiastic', 'dynamic', 'engaging', 'motivational'],
+      speakingStyle: 'energetic',
+      emotionalRange: ['excited', 'enthusiastic', 'curious', 'motivated'],
+      optimalFor: ['business', 'science', 'skills', 'career', 'environment'],
+    ),
+    'david': VoicePersonality(
+      name: 'Strategic Expert',
+      traits: ['wise', 'measured', 'strategic', 'advisory'],
+      speakingStyle: 'authoritative',
+      emotionalRange: ['thoughtful', 'confident', 'measured', 'wise'],
+      optimalFor: ['business', 'selfGrowth', 'skills', 'career', 'law'],
+    ),
+    'sara': VoicePersonality(
+      name: 'Empathetic Expert',
+      traits: ['empathetic', 'creative', 'nurturing', 'understanding'],
+      speakingStyle: 'warm',
+      emotionalRange: ['empathetic', 'encouraging', 'creative', 'supportive'],
+      optimalFor: ['psychology', 'creativity', 'gaming', 'society'],
+    ),
+    'zoe': VoicePersonality(
+      name: 'Creative Host',
+      traits: ['creative', 'energetic', 'storytelling', 'imaginative'],
+      speakingStyle: 'expressive',
+      emotionalRange: ['excited', 'creative', 'imaginative', 'enthusiastic'],
+      optimalFor: ['creativity', 'history', 'geopolitics', 'gaming'],
+    ),
   };
 }
 ```
 
-### **Conversation Quality Metrics:**
+### **Phase 2: StyleTTS 2 Personality Mapping**
 
 ```dart
-class ConversationQualityAnalyzer {
-  Future<ConversationQualityReport> analyzeScript(ConversationScript script) async {
-    return ConversationQualityReport(
-      naturalFlowScore: _calculateFlowScore(script),
-      speakerBalanceScore: _calculateBalanceScore(script),
-      engagementPotential: _estimateEngagement(script),
-      educationalEffectiveness: _assessLearningValue(script),
-      recommendations: _generateImprovements(script),
-    );
-  }
-  
-  double _calculateFlowScore(ConversationScript script) {
-    // Analyze transition smoothness, question-answer alignment, natural pacing
-    // Score: 0.0 - 1.0 (higher = more natural)
-  }
-  
-  double _calculateBalanceScore(ConversationScript script) {
-    // Ensure neither speaker dominates too much
-    // Ideal ratio: 40% host, 60% expert
+class Phase2PersonalitySystem {
+  // Phase 2: Custom StyleTTS 2 personalities
+  static const Map<String, VoicePersonality> phase2Personalities = {
+    'professor': VoicePersonality(
+      name: 'The Professor',
+      traits: ['authoritative', 'knowledgeable', 'patient', 'educational'],
+      speakingStyle: 'lecture',
+      emotionalRange: ['confident', 'patient', 'enthusiastic', 'thoughtful'],
+      optimalFor: ['technology', 'science', 'mathematics'],
+    ),
+    'mentor': VoicePersonality(
+      name: 'The Mentor',
+      traits: ['supportive', 'wise', 'encouraging', 'experienced'],
+      speakingStyle: 'conversational',
+      emotionalRange: ['supportive', 'encouraging', 'wise', 'empathetic'],
+      optimalFor: ['psychology', 'selfGrowth', 'career'],
+    ),
+    'curious_host': VoicePersonality(
+      name: 'The Curious Host',
+      traits: ['inquisitive', 'energetic', 'engaging', 'enthusiastic'],
+      speakingStyle: 'interview',
+      emotionalRange: ['curious', 'excited', 'surprised', 'enthusiastic'],
+      optimalFor: ['technology', 'science', 'creativity'],
+    ),
+    'thoughtful_analyst': VoicePersonality(
+      name: 'The Thoughtful Analyst',
+      traits: ['analytical', 'reflective', 'balanced', 'insightful'],
+      speakingStyle: 'analytical',
+      emotionalRange: ['thoughtful', 'analytical', 'balanced', 'reflective'],
+      optimalFor: ['business', 'geopolitics', 'society'],
+    ),
+    'innovator': VoicePersonality(
+      name: 'The Innovator',
+      traits: ['dynamic', 'forward-thinking', 'inspiring', 'visionary'],
+      speakingStyle: 'inspirational',
+      emotionalRange: ['dynamic', 'inspiring', 'enthusiastic', 'visionary'],
+      optimalFor: ['technology', 'creativity', 'gaming'],
+    ),
+    'storyteller': VoicePersonality(
+      name: 'The Storyteller',
+      traits: ['expressive', 'narrative', 'engaging', 'emotional'],
+      speakingStyle: 'narrative',
+      emotionalRange: ['expressive', 'engaging', 'emotional', 'captivating'],
+      optimalFor: ['history', 'creativity', 'society'],
+    ),
+  };
+}
+```
+
+---
+
+## 🎭 **IMPLEMENTATION STATUS**
+
+### **Phase 1: ElevenLabs Integration ✅ COMPLETE**
+
+- ✅ **Voice Configuration**: 6 ElevenLabs voices configured
+- ✅ **Category Mapping**: All 15 categories mapped to voice pairs
+- ✅ **Personality System**: Voice personalities defined
+- ✅ **Conversation Engine**: Dynamic dialogue generation
+- ✅ **Audio Integration**: ElevenLabs TTS service integrated
+- ✅ **Production Ready**: Fully functional two-speaker system
+
+### **Phase 2: StyleTTS 2 Integration 🔄 PLANNED**
+
+- 🔄 **Voice Training**: Custom StyleTTS 2 models (placeholder)
+- 🔄 **Model Integration**: StyleTTS 2 service integration
+- 🔄 **Quality Optimization**: Podcast-quality voice generation
+- 🔄 **Cost Optimization**: Reduced TTS costs
+- 🔄 **Brand Differentiation**: Unique voice identities
+
+### **Migration Strategy**
+
+```dart
+class TTSMigrationStrategy {
+  static Future<void> migrateToPhase2() async {
+    // Step 1: Train custom StyleTTS 2 models
+    await _trainCustomModels();
+    
+    // Step 2: Integrate StyleTTS 2 service
+    await _integrateStyleTTS2Service();
+    
+    // Step 3: A/B test quality and performance
+    await _testPhase2Quality();
+    
+    // Step 4: Gradual migration of content
+    await _migrateContentToPhase2();
+    
+    // Step 5: Phase out ElevenLabs dependency
+    await _phaseOutElevenLabs();
   }
 }
 ```
 
 ---
 
-## 🎯 **USER EXPERIENCE INTEGRATION**
+## 🎭 **CONCLUSION**
 
-### **Format Selection UI:**
+The two-speaker conversation system provides a revolutionary approach to conversational learning. Phase 1 delivers immediate value with high-quality ElevenLabs voices, while Phase 2 prepares for the future with custom StyleTTS 2 models.
 
-```dart
-class EpisodeFormatSelector extends StatefulWidget {
-  final Function(PodcastFormat) onFormatSelected;
-  
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FormatOption(
-          format: PodcastFormat.singleSpeaker,
-          title: "Classic Format",
-          description: "Single expert explanation",
-          icon: Icons.person,
-          benefits: ["Focused delivery", "Familiar format", "Efficient learning"],
-        ),
-        
-        FormatOption(
-          format: PodcastFormat.twoSpeaker,
-          title: "Conversation Format", // NEW
-          description: "Dynamic dialogue between host and expert",
-          icon: Icons.people,
-          benefits: ["Engaging dialogue", "Natural questions", "Better retention"],
-          badge: "Premium Experience",
-        ),
-      ],
-    );
-  }
-}
-```
+**Key Benefits:**
+- **Enhanced Engagement**: Natural dialogue patterns increase user engagement
+- **Better Comprehension**: Two-speaker format improves information retention
+- **Scalable Architecture**: Supports both current and future TTS technologies
+- **Cost Optimization**: Phase 2 will significantly reduce TTS costs
+- **Brand Differentiation**: Custom voices create unique learning experience
 
-### **Conversation Preview:**
-
-```dart
-class ConversationPreview extends StatelessWidget {
-  final ConversationScript script;
-  
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: script.blocks.length,
-      itemBuilder: (context, index) {
-        final block = script.blocks[index];
-        return ConversationBubble(
-          speaker: block.speaker,
-          content: block.content.substring(0, min(100, block.content.length)) + "...",
-          speakerName: block.speakerName,
-          avatar: block.speakerAvatar,
-        );
-      },
-    );
-  }
-}
-```
-
----
-
-## 📊 **PERFORMANCE OPTIMIZATION**
-
-### **Fragment Caching for Conversations:**
-
-```dart
-class ConversationFragmentCache {
-  // Cache conversation patterns by template + content type
-  final Map<String, List<ConversationFragment>> _templateCache = {};
-  
-  Future<ConversationFragment?> findConversationMatch({
-    required String templateId,
-    required String content,
-    required ConversationPair speakers,
-  }) async {
-    
-    final cacheKey = _generateConversationCacheKey(templateId, content, speakers);
-    final existingFragments = _templateCache[templateId] ?? [];
-    
-    // Find semantically similar conversation fragments
-    for (final fragment in existingFragments) {
-      final similarity = await _calculateConversationSimilarity(
-        fragment.content,
-        content,
-      );
-      
-      if (similarity > 0.85) {
-        return fragment;
-      }
-    }
-    
-    return null;
-  }
-}
-```
-
-### **Quality Assurance for Conversations:**
-
-```dart
-class ConversationQualityGate {
-  Future<bool> validateConversation(ConversationScript script) async {
-    // Check speaker balance (neither dominates excessively)
-    final balance = _calculateSpeakerBalance(script);
-    if (balance < 0.3 || balance > 0.7) return false;
-    
-    // Validate natural flow (questions followed by answers)
-    final flowScore = _validateConversationFlow(script);
-    if (flowScore < 0.8) return false;
-    
-    // Check educational content density
-    final learningValue = _assessEducationalValue(script);
-    if (learningValue < 0.75) return false;
-    
-    return true;
-  }
-}
-```
-
----
-
-## 🔄 **MIGRATION FROM SINGLE SPEAKER**
-
-### **Backwards Compatibility:**
-- Existing single-speaker content remains functional
-- Users can choose format per episode
-- Gradual introduction with user education
-
-### **A/B Testing Framework:**
-- 50% users get conversation format
-- Track engagement, completion, satisfaction
-- Compare learning outcomes between formats
-
-### **User Onboarding:**
-- Interactive demo of conversation format benefits
-- Side-by-side comparison with classic format
-- User preference learning and recommendation
-
----
-
-## 📈 **SUCCESS METRICS**
-
-### **Engagement Metrics:**
-- **Completion Rate**: Target +25% vs single-speaker
-- **Replay Rate**: Target +40% for conversation format
-- **Skip Rate**: Target <15% for conversation episodes
-
-### **Learning Effectiveness:**
-- **Comprehension Scores**: A/B test knowledge retention
-- **User Feedback**: Qualitative assessment of conversation quality
-- **Time to Understanding**: Measure concept grasp speed
-
-### **Technical Performance:**
-- **Generation Time**: <30 seconds for 5-minute conversation
-- **Cache Hit Rate**: >40% for conversation fragments
-- **Audio Quality**: Seamless speaker transitions
-
----
-
-**The two-speaker conversation system transforms Wisme from an audio encyclopedia into an engaging learning companion, making complex topics accessible through natural dialogue patterns that mirror how humans naturally learn through conversation.**
-
-*Last Updated: July 20, 2025*
-*Document Owner: Audio Experience Team*
+**Next Steps:**
+1. **Phase 1**: Continue optimizing ElevenLabs integration
+2. **Phase 2**: Begin StyleTTS 2 model training preparation
+3. **Quality Assurance**: Implement comprehensive testing protocols
+4. **User Feedback**: Gather feedback on voice quality and preferences
+5. **Performance Monitoring**: Track engagement and retention metrics

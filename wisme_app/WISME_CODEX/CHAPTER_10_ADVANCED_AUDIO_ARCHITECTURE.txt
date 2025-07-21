@@ -1,0 +1,49 @@
+CHAPTER 10: ADVANCED AUDIO ARCHITECTURE
+
+INTRODUCTION
+Audio is the core of WISME’s conversational learning. This chapter details the advanced audio system, from two-speaker architecture to smart caching and real-time adaptation.
+
+1. TWO-SPEAKER AUDIO SYSTEM
+- Modular system with primary (host) and secondary (expert) voices
+- 6-voice mapping for content categories (Phase 1: ElevenLabs, Phase 2: StyleTTS 2)
+- Dynamic dialogue assembly for natural, engaging conversations
+
+2. SMART AUDIO CACHING
+- Semantic fragment caching for cost-effective reuse
+- Tagging and metadata for rapid lookup and dynamic journey assembly
+- Cache management for freshness, diversity, and engagement
+
+3. AUDIO QUALITY OPTIMIZATION
+- Always-on production quality for all users (no user-facing quality variable)
+- Automated analysis for clarity, naturalness, and technical quality
+- Tiered optimizations for free vs. premium users
+
+4. REAL-TIME AUDIO PROCESSING
+- Real-time playback, background audio, and seamless transitions
+- Placeholder for future emotion/adaptation features (Phase 2)
+- Analytics-driven improvements to playback and engagement
+
+5. PERSONALIZATION & ADAPTATION
+- Personalized voice selection for premium users (Phase 2)
+- Adaptive playback speed, volume, and emphasis based on user profile
+- Integration with personalization engine for learning style adaptation
+
+6. PERFORMANCE OPTIMIZATION
+- Multi-layer caching and efficient audio streaming
+- Proactive preloading and cache cleanup
+- Monitoring and continuous improvement
+
+CHALLENGES & SOLUTIONS
+- Challenge: Cost of high-quality TTS → Solution: Fragment caching and reuse
+- Challenge: Maintaining engagement → Solution: Two-speaker dialogue and adaptive playback
+- Challenge: Scalability → Solution: Modular, event-driven architecture
+
+FUTURE CONSIDERATIONS
+- Full migration to custom TTS (StyleTTS 2) for premium features
+- Real-time emotion and engagement adaptation
+- Expansion to multi-language and accessibility features
+
+SUMMARY & KEY TAKEAWAYS
+- WISME’s audio system is modular, scalable, and designed for both quality and cost-efficiency
+- Smart caching and two-speaker architecture drive engagement and sustainability
+- The system is future-proofed for advanced personalization and adaptation 

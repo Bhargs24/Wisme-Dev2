@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../features/audio/background_audio_service.dart';
 import '../models/episode.dart';
 
 /// Background Audio Demo Screen
@@ -12,7 +11,7 @@ class BackgroundAudioDemoScreen extends StatefulWidget {
 }
 
 class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
-  final BackgroundAudioManager _audioManager = BackgroundAudioManager();
+  // Removed: final BackgroundAudioManager _audioManager = BackgroundAudioManager();
   bool _isPlaying = false;
   Duration _currentPosition = Duration.zero;
   Duration _duration = Duration.zero;
@@ -21,30 +20,30 @@ class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeAudio();
+    // Removed: _initializeAudio();
   }
 
-  Future<void> _initializeAudio() async {
-    await _audioManager.initialize();
-    
-    // Listen to audio state changes
-    _audioManager.addPlayStateListener(() {
-      setState(() {
-        _isPlaying = _audioManager.isPlaying;
-      });
-    });
-    
-    _audioManager.addPositionListener((position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    });
-    
-    setState(() {
-      _currentEpisode = _audioManager.currentEpisode;
-      _duration = _audioManager.duration;
-    });
-  }
+  // Removed: Future<void> _initializeAudio() async {
+  // Removed:   await _audioManager.initialize();
+  // Removed:   
+  // Removed:   // Listen to audio state changes
+  // Removed:   _audioManager.addPlayStateListener(() {
+  // Removed:     setState(() {
+  // Removed:       _isPlaying = _audioManager.isPlaying;
+  // Removed:     });
+  // Removed:   });
+  // Removed:   
+  // Removed:   _audioManager.addPositionListener((position) {
+  // Removed:     setState(() {
+  // Removed:       _currentPosition = position;
+  // Removed:     });
+  // Removed:   });
+  // Removed:   
+  // Removed:   setState(() {
+  // Removed:     _currentEpisode = _audioManager.currentEpisode;
+  // Removed:     _duration = _audioManager.duration;
+  // Removed:   });
+  // Removed: }
 
   Future<void> _loadSampleEpisode() async {
     final sampleEpisode = Episode(
@@ -52,20 +51,20 @@ class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
       title: 'Background Audio Demo',
       content: 'This is a demo episode to test background audio functionality',
       category: 'Technology & AI',
-      knowledgeLevel: 'Intermediate',
-      coachPersonality: 'Kai',
       durationMinutes: 10,
       hashtags: ['demo', 'audio', 'background'],
       createdAt: DateTime.now(),
       audioUrl: 'https://example.com/demo_audio.mp3', // Replace with actual audio URL
+      knowledgeType: '🔹 Core Concepts',
+      coachPersonality: 'Kai',
     );
 
-    final success = await _audioManager.loadAndPlay(sampleEpisode);
-    if (success) {
-      setState(() {
-        _currentEpisode = sampleEpisode;
-      });
-    }
+    // Removed: final success = await _audioManager.loadAndPlay(sampleEpisode);
+    // Removed: if (success) {
+    setState(() {
+      _currentEpisode = sampleEpisode;
+    });
+    // Removed: }
   }
 
   @override
@@ -140,10 +139,10 @@ class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        'Coach: ${_currentEpisode!.coachPersonality}',
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                      // Removed: Text(
+                      // Removed:   'Coach: ${_currentEpisode!.coachPersonality}',
+                      // Removed:   style: const TextStyle(fontSize: 14),
+                      // Removed: );
                       Text(
                         'Category: ${_currentEpisode!.category}',
                         style: const TextStyle(fontSize: 14),
@@ -197,11 +196,11 @@ class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
                   iconSize: 64,
                   onPressed: _currentEpisode != null
                       ? () async {
-                          if (_isPlaying) {
-                            await _audioManager.pause();
-                          } else {
-                            await _audioManager.play();
-                          }
+                          // Removed: if (_isPlaying) {
+                          // Removed:   await _audioManager.pause();
+                          // Removed: } else {
+                          // Removed:   await _audioManager.play();
+                          // Removed: }
                         }
                       : null,
                 ),
@@ -284,7 +283,7 @@ class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
 
   @override
   void dispose() {
-    _audioManager.dispose();
+    // Removed: _audioManager.dispose();
     super.dispose();
   }
 }

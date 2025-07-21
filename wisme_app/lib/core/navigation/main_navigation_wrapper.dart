@@ -81,7 +81,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
           color: WismeColors.surface,
           boxShadow: [
             BoxShadow(
-              color: WismeColors.textPrimary.withOpacity(0.1),
+              color: WismeColors.textPrimary.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -107,7 +107,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
                     ),
                     decoration: BoxDecoration(
                       color: isActive 
-                        ? WismeColors.primaryBlue.withOpacity(0.1)
+                        ? WismeColors.primaryBlue.withValues(alpha: 0.1)
                         : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),

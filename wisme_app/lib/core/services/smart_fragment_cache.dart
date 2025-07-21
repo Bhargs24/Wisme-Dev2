@@ -8,30 +8,35 @@ import 'package:crypto/crypto.dart';
 import 'package:path_provider/path_provider.dart';
 import '../audio/audio_models.dart';
 import '../services/two_speaker_audio_system.dart';
+import 'dart:math' as math;
 
 /// Cached audio fragment
 class CachedAudioFragment {
   final String id;
   final String textHash;
   final String voiceId;
-  final AudioQuality quality;
+  final String text;
   final String filePath;
   final int fileSize;
   final Duration duration;
   final DateTime createdAt;
   final DateTime lastAccessed;
+  final List<String> tags;
+  final List<double>? embedding;
   final Map<String, dynamic> metadata;
 
   const CachedAudioFragment({
     required this.id,
     required this.textHash,
     required this.voiceId,
-    required this.quality,
+    required this.text,
     required this.filePath,
     required this.fileSize,
     required this.duration,
     required this.createdAt,
     required this.lastAccessed,
+    this.tags = const [],
+    this.embedding,
     this.metadata = const {},
   });
 
@@ -39,12 +44,14 @@ class CachedAudioFragment {
     'id': id,
     'textHash': textHash,
     'voiceId': voiceId,
-    'quality': quality.name,
+    'text': text,
     'filePath': filePath,
     'fileSize': fileSize,
     'duration': duration.inMilliseconds,
     'createdAt': createdAt.toIso8601String(),
     'lastAccessed': lastAccessed.toIso8601String(),
+    'tags': tags,
+    'embedding': embedding,
     'metadata': metadata,
   };
 
@@ -53,15 +60,14 @@ class CachedAudioFragment {
       id: json['id'] as String,
       textHash: json['textHash'] as String,
       voiceId: json['voiceId'] as String,
-      quality: AudioQuality.values.firstWhere(
-        (e) => e.name == json['quality'],
-        orElse: () => AudioQuality.medium,
-      ),
+      text: json['text'] as String,
       filePath: json['filePath'] as String,
       fileSize: json['fileSize'] as int,
       duration: Duration(milliseconds: json['duration'] as int),
       createdAt: DateTime.parse(json['createdAt'] as String),
       lastAccessed: DateTime.parse(json['lastAccessed'] as String),
+      tags: List<String>.from(json['tags'] ?? []),
+      embedding: (json['embedding'] as List?)?.map((e) => (e as num).toDouble()).toList(),
       metadata: Map<String, dynamic>.from(json['metadata'] ?? {}),
     );
   }
@@ -112,12 +118,8 @@ class SmartFragmentCache {
   }
 
   /// Generate cache key for text and voice configuration
-  static String _generateCacheKey({
-    required String text,
-    required VoiceConfiguration voiceConfig,
-    required AudioQuality quality,
-  }) {
-    final input = '$text|${voiceConfig.voiceId}|${quality.name}';
+  static String _generateCacheKey({required String text, required String voiceId}) {
+    final input = '$text|$voiceId';
     final bytes = utf8.encode(input);
     final digest = sha256.convert(bytes);
     return digest.toString();
@@ -131,8 +133,7 @@ class SmartFragmentCache {
   }) async {
     final key = _generateCacheKey(
       text: text,
-      voiceConfig: voiceConfig,
-      quality: quality,
+      voiceId: voiceConfig.voiceId,
     );
 
     final fragment = _cache[key];
@@ -145,12 +146,14 @@ class SmartFragmentCache {
           id: fragment.id,
           textHash: fragment.textHash,
           voiceId: fragment.voiceId,
-          quality: fragment.quality,
+          text: fragment.text,
           filePath: fragment.filePath,
           fileSize: fragment.fileSize,
           duration: fragment.duration,
           createdAt: fragment.createdAt,
           lastAccessed: DateTime.now(),
+          tags: fragment.tags,
+          embedding: fragment.embedding,
           metadata: fragment.metadata,
         );
         
@@ -172,16 +175,14 @@ class SmartFragmentCache {
   /// Store generated audio fragment in cache
   static Future<void> storeFragment({
     required String text,
-    required VoiceConfiguration voiceConfig,
-    required AudioQuality quality,
+    required String voiceId,
     required String audioFilePath,
     required Duration duration,
+    List<String> tags = const [],
+    List<double>? embedding,
+    Map<String, dynamic> metadata = const {},
   }) async {
-    final key = _generateCacheKey(
-      text: text,
-      voiceConfig: voiceConfig,
-      quality: quality,
-    );
+    final key = _generateCacheKey(text: text, voiceId: voiceId);
 
     final file = File(audioFilePath);
     if (!await file.exists()) {
@@ -194,17 +195,16 @@ class SmartFragmentCache {
     final fragment = CachedAudioFragment(
       id: key,
       textHash: key,
-      voiceId: voiceConfig.voiceId,
-      quality: quality,
+      voiceId: voiceId,
+      text: text,
       filePath: audioFilePath,
       fileSize: fileSize,
       duration: duration,
       createdAt: now,
       lastAccessed: now,
-      metadata: {
-        'personality': voiceConfig.personality,
-        'speakerId': voiceConfig.speakerId,
-      },
+      tags: tags,
+      embedding: embedding,
+      metadata: metadata,
     );
 
     _cache[key] = fragment;
@@ -369,4 +369,30 @@ class SmartFragmentCache {
       await _saveCacheToDisk();
     }
   }
+
+  static List<CachedAudioFragment> findByTag(String tag, String voiceId) =>
+      _cache.values.where((f) => f.voiceId == voiceId && f.tags.contains(tag)).toList();
+
+  static CachedAudioFragment? findBySemantic(List<double> embedding, String voiceId, {double threshold = 0.8}) {
+    double cosineSim(List<double> a, List<double> b) {
+      final dot = a.asMap().entries.fold(0.0, (sum, e) => sum + e.value * b[e.key]);
+      final normA = math.sqrt(a.fold(0.0, (sum, e) => sum + e * e));
+      final normB = math.sqrt(b.fold(0.0, (sum, e) => sum + e * e));
+      return dot / (normA * normB + 1e-8);
+    }
+    CachedAudioFragment? best;
+    double bestScore = threshold;
+    for (final f in _cache.values) {
+      if (f.voiceId == voiceId && f.embedding != null && f.embedding!.length == embedding.length) {
+        final score = cosineSim(f.embedding!, embedding);
+        if (score > bestScore) {
+          best = f;
+          bestScore = score;
+        }
+      }
+    }
+    return best;
+  }
+
+  static Iterable<CachedAudioFragment> get allFragments => _cache.values;
 }

@@ -123,7 +123,7 @@ OUTPUT JSON STRUCTURE:
 {
   "topicAnalysis": {
     "category": "exact category match",
-    "knowledgeLevel": "exact level with emoji",
+    "knowledgeType": "exact level with emoji",
     "recommendedCoach": "Kai|Vee",
     "confidence": 0.95,
     "personalizedInsight": "why this approach fits user's context",
@@ -344,8 +344,8 @@ Return only hashtags, one per line, starting with #''';
   }) {
     // Determine category using basic keyword matching
     final category = _determineFallbackCategory(topic);
-    final knowledgeLevel = _determineFallbackLevel(userBackground ?? '');
-    final coach = preferredCoach ?? (knowledgeLevel.contains('Core') ? 'Kai' : 'Vee');
+    final knowledgeType = _determineFallbackLevel(userBackground ?? '');
+    final coach = preferredCoach ?? (knowledgeType.contains('Core') ? 'Kai' : 'Vee');
     
     // Generate 5 episodes with personalized content
     final episodes = <Map<String, dynamic>>[];
@@ -365,7 +365,7 @@ Return only hashtags, one per line, starting with #''';
     return {
       'topicAnalysis': {
         'category': category,
-        'knowledgeLevel': knowledgeLevel,
+        'knowledgeType': knowledgeType,
         'recommendedCoach': coach,
         'confidence': 0.7, // Lower confidence for fallback
         'personalizedInsight': personalContext != null 

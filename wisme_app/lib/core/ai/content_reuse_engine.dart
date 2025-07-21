@@ -50,7 +50,7 @@ class ContentReuseEngine {
   Future<List<ContentReuseResult>> findReusableContent({
     required String newContentTopic,
     required String category,
-    required String knowledgeLevel,
+    required String knowledgeType,
     required String userId,
   }) async {
     try {
@@ -61,7 +61,7 @@ class ContentReuseEngine {
       final semanticMatches = await _database.searchBySemantic(
         query: newContentTopic,
         category: category,
-        knowledgeLevel: knowledgeLevel,
+        knowledgeType: knowledgeType,
         limit: _config.maxSuggestions * 3, // Get more to filter later
       );
 
@@ -203,12 +203,12 @@ class ContentReuseEngine {
   Future<Map<String, double>> analyzeHashtagOverlap({
     required List<String> newContentHashtags,
     required String category,
-    required String knowledgeLevel,
+    required String knowledgeType,
   }) async {
     final episodes = await _database.searchByHashtags(
       hashtags: newContentHashtags,
       category: category,
-      knowledgeLevel: knowledgeLevel,
+      knowledgeType: knowledgeType,
     );
 
     final overlapScores = <String, double>{};
@@ -240,7 +240,7 @@ class ContentReuseEngine {
     return findReusableContent(
       newContentTopic: searchQuery,
       category: category,
-      knowledgeLevel: 'Intermediate', // Default knowledge level for podcast learning
+      knowledgeType: 'Intermediate', // Default knowledge level for podcast learning
       userId: userId,
     );
   }

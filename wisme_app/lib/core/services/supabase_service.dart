@@ -103,7 +103,7 @@ class SupabaseService {
       'title': episode.title,
       'content': episode.content, // Use content instead of script
       'category': episode.category,
-      'knowledge_level': episode.knowledgeLevel,
+      'knowledge_type': episode.knowledgeType,
       'coach_personality': episode.coachPersonality,
       'duration_minutes': episode.durationMinutes, // Use durationMinutes
       'hashtags': episode.hashtags,

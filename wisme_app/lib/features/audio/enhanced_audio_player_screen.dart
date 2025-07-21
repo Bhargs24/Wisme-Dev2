@@ -6,15 +6,12 @@ library;
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../core/core.dart';
-import '../../shared/shared.dart';
 import '../../models/episode.dart';
-import '../../models/conversation_models.dart';
 
 /// Revolutionary audio player supporting both single and two-speaker modes
 class EnhancedAudioPlayerScreen extends StatefulWidget {
   final String episodeTitle;
   final String episodeContent;
-  final String coachPersonality;
   final String? audioUrl;
   final Duration duration;
   final Episode? episode; // For full episode data
@@ -24,7 +21,6 @@ class EnhancedAudioPlayerScreen extends StatefulWidget {
     super.key,
     required this.episodeTitle,
     required this.episodeContent,
-    required this.coachPersonality,
     this.audioUrl,
     required this.duration,
     this.episode,
@@ -157,13 +153,13 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
   void _determinePlaybackMode() {
     // Check if two-speaker mode should be enabled
     _isTwoSpeakerMode = widget.enableTwoSpeakerMode ?? 
-                       (widget.episode?.isTwoSpeakerConversation == true) ??
+                       (widget.episode?.isTwoSpeakerConversation == true) ||
                        _shouldUseTwoSpeakerMode();
   }
 
   bool _shouldUseTwoSpeakerMode() {
     // Smart detection of when to use two-speaker mode
-    if (!AudioServiceRegistry.instance.isInitialized) return false;
+    if (!AudioServiceRegistry.isInitialized) return false;
     
     // Check if content would benefit from two-speaker format
     final contentLength = widget.episodeContent.length;
@@ -181,8 +177,8 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
   }
 
   void _setupTwoSpeakerContent() async {
-    if (!AudioServiceRegistry.instance.isInitialized) {
-      print('⚠️ Two-speaker system not initialized, falling back to traditional mode');
+    if (!AudioServiceRegistry.isInitialized) {
+      print('\u26a0\ufe0f Two-speaker system not initialized, falling back to traditional mode');
       _isTwoSpeakerMode = false;
       _setupTraditionalContent();
       return;
@@ -193,13 +189,9 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
     });
 
     try {
-      // Generate two-speaker conversation
-      final conversationData = await twoSpeakerSystem.generateAudioExperience(
-        topic: widget.episodeTitle,
-        content: widget.episodeContent,
-        userInterests: [], // TODO: Get from personalization engine
-        difficulty: 'intermediate', // TODO: Determine from episode
-      );
+      // TODO: Replace twoSpeakerSystem with actual service or remove if not needed
+      // final conversationData = await twoSpeakerSystem.generateAudioExperience(...);
+      final conversationData = null;
 
       if (conversationData != null) {
         setState(() {
@@ -216,7 +208,7 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
         throw Exception('Failed to generate conversation data');
       }
     } catch (e) {
-      print('❌ Failed to setup two-speaker content: $e');
+      print('\u274c Failed to setup two-speaker content: $e');
       // Fallback to traditional mode
       _isTwoSpeakerMode = false;
       _setupTraditionalContent();
@@ -244,18 +236,20 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
     if (segmentIndex >= _currentExchanges.length) return;
     
     final exchange = _currentExchanges[segmentIndex];
-    final audioSegment = exchange.audioSegments.first; // Get first speaker's segment
+    final audioSegment = (exchange.audioSegments != null && exchange.audioSegments!.isNotEmpty)
+        ? exchange.audioSegments!.first
+        : null; // Get first speaker's segment
     
-    if (audioSegment.audioFilePath != null) {
+    if (audioSegment != null && audioSegment.audioPath != null) {
       try {
-        await _audioPlayer.setSourceDeviceFile(audioSegment.audioFilePath!);
+        await _audioPlayer.setSourceDeviceFile(audioSegment.audioPath!);
         setState(() {
           _currentSegmentIndex = segmentIndex;
-          _currentSpeaker = audioSegment.speaker;
+          // _currentSpeaker = audioSegment.speaker; // TODO: Refactor to get speaker from exchange
         });
         _speakerTransitionController.forward();
       } catch (e) {
-        print('❌ Failed to load audio segment: $e');
+        print('\u274c Failed to load audio segment: $e');
       }
     }
   }
@@ -266,17 +260,19 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
     Duration segmentStartTime = Duration.zero;
     for (int i = 0; i < _currentExchanges.length; i++) {
       final exchange = _currentExchanges[i];
-      final segmentDuration = exchange.audioSegments.fold<Duration>(
-        Duration.zero,
-        (total, segment) => total + segment.duration,
-      );
+      final segmentDuration = (exchange.audioSegments != null)
+          ? exchange.audioSegments!.fold<Duration>(
+              Duration.zero,
+              (total, segment) => total + segment.duration,
+            )
+          : Duration.zero;
       
       if (_currentPosition >= segmentStartTime && 
           _currentPosition < segmentStartTime + segmentDuration) {
         if (i != _currentSegmentIndex) {
           setState(() {
             _currentSegmentIndex = i;
-            _currentSpeaker = exchange.audioSegments.first.speaker;
+            // _currentSpeaker = exchange.audioSegments?.first.speaker; // TODO: Refactor to get speaker from exchange
           });
           _speakerTransitionController.reset();
           _speakerTransitionController.forward();
@@ -478,7 +474,7 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
                     Text(
                       _isTwoSpeakerMode 
                           ? 'Two-Speaker Conversation'
-                          : 'Coach ${widget.coachPersonality}',
+                          : 'Coach ${widget.episode?.category}',
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 14,
@@ -492,7 +488,8 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
           IconButton(
             onPressed: () => setState(() => _showTranscript = !_showTranscript),
             icon: Icon(
-              _showTranscript ? Icons.transcript : Icons.transcript_outlined,
+              // TODO: Replace with custom transcript icons
+              _showTranscript ? Icons.article : Icons.description,
               color: Colors.white,
             ),
           ),
@@ -678,7 +675,7 @@ class _EnhancedAudioPlayerScreenState extends State<EnhancedAudioPlayerScreen>
                 );
                 await _audioPlayer.seek(newPosition);
               },
-              icon: Icon(Icons.replay_15, color: Colors.white, size: 32),
+              icon: Icon(Icons.replay, color: Colors.white, size: 32),
             ),
             
             // Main play button

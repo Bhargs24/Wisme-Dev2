@@ -145,6 +145,9 @@ class AudioServiceRegistry {
     );
   }
 
+  /// Check if the registry is initialized
+  static bool get isInitialized => _initialized;
+
   /// Get registry status summary
   static Map<String, dynamic> getStatusSummary() {
     final readyCount = _services.values
