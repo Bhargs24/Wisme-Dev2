@@ -6,13 +6,37 @@ class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   Widget _buildResearchPoint(String emoji, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primaryBlue.withOpacity(0.1),
+            AppColors.accentGreen.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primaryBlue.withOpacity(0.2),
+        ),
+      ),
       child: Row(
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 12),
-          Expanded(child: Text(text, style: AppTextStyles.bodyLarge)),
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -21,53 +45,159 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo placeholder
-              Container(
-                height: 120,
-                width: 120,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryBlue,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: const Icon(
-                  Icons.headphones,
-                  size: 60,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                'Welcome to Wisme Research',
-                style: AppTextStyles.heading1,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Help us validate the future of conversational learning through this research study',
-                style: AppTextStyles.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 40),
-              _buildResearchPoint('📊', 'Participate in learning research'),
-              _buildResearchPoint('🎧', 'Experience new learning methods'),
-              _buildResearchPoint('📝', 'Share your feedback & insights'),
-              _buildResearchPoint('🏆', 'Contribute to education innovation'),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/consent'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 56),
-                  backgroundColor: AppColors.primaryBlue,
-                ),
-                child: const Text('Begin Research Study', style: TextStyle(fontSize: 18)),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment.topCenter,
+            radius: 1.5,
+            colors: [
+              AppColors.primaryBlue.withOpacity(0.15),
+              AppColors.backgroundDark,
+              AppColors.backgroundDark,
             ],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Gold Gradient Wisme Logo
+                Container(
+                  height: 140,
+                  width: 140,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        const Color(0xFFFFD700), // Gold
+                        const Color(0xFFFFA500), // Orange gold
+                        const Color(0xFFFF8C00), // Dark orange
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFD700).withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: [Colors.white, Colors.white.withOpacity(0.9)],
+                        ).createShader(bounds),
+                        child: const Icon(
+                          Icons.headphones,
+                          size: 50,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: [Colors.white, Colors.white.withOpacity(0.9)],
+                        ).createShader(bounds),
+                        child: Text(
+                          'WISME',
+                          style: AppTextStyles.heading2.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
+                Text(
+                  'Welcome to Wisme Research',
+                  style: AppTextStyles.heading1.copyWith(
+                    color: Colors.white,
+                    fontSize: 28,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                  const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withOpacity(0.1),
+                        Colors.white.withOpacity(0.05),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Text(
+                    'Help us validate the future of conversational learning through this research study',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      color: Colors.white,
+                      fontSize: 16,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                _buildResearchPoint('📊', 'Participate in learning research'),
+                _buildResearchPoint('🎧', 'Experience new learning methods'),
+                _buildResearchPoint('📝', 'Share your feedback & insights'),
+                _buildResearchPoint('🏆', 'Contribute to education innovation'),
+                const Spacer(),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFFFFD700), // Gold
+                        const Color(0xFFFFA500), // Orange gold
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFD700).withOpacity(0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(context, '/consent'),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      'Begin Research Study',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

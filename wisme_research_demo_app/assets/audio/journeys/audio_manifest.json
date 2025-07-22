@@ -1,0 +1,228 @@
+{
+  "journeys": {
+    "data_structures_algorithms": {
+      "title": "Data Structures & Algorithms Fundamentals",
+      "category": "Computer Science",
+      "difficulty": "Intermediate",
+      "description": "Master fundamental data structures and algorithmic thinking",
+      "episodes": [
+        {
+          "id": "dsa_01",
+          "title": "Big O Notation & Complexity Analysis",
+          "audioPath": "assets/audio/learning_journeys/data_structures_algorithms/episode_1/audio.mp3",
+          "duration": "8:30",
+          "description": "Understanding time and space complexity with Big O notation",
+          "topics": ["Big O", "Time Complexity", "Space Complexity", "Algorithm Analysis"]
+        },
+        {
+          "id": "dsa_02", 
+          "title": "Arrays & Array Operations",
+          "audioPath": "assets/audio/learning_journeys/data_structures_algorithms/episode_2/audio.mp3",
+          "duration": "7:45",
+          "description": "Deep dive into array operations and memory management",
+          "topics": ["Arrays", "Memory Management", "Array Operations", "Dynamic Arrays"]
+        },
+        {
+          "id": "dsa_03",
+          "title": "Linked Lists Deep Dive",
+          "audioPath": "assets/audio/learning_journeys/data_structures_algorithms/episode_3/audio.mp3",
+          "duration": "8:15",
+          "description": "Understanding linked list structures and pointer manipulation",
+          "topics": ["Linked Lists", "Pointers", "Node Structures", "List Operations"]
+        },
+        {
+          "id": "dsa_04",
+          "title": "Stacks & Queues - LIFO vs FIFO",
+          "audioPath": "assets/audio/learning_journeys/data_structures_algorithms/episode_4/audio.mp3",
+          "duration": "9:00",
+          "description": "Building efficient stacks and queues with real-world applications",
+          "topics": ["Stacks", "Queues", "LIFO", "FIFO", "Implementation Patterns"]
+        },
+        {
+          "id": "dsa_05",
+          "title": "Recursion & Base Cases",
+          "audioPath": "assets/audio/learning_journeys/data_structures_algorithms/episode_5/audio.mp3",
+          "duration": "8:45",
+          "description": "Mastering recursive thinking and base case identification",
+          "topics": ["Recursion", "Base Cases", "Recursive Algorithms", "Problem Solving"]
+        }
+      ]
+    },
+    "operating_systems": {
+      "title": "Operating Systems Demystified",
+      "category": "Computer Science",
+      "difficulty": "Intermediate",
+      "description": "Understanding how operating systems manage computer resources",
+      "episodes": [
+        {
+          "id": "os_01",
+          "title": "Process Management & Scheduling",
+          "audioPath": "assets/audio/learning_journeys/operating_systems/episode_1/audio.mp3",
+          "duration": "8:00",
+          "description": "How operating systems manage and schedule processes",
+          "topics": ["Process Management", "CPU Scheduling", "Process States", "Multitasking"]
+        },
+        {
+          "id": "os_02",
+          "title": "Memory Management & Virtual Memory",
+          "audioPath": "assets/audio/learning_journeys/operating_systems/episode_2/audio.mp3",
+          "duration": "8:20",
+          "description": "Understanding how OS manages RAM and virtual memory",
+          "topics": ["Memory Management", "Virtual Memory", "Paging", "Memory Allocation"]
+        },
+        {
+          "id": "os_03",
+          "title": "File Systems & Storage",
+          "audioPath": "assets/audio/learning_journeys/operating_systems/episode_3/audio.mp3",
+          "duration": "7:50",
+          "description": "How operating systems organize and manage file storage",
+          "topics": ["File Systems", "Storage Management", "Directory Structure", "File Operations"]
+        },
+        {
+          "id": "os_04",
+          "title": "Networking & Inter-Process Communication",
+          "audioPath": "assets/audio/learning_journeys/operating_systems/episode_4/audio.mp3",
+          "duration": "8:10",
+          "description": "How processes communicate and network integration",
+          "topics": ["IPC", "Network Stack", "Sockets", "Process Communication"]
+        },
+        {
+          "id": "os_05",
+          "title": "Device Drivers & Hardware Interaction",
+          "audioPath": "assets/audio/learning_journeys/operating_systems/episode_5/audio.mp3",
+          "duration": "9:15",
+          "description": "Understanding how OS communicates with hardware",
+          "topics": ["Device Drivers", "Hardware Abstraction", "I/O Management", "Kernel"]
+        },
+        {
+          "id": "os_06",
+          "title": "System Security & Access Control",
+          "audioPath": "assets/audio/learning_journeys/operating_systems/episode_6/audio.mp3",
+          "duration": "7:40",
+          "description": "OS security mechanisms and user access control",
+          "topics": ["System Security", "Access Control", "Authentication", "Permissions"]
+        }
+      ]
+    },
+    "database_systems": {
+      "title": "Database Deep Dive",
+      "category": "Computer Science",
+      "difficulty": "Intermediate",
+      "description": "Master database design, querying, and optimization",
+      "episodes": [
+        {
+          "id": "db_01",
+          "title": "Database Fundamentals & RDBMS Concepts",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_1/audio.mp3",
+          "duration": "8:25",
+          "description": "Introduction to databases and relational database concepts",
+          "topics": ["Database Basics", "RDBMS", "Tables", "Relationships"]
+        },
+        {
+          "id": "db_02",
+          "title": "SQL Queries & Data Retrieval",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_2/audio.mp3",
+          "duration": "7:55",
+          "description": "Writing effective SQL queries for data retrieval",
+          "topics": ["SQL", "SELECT Queries", "Joins", "Filtering"]
+        },
+        {
+          "id": "db_03",
+          "title": "Database Design & Normalization",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_3/audio.mp3",
+          "duration": "8:35",
+          "description": "Designing efficient database schemas and normalization",
+          "topics": ["Database Design", "Normalization", "Schema Design", "Entity Relationships"]
+        },
+        {
+          "id": "db_04",
+          "title": "Indexing & Query Optimization",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_4/audio.mp3",
+          "duration": "8:05",
+          "description": "Optimizing database performance through indexing",
+          "topics": ["Indexing", "Query Optimization", "Performance Tuning", "Query Plans"]
+        },
+        {
+          "id": "db_05",
+          "title": "Transactions & ACID Properties",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_5/audio.mp3",
+          "duration": "7:20",
+          "description": "Understanding database transactions and consistency",
+          "topics": ["Transactions", "ACID", "Concurrency", "Data Integrity"]
+        },
+        {
+          "id": "db_06",
+          "title": "NoSQL & Modern Database Systems",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_6/audio.mp3",
+          "duration": "8:50",
+          "description": "Exploring NoSQL databases and modern data storage",
+          "topics": ["NoSQL", "Document Databases", "Key-Value Stores", "Modern Databases"]
+        },
+        {
+          "id": "db_07",
+          "title": "Database Security & Backup Strategies",
+          "audioPath": "assets/audio/learning_journeys/database_systems/episode_7/audio.mp3",
+          "duration": "8:00",
+          "description": "Securing databases and implementing backup strategies",
+          "topics": ["Database Security", "Backup Strategies", "Recovery", "Data Protection"]
+        }
+      ]
+    },
+    "personal_finance": {
+      "title": "Personal Finance Mastery",
+      "category": "Life Skills",
+      "difficulty": "Beginner",
+      "description": "Build wealth and financial security through smart money management",
+      "episodes": [
+        {
+          "id": "pf_01",
+          "title": "Budgeting Fundamentals & Cash Flow",
+          "audioPath": "assets/audio/learning_journeys/personal_finance/episode_1/audio.mp3",
+          "duration": "8:15",
+          "description": "Creating effective budgets and understanding money flow",
+          "topics": ["Budgeting", "Cash Flow", "Expense Tracking", "Financial Planning"]
+        },
+        {
+          "id": "pf_02",
+          "title": "Emergency Funds & Financial Safety Nets",
+          "audioPath": "assets/audio/learning_journeys/personal_finance/episode_2/audio.mp3",
+          "duration": "7:45",
+          "description": "Building financial safety nets and risk management",
+          "topics": ["Emergency Fund", "Risk Management", "Insurance", "Financial Security"]
+        },
+        {
+          "id": "pf_03",
+          "title": "Investment Basics & Portfolio Building",
+          "audioPath": "assets/audio/learning_journeys/personal_finance/episode_3/audio.mp3",
+          "duration": "8:30",
+          "description": "Understanding investments and building diversified portfolios",
+          "topics": ["Investing", "Stocks", "Bonds", "Portfolio Diversification"]
+        },
+        {
+          "id": "pf_04",
+          "title": "Retirement Planning & Long-term Wealth",
+          "audioPath": "assets/audio/learning_journeys/personal_finance/episode_4/audio.mp3",
+          "duration": "8:05",
+          "description": "Planning for retirement and building long-term wealth",
+          "topics": ["Retirement Planning", "401k", "IRA", "Long-term Investing"]
+        },
+        {
+          "id": "pf_05",
+          "title": "Tax Planning & Optimization Strategies",
+          "audioPath": "assets/audio/learning_journeys/personal_finance/episode_5/audio.mp3",
+          "duration": "7:30",
+          "description": "Minimizing taxes and maximizing financial efficiency",
+          "topics": ["Tax Planning", "Tax-Advantaged Accounts", "Deductions", "Tax Strategies"]
+        },
+        {
+          "id": "pf_06",
+          "title": "Credit Management & Debt Strategy",
+          "audioPath": "assets/audio/learning_journeys/personal_finance/episode_6/audio.mp3",
+          "duration": "8:10",
+          "description": "Managing credit effectively and debt elimination strategies",
+          "topics": ["Credit Management", "Debt Strategy", "Credit Score", "Debt Payoff"]
+        }
+      ]
+    }
+  }
+}

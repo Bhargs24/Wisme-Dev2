@@ -31,6 +31,28 @@
 
   <title>wisme_research_demo_app</title>
   <link rel="manifest" href="manifest.json">
+  
+  <!-- Firebase Configuration -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+  
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAHODOy0bNcbxZ4IZqyQYYl-4ZLIV9TGRY",
+      authDomain: "wisme-research-app.firebaseapp.com",
+      projectId: "wisme-research-app",
+      storageBucket: "wisme-research-app.firebasestorage.app",
+      messagingSenderId: "3043141516",
+      appId: "1:3043141516:web:fde5093af66e808da758a9"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

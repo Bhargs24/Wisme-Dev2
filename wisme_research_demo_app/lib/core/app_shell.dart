@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/bottom_nav_bar.dart';
+import '../home/modern_home_screen.dart';
 import '../journeys/journey_selection_screen.dart';
 import '../progress/learning_progress_screen.dart';
 import '../gamification/profile_screen.dart';
@@ -16,7 +17,8 @@ class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    JourneySelectionScreen(),
+    const ModernHomeScreen(),
+    const JourneySelectionScreen(),
     const LearningProgressScreen(),
     const ProfileScreen(),
     const FeedbackNavigationScreen(),

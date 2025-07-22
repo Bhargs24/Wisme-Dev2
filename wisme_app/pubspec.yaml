@@ -117,7 +117,7 @@ flutter:
     - assets/icons/
     - assets/animations/
     - assets/audio/
-    - assets/database/
+    - .env
 
 
   # see https://flutter.dev/to/font-from-package

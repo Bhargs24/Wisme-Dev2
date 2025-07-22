@@ -9,7 +9,7 @@ We are revolutionizing Wisme's audio learning system with:
 - **Two-speaker conversational format** (host + expert dialogue)
 - **Smart fragment caching** (60-70% cost reduction)
 - **Interest-driven personalization** (context-aware content)
-- **Migration to custom StyleTTS 2 models** (85-99% cost reduction long-term)
+- **Migration to custom XTTS model** (99% cost reduction long-term)
 
 ---
 
@@ -18,12 +18,14 @@ We are revolutionizing Wisme's audio learning system with:
 ```
 NEW_AUDIO_ARCHITECTURE/
 ├── 00_OVERVIEW_AND_MASTER_PLAN.md (this file)
-├── 01_TWO_SPEAKER_SYSTEM_DESIGN.md ✅
-├── 02_SMART_FRAGMENT_CACHING.md ✅
-├── 03_INTEREST_DRIVEN_PERSONALIZATION.md ✅
-├── 06_IMPLEMENTATION_PHASES_AND_TIMELINE.md ✅
-├── 07_UPDATED_CODEX_MASTER_PLAN.md ✅
-└── 08_COMPLETE_INDEX.md ✅
+├── 01_TWO_SPEAKER_SYSTEM_DESIGN.md
+├── 02_SMART_FRAGMENT_CACHING.md
+├── 03_INTEREST_DRIVEN_PERSONALIZATION.md
+├── 04_PROMPT_ENGINEERING_OVERHAUL.md
+├── 05_MIGRATION_PLAN_ELEVENLABS_TO_XTTS.md
+├── 06_XTTS_MODEL_TRAINING_GUIDE.md
+├── 07_TECHNICAL_IMPLEMENTATION_PHASES.md
+└── 08_CODEX_UPDATES_REQUIRED.md
 ```
 
 ---
@@ -31,7 +33,7 @@ NEW_AUDIO_ARCHITECTURE/
 ## 🎯 **CORE OBJECTIVES**
 
 ### **Primary Goals:**
-1. **Cost Optimization**: 60% immediate savings via caching, 85-99% savings post-StyleTTS 2
+1. **Cost Optimization**: 60% immediate savings via caching, 99% savings post-XTTS
 2. **User Experience**: Premium conversational learning format
 3. **Personalization**: Interest-aware content generation
 4. **Scalability**: System designed for 1M+ users
@@ -46,10 +48,9 @@ NEW_AUDIO_ARCHITECTURE/
 
 ## 🚀 **IMPLEMENTATION TIMELINE**
 
-### **Phase 1: Foundation (Months 1-2) - PRODUCTION READY**
-- [x] Two-speaker conversation system with predetermined ElevenLabs voices
-- [x] 6 Voice IDs covering all 15 content categories 
-- [x] Smart reuse strategy: same voices, different personas per category
+### **Phase 1: Foundation (Months 1-2)**
+- [ ] Two-speaker conversation system
+- [ ] Fixed voice assignment per category
 - [ ] Basic fragment caching infrastructure
 - [ ] Interest tracking integration
 
@@ -59,13 +60,13 @@ NEW_AUDIO_ARCHITECTURE/
 - [ ] Cache optimization algorithms
 - [ ] Quality assurance pipeline
 
-### **Phase 3: StyleTTS 2 Preparation (Months 19-24)**
+### **Phase 3: XTTS Preparation (Months 4-5)**
 - [ ] Voice data collection (20+ hours per speaker)
-- [ ] StyleTTS 2 training infrastructure setup
+- [ ] XTTS training infrastructure setup
 - [ ] Parallel system testing
 - [ ] Migration planning
 
-### **Phase 4: StyleTTS 2 Migration (Months 25-36)**
+### **Phase 4: XTTS Migration (Months 6-8)**
 - [ ] Custom model training
 - [ ] Gradual rollout (10% → 50% → 100%)
 - [ ] Performance optimization
@@ -146,7 +147,7 @@ NEW_AUDIO_ARCHITECTURE/
 - User choice preserved throughout migration
 
 ### **Risk Mitigation:**
-- Fallback to ElevenLabs if StyleTTS 2 issues
+- Fallback to ElevenLabs if XTTS issues
 - Quality rollback mechanisms
 - User preference reset options
 - Comprehensive monitoring and alerting
@@ -159,7 +160,7 @@ NEW_AUDIO_ARCHITECTURE/
 1. **Industry First**: Two-speaker AI-generated educational podcasts
 2. **Instant Delivery**: Cached content = zero loading time
 3. **Deep Personalization**: Interest-aware learning paths
-4. **Cost Leadership**: 85-99% cost reduction enables premium features at scale
+4. **Cost Leadership**: 95% cost reduction enables premium features at scale
 
 ### **Market Positioning:**
 - Premium learning experience at accessible pricing
@@ -175,7 +176,7 @@ NEW_AUDIO_ARCHITECTURE/
 2. **Cache Hit Optimization**: Balance reuse vs freshness
 3. **User Acceptance**: Two-speaker format adoption
 4. **Technical Execution**: Complex system integration
-5. **StyleTTS 2 Training Success**: Quality matching ElevenLabs
+5. **XTTS Training Success**: Quality matching ElevenLabs
 
 ---
 
@@ -191,5 +192,5 @@ NEW_AUDIO_ARCHITECTURE/
 
 **This master plan represents a complete transformation of Wisme's audio architecture, positioning us as the leader in AI-generated personalized learning content while achieving unprecedented cost efficiency.**
 
-*Last Updated: July 20, 2025*
+*Last Updated: July 19, 2025*
 *Document Owner: CTO & Technical Architecture Team*

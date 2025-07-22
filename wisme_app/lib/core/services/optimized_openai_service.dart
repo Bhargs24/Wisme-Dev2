@@ -15,8 +15,8 @@ class OptimizedOpenAIService {
   static const String _baseUrl = 'https://api.openai.com/v1';
   static const String _model = 'gpt-4';
   
-  /// Complete 60 Learning Types (15 categories × 4 types each)
-  static const Map<String, List<String>> learningTypes = {
+  /// Complete 60 Knowledge Levels (15 categories × 4 levels each)
+  static const Map<String, List<String>> knowledgeLevels = {
     'Technology & AI': ['🔹 Core Concepts', '💼 Case Studies', '🛠 Tools & Trends', '🎛 Bit of Everything'],
     'Business & Finance': ['💡 Fundamentals', '💼 Case Studies', '📈 Growth Strategy', '🎛 Balanced Mix'],
     'Psychology & Mind': ['🧠 Theories & Experiments', '💬 Real-Life Application', '🧘 Mindfulness & Behavior', '🎛 Mixed Approach'],
@@ -84,7 +84,7 @@ class OptimizedOpenAIService {
     return '''
 You are WISME AI - the world's most advanced educational content architect. Generate a complete personalized learning experience in a single response.
 
-LEARNING SYSTEM (60 types across 15 categories):
+KNOWLEDGE SYSTEM (60 levels across 15 categories):
 Technology & AI: 🔹 Core Concepts, 💼 Case Studies, 🛠 Tools & Trends, 🎛 Bit of Everything
 Business & Finance: 💡 Fundamentals, 💼 Case Studies, 📈 Growth Strategy, 🎛 Balanced Mix
 Psychology & Mind: 🧠 Theories & Experiments, 💬 Real-Life Application, 🧘 Mindfulness & Behavior, 🎛 Mixed Approach
@@ -110,7 +110,7 @@ CONTENT VARIATION REQUIREMENTS:
 - Each episode must have unique opening, transitions, and conclusions
 - Vary sentence structure, vocabulary, and teaching techniques
 - Use different analogies and examples for each concept
-- Adapt language complexity to learning type and user background
+- Adapt language complexity to knowledge level and user background
 
 PERSONALIZATION DEPTH:
 - Integrate user's background into examples and analogies
@@ -123,7 +123,7 @@ OUTPUT JSON STRUCTURE:
 {
   "topicAnalysis": {
     "category": "exact category match",
-    "learningType": "exact type with emoji",
+    "knowledgeLevel": "exact level with emoji",
     "recommendedCoach": "Kai|Vee",
     "confidence": 0.95,
     "personalizedInsight": "why this approach fits user's context",
@@ -201,7 +201,7 @@ EPISODE CONTENT GUIDELINES:
     
     contextualPrompt.writeln('''
 REQUIREMENTS:
-1. Analyze topic and assign perfect category + learning type
+1. Analyze topic and assign perfect category + knowledge level
 2. Create 5-episode journey with progressive difficulty
 3. Generate full personalized content for each episode
 4. Ensure each episode is unique in language, examples, and structure
@@ -261,15 +261,27 @@ Create a complete learning experience that feels like it was designed specifical
     }
   }
 
-  /// Parse the comprehensive response from OpenAI
+  /// Parse comprehensive response with error handling
   Map<String, dynamic> _parseComprehensiveResponse(String response) {
-    final data = json.decode(response);
-    // Ensure 'learningType' is used everywhere
-    if (!data.containsKey('learningType') && data.containsKey('knowledgeLevel')) {
-      data['learningType'] = data['knowledgeLevel'];
-      data.remove('knowledgeLevel');
+    try {
+      // Extract JSON from response (handle markdown code blocks)
+      final jsonMatch = RegExp(r'\{.*\}', dotAll: true).firstMatch(response);
+      if (jsonMatch == null) {
+        throw Exception('No JSON found in response');
+      }
+      
+      final jsonString = jsonMatch.group(0)!;
+      final parsed = json.decode(jsonString) as Map<String, dynamic>;
+      
+      // Validate required structure
+      if (!parsed.containsKey('topicAnalysis') || !parsed.containsKey('learningJourney')) {
+        throw Exception('Invalid response structure');
+      }
+      
+      return parsed;
+    } catch (e) {
+      throw Exception('Failed to parse comprehensive response: $e');
     }
-    return data;
   }
 
   /// Health check for API connection
@@ -332,8 +344,8 @@ Return only hashtags, one per line, starting with #''';
   }) {
     // Determine category using basic keyword matching
     final category = _determineFallbackCategory(topic);
-    final learningType = _determineFallbackType(userBackground ?? '');
-    final coach = preferredCoach ?? (learningType.contains('Core') ? 'Kai' : 'Vee');
+    final knowledgeLevel = _determineFallbackLevel(userBackground ?? '');
+    final coach = preferredCoach ?? (knowledgeLevel.contains('Core') ? 'Kai' : 'Vee');
     
     // Generate 5 episodes with personalized content
     final episodes = <Map<String, dynamic>>[];
@@ -353,7 +365,7 @@ Return only hashtags, one per line, starting with #''';
     return {
       'topicAnalysis': {
         'category': category,
-        'learningType': learningType,
+        'knowledgeLevel': knowledgeLevel,
         'recommendedCoach': coach,
         'confidence': 0.7, // Lower confidence for fallback
         'personalizedInsight': personalContext != null 
@@ -413,8 +425,8 @@ Return only hashtags, one per line, starting with #''';
     }
   }
 
-  /// Determine learning type from user background
-  String _determineFallbackType(String background) {
+  /// Determine knowledge level from user background
+  String _determineFallbackLevel(String background) {
     final backgroundLower = background.toLowerCase();
     
     if (backgroundLower.contains(RegExp(r'beginner|new|starting|first time|never|no experience'))) {
@@ -537,5 +549,3 @@ Keep exploring, and I'll see you in the next episode!''';
     ];
   }
 }
-
-

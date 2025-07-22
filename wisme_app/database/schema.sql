@@ -1,6 +1,5 @@
 -- Wisme Backend Database Schema
 -- Supabase PostgreSQL Schema for Production Deployment
--- Updated with NEW_AUDIO_ARCHITECTURE support
 
 -- Enable necessary extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -42,7 +41,7 @@ CREATE TABLE episodes (
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     category TEXT NOT NULL,
-    learningType TEXT NOT NULL,
+    knowledge_level TEXT NOT NULL,
     coach_personality TEXT NOT NULL,
     duration_minutes INTEGER NOT NULL,
     hashtags TEXT[] DEFAULT '{}',
@@ -108,7 +107,7 @@ CREATE TABLE learning_journeys (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL,
-    learningType TEXT NOT NULL,
+    knowledge_level TEXT NOT NULL,
     episode_ids UUID[] DEFAULT '{}',
     
     -- Journey Progress
@@ -249,121 +248,6 @@ CREATE TRIGGER update_episodes_updated_at
 -- Initial Data Seeding (Optional)
 INSERT INTO public.user_profiles (user_id, email, name, preferred_coach) VALUES
     ('00000000-0000-0000-0000-000000000000', 'demo@wisme.app', 'Demo User', 'Kai');
-
--- =============================================================================
--- NEW_AUDIO_ARCHITECTURE TABLES (PostgreSQL Version)
--- =============================================================================
-
--- Audio fragment cache for smart reuse and cost optimization  
-CREATE TABLE audio_fragments (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    content_hash TEXT NOT NULL UNIQUE,
-    content_text TEXT NOT NULL,
-    speaker_config JSONB NOT NULL, -- SpeakerVoice configuration
-    audio_data BYTEA NOT NULL,
-    file_size INTEGER NOT NULL,
-    duration_ms INTEGER NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    last_accessed TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    access_count INTEGER DEFAULT 1,
-    similarity_hash TEXT NOT NULL,
-    quality_score REAL DEFAULT 0.0,
-    usage_context JSONB DEFAULT '[]', -- Array of usage contexts
-    compression_ratio REAL DEFAULT 1.0
-);
-
--- Indexes for efficient fragment lookups
-CREATE INDEX idx_fragments_content_hash ON audio_fragments(content_hash);
-CREATE INDEX idx_fragments_similarity ON audio_fragments(similarity_hash);
-CREATE INDEX idx_fragments_last_accessed ON audio_fragments(last_accessed);
-CREATE INDEX idx_fragments_duration ON audio_fragments(duration_ms);
-
--- User interest profiles for personalization
-CREATE TABLE user_interest_profiles (
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-    interests JSONB NOT NULL DEFAULT '{}', -- Interest weights
-    learning_style JSONB NOT NULL DEFAULT '{}', -- Style preferences  
-    engagement_history JSONB NOT NULL DEFAULT '[]', -- Engagement data
-    preferred_speakers JSONB NOT NULL DEFAULT '[]', -- Speaker preferences
-    listening_patterns JSONB NOT NULL DEFAULT '{}', -- Time patterns, speeds, etc.
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- User interaction tracking for machine learning
-CREATE TABLE user_interactions (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    episode_id UUID REFERENCES episodes(id) ON DELETE CASCADE,
-    interaction_type TEXT NOT NULL,
-    interaction_data JSONB DEFAULT '{}',
-    session_id UUID NOT NULL,
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    position_ms INTEGER,
-    speaker_at_time TEXT,
-    engagement_score REAL DEFAULT 0.0
-);
-
--- Indexes for analytics queries
-CREATE INDEX idx_interactions_user_episode ON user_interactions(user_id, episode_id);
-CREATE INDEX idx_interactions_type ON user_interactions(interaction_type);
-CREATE INDEX idx_interactions_timestamp ON user_interactions(timestamp);
-
--- Conversation configurations for episodes
-CREATE TABLE conversation_configs (
-    episode_id UUID REFERENCES episodes(id) ON DELETE CASCADE PRIMARY KEY,
-    conversation_type TEXT NOT NULL,
-    host_speaker JSONB NOT NULL,
-    expert_speaker JSONB NOT NULL, 
-    total_exchanges INTEGER NOT NULL,
-    total_duration_ms INTEGER NOT NULL,
-    generated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-    difficulty_level TEXT NOT NULL,
-    topic_category TEXT NOT NULL
-);
-
--- Individual conversation exchanges
-CREATE TABLE conversation_exchanges (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    episode_id UUID REFERENCES episodes(id) ON DELETE CASCADE,
-    exchange_order INTEGER NOT NULL,
-    speaker_role TEXT NOT NULL,
-    text_content TEXT NOT NULL,
-    audio_file_path TEXT,
-    duration_ms INTEGER NOT NULL,
-    start_time_ms INTEGER NOT NULL,
-    end_time_ms INTEGER NOT NULL,
-    emphasis_level TEXT DEFAULT 'normal',
-    emotional_tone TEXT DEFAULT 'neutral'
-);
-
--- Speaker voices available in the system
-CREATE TABLE speaker_voices (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL,
-    role TEXT NOT NULL,
-    category TEXT NOT NULL, 
-    voice_id TEXT NOT NULL, -- ElevenLabs voice ID
-    personality_traits JSONB NOT NULL DEFAULT '[]',
-    speaking_style JSONB NOT NULL DEFAULT '{}',
-    expertise_areas JSONB NOT NULL DEFAULT '[]',
-    sample_audio_url TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    is_active BOOLEAN DEFAULT TRUE,
-    usage_count INTEGER DEFAULT 0
-);
-
--- Insert default speaker voices
-INSERT INTO speaker_voices (id, name, role, category, voice_id, personality_traits, speaking_style, expertise_areas) VALUES
-    (uuid_generate_v4(), 'Kai', 'host', 'technology', 'ElevenLabsVoiceID1', '["curious", "encouraging", "clear"]', '{"pace": "moderate", "energy": "high", "formality": "casual"}', '["technology", "programming", "ai"]'),
-    (uuid_generate_v4(), 'Alex', 'expert', 'technology', 'ElevenLabsVoiceID2', '["knowledgeable", "patient", "detailed"]', '{"pace": "thoughtful", "energy": "moderate", "formality": "professional"}', '["software engineering", "machine learning", "data science"]'),
-    (uuid_generate_v4(), 'Maya', 'host', 'business', 'ElevenLabsVoiceID3', '["enthusiastic", "practical", "engaging"]', '{"pace": "energetic", "energy": "high", "formality": "business_casual"}', '["entrepreneurship", "leadership", "strategy"]'),
-    (uuid_generate_v4(), 'David', 'expert', 'business', 'ElevenLabsVoiceID4', '["experienced", "analytical", "insightful"]', '{"pace": "measured", "energy": "moderate", "formality": "professional"}', '["finance", "economics", "business_strategy"]');
-
--- =============================================================================
--- NEW_AUDIO_ARCHITECTURE COMPLETE
--- =============================================================================
 
 -- Grant necessary permissions
 GRANT USAGE ON SCHEMA public TO anon, authenticated;

@@ -119,7 +119,7 @@ class _LearningStyleAssessmentScreenState extends State<LearningStyleAssessmentS
                 'Boring delivery methods',
                 'Hard to retain information',
                 'No personalization',
-                'Takes too much time',
+                'Need shorter sessions',
                 'Lack of interactive elements',
                 'No progress tracking',
               ].map((challenge) => FilterChip(

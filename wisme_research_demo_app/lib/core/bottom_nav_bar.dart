@@ -31,9 +31,10 @@ class BottomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(context, 0, Icons.home_rounded, 'Home'),
-              _buildNavItem(context, 1, Icons.insights_rounded, 'Progress'),
-              _buildNavItem(context, 2, Icons.person_rounded, 'Profile'),
-              _buildNavItem(context, 3, Icons.feedback_rounded, 'Feedback'),
+              _buildNavItem(context, 1, Icons.school_rounded, 'Learn'),
+              _buildNavItem(context, 2, Icons.insights_rounded, 'Progress'),
+              _buildNavItem(context, 3, Icons.person_rounded, 'Profile'),
+              _buildNavItem(context, 4, Icons.feedback_rounded, 'Feedback'),
             ],
           ),
         ),
