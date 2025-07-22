@@ -11,7 +11,6 @@ import 'smart_fragment_cache_service.dart';
 import 'audio_assembly_engine.dart';
 
 class Phase1ConversationEngine {
-  static const String _version = '1.0.0';
   static bool _initialized = false;
 
   /// Initialize the conversation engine
@@ -588,3 +587,5 @@ Create a conversational script for this episode that fits the target duration an
     };
   }
 } 
+
+

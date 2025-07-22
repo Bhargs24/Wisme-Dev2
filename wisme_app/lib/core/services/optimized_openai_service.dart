@@ -16,7 +16,7 @@ class OptimizedOpenAIService {
   static const String _model = 'gpt-4';
   
   /// Complete 60 Knowledge Levels (15 categories × 4 levels each)
-  static const Map<String, List<String>> knowledgeLevels = {
+  static const Map<String, List<String>> learningTypes = {
     'Technology & AI': ['🔹 Core Concepts', '💼 Case Studies', '🛠 Tools & Trends', '🎛 Bit of Everything'],
     'Business & Finance': ['💡 Fundamentals', '💼 Case Studies', '📈 Growth Strategy', '🎛 Balanced Mix'],
     'Psychology & Mind': ['🧠 Theories & Experiments', '💬 Real-Life Application', '🧘 Mindfulness & Behavior', '🎛 Mixed Approach'],
@@ -123,7 +123,7 @@ OUTPUT JSON STRUCTURE:
 {
   "topicAnalysis": {
     "category": "exact category match",
-    "knowledgeType": "exact level with emoji",
+    "learningType": "exact level with emoji",
     "recommendedCoach": "Kai|Vee",
     "confidence": 0.95,
     "personalizedInsight": "why this approach fits user's context",
@@ -344,8 +344,8 @@ Return only hashtags, one per line, starting with #''';
   }) {
     // Determine category using basic keyword matching
     final category = _determineFallbackCategory(topic);
-    final knowledgeType = _determineFallbackLevel(userBackground ?? '');
-    final coach = preferredCoach ?? (knowledgeType.contains('Core') ? 'Kai' : 'Vee');
+    final learningType = _determineFallbackLevel(userBackground ?? '');
+    final coach = preferredCoach ?? (learningType.contains('Core') ? 'Kai' : 'Vee');
     
     // Generate 5 episodes with personalized content
     final episodes = <Map<String, dynamic>>[];
@@ -365,7 +365,7 @@ Return only hashtags, one per line, starting with #''';
     return {
       'topicAnalysis': {
         'category': category,
-        'knowledgeType': knowledgeType,
+        'learningType': learningType,
         'recommendedCoach': coach,
         'confidence': 0.7, // Lower confidence for fallback
         'personalizedInsight': personalContext != null 
@@ -549,3 +549,5 @@ Keep exploring, and I'll see you in the next episode!''';
     ];
   }
 }
+
+

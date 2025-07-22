@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 import '../../core/state/app_state_manager.dart';
 import '../../core/analytics/comprehensive_analytics_system.dart';
 import '../../shared/components/modern_ui_components.dart';
-import '../../core/constants/app_colors.dart';
 import '../../shared/design_system/wisme_typography.dart';
+import '../../core/constants/app_colors.dart';
 
 class ModernHomeDashboard extends StatefulWidget {
   const ModernHomeDashboard({super.key});
@@ -776,3 +776,6 @@ class _ModernHomeDashboardState extends State<ModernHomeDashboard>
     );
   }
 } 
+
+
+

@@ -116,3 +116,5 @@ class ElevenLabsService {
   /// Check if service is properly configured
   bool get isConfigured => _apiKey.isNotEmpty;
 }
+
+

@@ -590,3 +590,6 @@ class _AnalyticsDashboardState extends State<AnalyticsDashboard> {
     // This method would load user analytics data from Supabase
   }
 }
+
+
+

@@ -406,7 +406,7 @@ class _EnhancedJourneyNavigatorState extends State<EnhancedJourneyNavigator> {
             'title': episode.title,
             'content': episode.content,
             'category': episode.category,
-            'knowledgeType': episode.knowledgeType,
+            'learningType': episode.learningType,
             'audioUrl': episode.audioUrl,
           },
           coachName: episode.coachPersonality,
@@ -459,7 +459,7 @@ class _EnhancedJourneyNavigatorState extends State<EnhancedJourneyNavigator> {
   }
 
   String _getBadgeForJourney() {
-    switch (_currentJourney.knowledgeType.toLowerCase()) {
+    switch (_currentJourney.learningType.toLowerCase()) {
       case 'beginner':
         return 'beginner';
       case 'intermediate':
@@ -507,7 +507,7 @@ class _EnhancedJourneyNavigatorState extends State<EnhancedJourneyNavigator> {
               children: [
                 const Icon(Icons.school, size: 16),
                 const SizedBox(width: 8),
-                Text(_currentJourney.knowledgeType.toUpperCase()),
+                Text(_currentJourney.learningType.toUpperCase()),
               ],
             ),
             const SizedBox(height: 8),

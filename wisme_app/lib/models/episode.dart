@@ -6,7 +6,7 @@ class Episode {
   final String title;
   final String content;
   final String category;
-  final String knowledgeType;
+  final String learningType;
   final String coachPersonality;
   final int durationMinutes;
   final List<String> hashtags;
@@ -24,7 +24,7 @@ class Episode {
     required this.title,
     required this.content,
     required this.category,
-    required this.knowledgeType,
+    required this.learningType,
     required this.coachPersonality,
     required this.durationMinutes,
     this.hashtags = const [],
@@ -45,7 +45,7 @@ class Episode {
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       category: json['category'] ?? '',
-      knowledgeType: json['knowledge_type'] ?? '',
+      learningType: json['knowledge_level'] ?? '',
       coachPersonality: json['coach_personality'] ?? '',
       durationMinutes: json['duration_minutes'] ?? 0,
       hashtags: List<String>.from(json['hashtags'] ?? []),
@@ -71,7 +71,7 @@ class Episode {
       'title': title,
       'content': content,
       'category': category,
-      'knowledge_type': knowledgeType,
+      'knowledge_level': learningType,
       'coach_personality': coachPersonality,
       'duration_minutes': durationMinutes,
       'hashtags': hashtags,
@@ -92,7 +92,7 @@ class Episode {
     String? title,
     String? content,
     String? category,
-    String? knowledgeType,
+    String? learningType,
     String? coachPersonality,
     int? durationMinutes,
     List<String>? hashtags,
@@ -110,7 +110,7 @@ class Episode {
       title: title ?? this.title,
       content: content ?? this.content,
       category: category ?? this.category,
-      knowledgeType: knowledgeType ?? this.knowledgeType,
+      learningType: learningType ?? this.learningType,
       coachPersonality: coachPersonality ?? this.coachPersonality,
       durationMinutes: durationMinutes ?? this.durationMinutes,
       hashtags: hashtags ?? this.hashtags,
@@ -144,12 +144,6 @@ class Episode {
 
   /// Check if episode is partially completed
   bool get isInProgress => completionPercentage > 0 && !isCompleted;
-
-  /// Check if episode uses two-speaker conversation format
-  bool get isTwoSpeakerConversation => 
-      coachPersonality.toLowerCase().contains('conversation') ||
-      coachPersonality.toLowerCase().contains('dialogue') ||
-      coachPersonality.toLowerCase().contains('interview');
 
   /// Get estimated remaining time
   int get remainingMinutes {

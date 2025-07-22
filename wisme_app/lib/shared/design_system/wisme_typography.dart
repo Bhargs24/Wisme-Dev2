@@ -1,175 +1,217 @@
-/// Wisme Design System - Typography
-/// Consistent typography styles across the Wisme app
-library;
+/// WISME Typography System
+/// 
+/// Provides consistent typography across the entire application
+/// with modern, accessible, and scalable text styles.
 
 import 'package:flutter/material.dart';
 
-/// Typography system for Wisme app
+/// WISME Typography System
 class WismeTypography {
-  // Private constructor to prevent instantiation
   WismeTypography._();
 
+  // Base font family
+  static const String _fontFamily = 'Inter';
+  
   // Font weights
   static const FontWeight light = FontWeight.w300;
   static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w500;
   static const FontWeight semiBold = FontWeight.w600;
   static const FontWeight bold = FontWeight.w700;
+  static const FontWeight extraBold = FontWeight.w800;
 
-  // Font sizes
-  static const double fontSize12 = 12.0;
-  static const double fontSize14 = 14.0;
-  static const double fontSize16 = 16.0;
-  static const double fontSize18 = 18.0;
-  static const double fontSize20 = 20.0;
-  static const double fontSize24 = 24.0;
-  static const double fontSize28 = 28.0;
-  static const double fontSize32 = 32.0;
-  static const double fontSize36 = 36.0;
-
-  // Line heights
-  static const double lineHeight12 = 1.2;
-  static const double lineHeight14 = 1.4;
-  static const double lineHeight16 = 1.6;
-
-  // Text styles
+  // ===== HEADING STYLES =====
+  
+  /// H1 - Main page titles
   static const TextStyle h1 = TextStyle(
-    fontSize: fontSize32,
-    fontWeight: bold,
-    height: lineHeight12,
+    fontFamily: _fontFamily,
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
+    height: 1.25,
+    letterSpacing: -0.5,
   );
-
+  
+  /// H2 - Section titles
   static const TextStyle h2 = TextStyle(
-    fontSize: fontSize28,
-    fontWeight: bold,
-    height: lineHeight12,
+    fontFamily: _fontFamily,
+    fontSize: 28,
+    fontWeight: FontWeight.w600,
+    height: 1.3,
+    letterSpacing: -0.3,
   );
-
+  
+  /// H3 - Subsection titles
   static const TextStyle h3 = TextStyle(
-    fontSize: fontSize24,
-    fontWeight: semiBold,
-    height: lineHeight14,
+    fontFamily: _fontFamily,
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+    height: 1.35,
+    letterSpacing: -0.2,
   );
-
+  
+  /// H4 - Card titles
   static const TextStyle h4 = TextStyle(
-    fontSize: fontSize20,
-    fontWeight: semiBold,
-    height: lineHeight14,
+    fontFamily: _fontFamily,
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    letterSpacing: -0.1,
   );
-
+  
+  /// H5 - Component titles
   static const TextStyle h5 = TextStyle(
-    fontSize: fontSize18,
-    fontWeight: medium,
-    height: lineHeight14,
+    fontFamily: _fontFamily,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+    letterSpacing: 0,
   );
-
+  
+  /// H6 - Small titles
   static const TextStyle h6 = TextStyle(
-    fontSize: fontSize16,
-    fontWeight: medium,
-    height: lineHeight14,
+    fontFamily: _fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.5,
+    letterSpacing: 0,
   );
 
+  // ===== BODY TEXT STYLES =====
+  
+  /// Body Large - Main content text
   static const TextStyle bodyLarge = TextStyle(
-    fontSize: fontSize18,
-    fontWeight: regular,
-    height: lineHeight16,
+    fontFamily: _fontFamily,
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+    height: 1.6,
+    letterSpacing: 0,
   );
-
+  
+  /// Body Medium - Standard body text
   static const TextStyle bodyMedium = TextStyle(
-    fontSize: fontSize16,
-    fontWeight: regular,
-    height: lineHeight16,
+    fontFamily: _fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    height: 1.5,
+    letterSpacing: 0,
   );
-
+  
+  /// Body Small - Secondary text
   static const TextStyle bodySmall = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: regular,
-    height: lineHeight16,
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.5,
+    letterSpacing: 0,
   );
 
-  static const TextStyle labelLarge = TextStyle(
-    fontSize: fontSize16,
-    fontWeight: medium,
-    height: lineHeight14,
+  // ===== UI COMPONENT STYLES =====
+  
+  /// Button text
+  static const TextStyle button = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.25,
+    letterSpacing: 0.1,
   );
-
-  static const TextStyle labelMedium = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: medium,
-    height: lineHeight14,
-  );
-
-  static const TextStyle labelSmall = TextStyle(
-    fontSize: fontSize12,
-    fontWeight: medium,
-    height: lineHeight14,
-  );
-
-  static const TextStyle caption = TextStyle(
-    fontSize: fontSize12,
-    fontWeight: regular,
-    height: lineHeight14,
-  );
-
-  static const TextStyle overline = TextStyle(
-    fontSize: fontSize12,
-    fontWeight: medium,
-    height: lineHeight14,
-    letterSpacing: 0.5,
-  );
-
-  // Button text styles
-  static const TextStyle buttonLarge = TextStyle(
-    fontSize: fontSize16,
-    fontWeight: semiBold,
-    height: lineHeight14,
-  );
-
-  static const TextStyle buttonMedium = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: semiBold,
-    height: lineHeight14,
-  );
-
+  
+  /// Button small
   static const TextStyle buttonSmall = TextStyle(
-    fontSize: fontSize12,
-    fontWeight: semiBold,
-    height: lineHeight14,
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    height: 1.25,
+    letterSpacing: 0.1,
+  );
+  
+  /// Caption text
+  static const TextStyle caption = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+    letterSpacing: 0.1,
+  );
+  
+  /// Label text
+  static const TextStyle label = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+    letterSpacing: 0.1,
   );
 
-  // Additional text styles for theme compatibility
-  static const TextStyle button = buttonMedium; // Default button style
-  static const TextStyle label = labelMedium; // Default label style
+  // ===== DISPLAY STYLES =====
   
-  // Input-related styles
-  static const TextStyle inputLabel = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: medium,
-    height: lineHeight14,
+  /// Display Large - Hero text
+  static const TextStyle displayLarge = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 48,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    letterSpacing: -1.0,
   );
   
-  static const TextStyle inputText = TextStyle(
-    fontSize: fontSize16,
-    fontWeight: regular,
-    height: lineHeight16,
+  /// Display Medium - Feature text
+  static const TextStyle displayMedium = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 40,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+    letterSpacing: -0.8,
   );
   
-  static const TextStyle helperText = TextStyle(
-    fontSize: fontSize12,
-    fontWeight: regular,
-    height: lineHeight14,
+  /// Display Small - Attention text
+  static const TextStyle displaySmall = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 36,
+    fontWeight: FontWeight.w600,
+    height: 1.25,
+    letterSpacing: -0.6,
   );
+
+  // ===== UTILITY METHODS =====
   
-  // Navigation styles
-  static const TextStyle navLabel = TextStyle(
-    fontSize: fontSize12,
-    fontWeight: medium,
-    height: lineHeight14,
-  );
+  /// Create a theme-compatible TextTheme
+  static TextTheme createTextTheme() {
+    return const TextTheme(
+      displayLarge: displayLarge,
+      displayMedium: displayMedium,
+      displaySmall: displaySmall,
+      headlineLarge: h1,
+      headlineMedium: h2,
+      headlineSmall: h3,
+      titleLarge: h4,
+      titleMedium: h5,
+      titleSmall: h6,
+      bodyLarge: bodyLarge,
+      bodyMedium: bodyMedium,
+      bodySmall: bodySmall,
+      labelLarge: button,
+      labelMedium: label,
+      labelSmall: caption,
+    );
+  }
   
-  static const TextStyle tabLabel = TextStyle(
-    fontSize: fontSize14,
-    fontWeight: medium,
-    height: lineHeight14,
-  );
+  /// Get responsive font size based on screen width
+  static double getResponsiveFontSize(double baseSize, double screenWidth) {
+    if (screenWidth > 768) {
+      return baseSize * 1.1; // Larger on tablets/desktop
+    } else if (screenWidth < 320) {
+      return baseSize * 0.9; // Smaller on very small screens
+    }
+    return baseSize; // Base size for mobile
+  }
+  
+  /// Apply color to text style
+  static TextStyle withColor(TextStyle style, Color color) {
+    return style.copyWith(color: color);
+  }
+  
+  /// Apply weight to text style
+  static TextStyle withWeight(TextStyle style, FontWeight weight) {
+    return style.copyWith(fontWeight: weight);
+  }
 }

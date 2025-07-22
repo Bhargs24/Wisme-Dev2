@@ -5,8 +5,24 @@ import '../../models/models.dart';
 /// Uses single API call for complete learning experience generation
 class AdvancedTopicClassifier {
 
-  /// Complete 60 Knowledge Levels (15 categories × 4 levels each)
-  static const Map<String, List<String>> categoryLevels = OptimizedOpenAIService.knowledgeLevels;
+  /// Complete 60 Learning Types (15 categories × 4 approaches each)
+  static const Map<String, List<String>> categoryLevels = {
+    'Technology & AI': ['🔹 Core Concepts', '💼 Case Studies', '🛠 Tools & Trends', '🎛 Bit of Everything'],
+    'Business & Finance': ['💡 Fundamentals', '💼 Case Studies', '📈 Growth Strategy', '🎛 Balanced Mix'],
+    'Psychology & Mind': ['🧠 Theories & Experiments', '💬 Real-Life Application', '🧘 Mindfulness & Behavior', '🎛 Mixed Approach'],
+    'Science & Nature': ['🔬 Scientific Concepts', '🧬 Discoveries', '🌱 Ethics & Controversies', '🎛 Narrative Mix'],
+    'Creativity & Design': ['🎨 Design Fundamentals', '📚 Iconic Examples', '🛠 Frameworks & Tools', '🎛 Creative Blend'],
+    'Personal Development': ['📖 Philosophy & Mental Models', '🎯 Self-Development', '💬 Habits & Mindset', '🎛 Reflective Mix'],
+    'History & Culture': ['🗺️ Timelines', '🌍 Cultural Impact', '🎶 Media & Storytelling', '🎛 Blended Approach'],
+    'Skills & Tools': ['🧰 Getting Started', '🔧 Pro Tools & Hacks', '📈 Workflows & Systems', '🎛 Practical Guide'],
+    'Career & Strategy': ['🪞 Identity & Purpose', '📄 Career Assets', '🧭 Strategic Moves', '🎛 Holistic Journey'],
+    'Law & Governance': ['📜 Legal Foundations', '🧭 Governance & Policy', '⚖️ Case Law & Precedents', '🎛 Civic Systems Mix'],
+    'Geopolitics & Global Affairs': ['🌐 Power Dynamics', '🤝 Diplomacy & Alliances', '💣 Conflicts & Security', '🎛 Global Narrative Mix'],
+    'Health & Medicine': ['🩺 Medical Fundamentals', '🧬 Research & Innovation', '💊 Practice & Policy', '🎛 Health Systems Mix'],
+    'Environment & Sustainability': ['🌱 Climate & Ecology', '🏭 Environmental Impact', '♻️ Solutions & Innovation', '🎛 Sustainable Future Mix'],
+    'Communication & Language': ['🗣️ Language Foundations', '📝 Professional Communication', '🌍 Cross-Cultural Context', '🎛 Communication Mastery'],
+    'Sports & Recreation': ['🏃‍♂️ Athletic Performance', '📊 Sports Analytics', '🎯 Strategy & Mental Game', '🎛 Complete Athlete Approach'],
+  };
 
   /// MASTER ANALYSIS: Single API call for complete learning experience
   static Future<TopicClassification> analyzeTopicWithAI(String topic, {
@@ -14,6 +30,7 @@ class AdvancedTopicClassifier {
     String? learningIntent,
     String? personalContext,
     List<String>? previousTopics,
+    String? preferredCoach,
     String? learningGoal,
   }) async {
     try {
@@ -24,6 +41,7 @@ class AdvancedTopicClassifier {
         learningIntent: learningIntent,
         personalContext: personalContext,
         previousTopics: previousTopics,
+        preferredCoach: preferredCoach,
         learningGoal: learningGoal,
       );
 
@@ -36,7 +54,7 @@ class AdvancedTopicClassifier {
       return TopicClassification(
         originalTopic: topic,
         category: analysis['category'] as String,
-        knowledgeType: analysis['knowledgeType'] as String,
+        learningType: analysis['knowledgeLevel'] as String,
         confidence: (analysis['confidence'] as num).toDouble(),
         subtopics: _extractSubtopics(episodes),
         contentHints: _extractLearningHints(analysis),
@@ -45,6 +63,7 @@ class AdvancedTopicClassifier {
           learningObjectives: _extractAllObjectives(episodes),
           totalEpisodes: episodes.length,
         ),
+        recommendedCoach: analysis['recommendedCoach'] as String,
         estimatedDuration: analysis['estimatedTotalDuration'] as int,
         prerequisiteTopics: previousTopics ?? [],
         personalContext: personalContext,
@@ -52,6 +71,7 @@ class AdvancedTopicClassifier {
         completeLearningExperience: completeExperience,
       );
     } catch (e) {
+      print('⚠️ Optimized OpenAI analysis failed, using fallback: $e');
       return _createFallbackClassification(topic, personalContext);
     }
   }
@@ -73,7 +93,7 @@ class AdvancedTopicClassifier {
   /// Extract content presentation hints from analysis
   static List<String> _extractLearningHints(Map<String, dynamic> analysis) {
     final coach = analysis['recommendedCoach'] as String;
-    final knowledgeType = analysis['knowledgeType'] as String;
+    final learningType = analysis['knowledgeLevel'] as String;
     
     final hints = <String>[];
     
@@ -84,12 +104,12 @@ class AdvancedTopicClassifier {
       hints.addAll(['practical', 'energetic', 'action-oriented']);
     }
     
-    // Knowledge level-based hints
-    if (knowledgeType.contains('Core Concepts')) {
+    // Learning type-based hints
+    if (learningType.contains('Core Concepts')) {
       hints.addAll(['foundational', 'systematic']);
-    } else if (knowledgeType.contains('Case Studies')) {
+    } else if (learningType.contains('Case Studies')) {
       hints.addAll(['example-driven', 'real-world']);
-    } else if (knowledgeType.contains('Tools & Trends')) {
+    } else if (learningType.contains('Tools & Trends')) {
       hints.addAll(['cutting-edge', 'practical-tools']);
     } else {
       hints.addAll(['comprehensive', 'balanced']);
@@ -112,7 +132,7 @@ class AdvancedTopicClassifier {
   static TopicClassification _createFallbackClassification(String topic, String? personalContext) {
     // Smart category detection based on keywords
     String category = 'Personal Development'; // Default
-    String knowledgeType = '🔹 Core Concepts';
+    String learningType = '🔹 Core Concepts';
     String coach = 'Kai';
     
     final topicLower = topic.toLowerCase();
@@ -120,46 +140,46 @@ class AdvancedTopicClassifier {
     // Advanced keyword matching with context awareness
     if (topicLower.contains(RegExp(r'tech|ai|program|code|software|data|machine|algorithm|computer'))) {
       category = 'Technology & AI';
-      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'beginner|new|start')) ?? false 
+      learningType = personalContext?.toLowerCase().contains(RegExp(r'beginner|new|start')) ?? false 
           ? '🔹 Core Concepts' : '🛠 Tools & Trends';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'business|money|finance|market|startup|entrepreneur|strategy'))) {
       category = 'Business & Finance';
-      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'example|case|company')) ?? false 
+      learningType = personalContext?.toLowerCase().contains(RegExp(r'example|case|company')) ?? false 
           ? '💼 Case Studies' : '💡 Fundamentals';
       coach = 'Vee';
     } else if (topicLower.contains(RegExp(r'psychology|mind|behavior|emotion|mental|cognitive'))) {
       category = 'Psychology & Mind';
-      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'practical|apply|real')) ?? false 
+      learningType = personalContext?.toLowerCase().contains(RegExp(r'practical|apply|real')) ?? false 
           ? '💬 Real-Life Application' : '🧠 Theories & Experiments';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'science|physics|chemistry|biology|research|study'))) {
       category = 'Science & Nature';
-      knowledgeType = '🔬 Scientific Concepts';
+      learningType = '🔬 Scientific Concepts';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'design|art|creative|music|visual|aesthetic'))) {
       category = 'Creativity & Design';
-      knowledgeType = personalContext?.toLowerCase().contains(RegExp(r'tool|software|technique')) ?? false 
+      learningType = personalContext?.toLowerCase().contains(RegExp(r'tool|software|technique')) ?? false 
           ? '🛠 Frameworks & Tools' : '🎨 Design Fundamentals';
       coach = 'Vee';
     } else if (topicLower.contains(RegExp(r'career|job|work|professional|skill|leadership'))) {
       category = 'Career & Strategy';
-      knowledgeType = '🪞 Identity & Purpose';
+      learningType = '🪞 Identity & Purpose';
       coach = 'Vee';
     } else if (topicLower.contains(RegExp(r'history|culture|society|social|political'))) {
       category = 'History & Culture';
-      knowledgeType = '🗺️ Timelines';
+      learningType = '🗺️ Timelines';
       coach = 'Kai';
     } else if (topicLower.contains(RegExp(r'environment|climate|sustainability|green|eco'))) {
       category = 'Environment & Sustainability';
-      knowledgeType = '🌱 Climate & Ecology';
+      learningType = '🌱 Climate & Ecology';
       coach = 'Kai';
     }
 
     return TopicClassification(
       originalTopic: topic,
       category: category,
-      knowledgeType: knowledgeType,
+      learningType: learningType,
       confidence: 0.6, // Lower confidence for fallback
       subtopics: [
         SubtopicResult(
@@ -196,6 +216,7 @@ class AdvancedTopicClassifier {
         ],
         totalEpisodes: 3,
       ),
+      recommendedCoach: coach,
       estimatedDuration: 30,
       prerequisiteTopics: const [],
       personalContext: personalContext,
@@ -212,6 +233,7 @@ class AdvancedTopicClassifier {
     try {
       return await OptimizedOpenAIService().testConnection();
     } catch (e) {
+      print('Topic classifier connection test failed: $e');
       return false;
     }
   }

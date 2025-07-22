@@ -55,7 +55,7 @@ class _BackgroundAudioDemoScreenState extends State<BackgroundAudioDemoScreen> {
       hashtags: ['demo', 'audio', 'background'],
       createdAt: DateTime.now(),
       audioUrl: 'https://example.com/demo_audio.mp3', // Replace with actual audio URL
-      knowledgeType: '🔹 Core Concepts',
+      learningType: '🔹 Core Concepts',
       coachPersonality: 'Kai',
     );
 

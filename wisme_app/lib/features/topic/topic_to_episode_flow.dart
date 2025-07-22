@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/models.dart';
-import '../audio/enhanced_audio_player_screen.dart';
+import '../audio/presentation/pages/enhanced_audio_player_system.dart';
 
 /// Complete Topic to Episode Flow
-/// The core user experience: Topic Input → AI Processing → Episode Generation → Enhanced Audio Player
+/// The core user experience: Topic Input → AI Processing → Episode Generation → Audio Player
 class TopicToEpisodeFlow extends ConsumerStatefulWidget {
   const TopicToEpisodeFlow({super.key});
 
@@ -17,6 +17,7 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
   
   // Topic Input Data
   String _inputTopic = '';
+  final String _selectedCoach = 'Kai';
   
   // Generated Episode Data
   Episode? _generatedEpisode;
@@ -421,16 +422,18 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
     );
   }
 
-  /// Screen 4: Enhanced Audio Player with Two-Speaker Support
+  /// Screen 4: Audio Player
   Widget _buildAudioPlayerScreen() {
     if (_generatedEpisode == null) return const SizedBox();
     
-    return EnhancedAudioPlayerScreen(
-      episodeTitle: _generatedEpisode!.title,
-      episodeContent: _generatedEpisode!.content,
-      duration: Duration(minutes: _generatedEpisode!.durationMinutes),
-      episode: _generatedEpisode, // Pass full episode for enhanced features
-      enableTwoSpeakerMode: true, // Enable new two-speaker system
+    return EnhancedAudioPlayerSystem(
+      episode: {
+        'title': _generatedEpisode!.title,
+        'content': _generatedEpisode!.content,
+        'duration': _generatedEpisode!.durationMinutes,
+      },
+      coachName: _generatedEpisode!.coachPersonality,
+      onCompleted: () => Navigator.of(context).pop(),
     );
   }
 
@@ -458,7 +461,7 @@ class _TopicToEpisodeFlowState extends ConsumerState<TopicToEpisodeFlow> {
       content: '''
 Welcome to your personalized learning session about $_inputTopic!
 
-I'm your coach, and I'm excited to guide you through this topic. We'll explore the fundamentals, break down complex concepts, and help you build practical understanding.
+I'm your coach $_selectedCoach, and I'm excited to guide you through this topic. We'll explore the fundamentals, break down complex concepts, and help you build practical understanding.
 
 [PAUSE]
 
@@ -479,8 +482,8 @@ By the end of this episode, you'll have a solid foundation in $_inputTopic and p
 Ready? Let's begin your learning journey!
       ''',
       category: 'Technology & AI',
-      knowledgeType: '🔹 Core Concepts',
-      coachPersonality: 'Coach', // Default coach personality
+      learningType: '🔹 Core Concepts',
+      coachPersonality: _selectedCoach,
       hashtags: [_inputTopic.toLowerCase().replaceAll(' ', '_')],
       durationMinutes: 12,
       createdAt: DateTime.now(),
@@ -513,3 +516,6 @@ Ready? Let's begin your learning journey!
     super.dispose();
   }
 }
+
+
+

@@ -5,14 +5,14 @@ abstract class ContentDatabase {
   Future<List<Episode>> searchBySemantic({
     required String query,
     required String category,
-    required String knowledgeType,
+    required String learningType,
     int limit = 50,
   });
   
   Future<List<Episode>> searchByHashtags({
     required List<String> hashtags,
     required String category,
-    required String knowledgeType,
+    required String knowledgeLevel,
     int limit = 50,
   });
   
@@ -32,7 +32,7 @@ class InMemoryContentDatabase implements ContentDatabase {
   Future<List<Episode>> searchBySemantic({
     required String query,
     required String category,
-    required String knowledgeType,
+    required String learningType,
     int limit = 50,
   }) async {
     // For testing, use simple keyword matching
@@ -40,7 +40,7 @@ class InMemoryContentDatabase implements ContentDatabase {
     final results = <Episode>[];
     
     for (final episode in _episodes.values) {
-      if (episode.category == category && episode.knowledgeType == knowledgeType) {
+      if (episode.category == category && episode.learningType == learningType) {
         // Search in episode content - using actual Episode properties
         if (episode.title.toLowerCase().contains(queryLower) ||
             episode.content.toLowerCase().contains(queryLower)) {
@@ -56,13 +56,13 @@ class InMemoryContentDatabase implements ContentDatabase {
   Future<List<Episode>> searchByHashtags({
     required List<String> hashtags,
     required String category,
-    required String knowledgeType,
+    required String knowledgeLevel,
     int limit = 50,
   }) async {
     final results = <Episode>[];
     
     for (final episode in _episodes.values) {
-      if (episode.category == category && episode.knowledgeType == knowledgeType) {
+      if (episode.category == category && episode.learningType == knowledgeLevel) {
         // Use episode's hashtags property
         final episodeHashtags = episode.hashtags;
         final overlap = hashtags.where((tag) => episodeHashtags.contains(tag)).length;
@@ -111,7 +111,7 @@ class InMemoryContentDatabase implements ContentDatabase {
       title: episode.title,
       content: episode.content, // Use correct property name
       category: episode.category,
-      knowledgeType: episode.knowledgeType,
+      learningType: episode.learningType,
       coachPersonality: episode.coachPersonality, // Required parameter
       hashtags: episode.hashtags,
       durationMinutes: episode.durationMinutes, // Use correct property name
@@ -130,7 +130,7 @@ class InMemoryContentDatabase implements ContentDatabase {
         title: existingEpisode.title,
         content: newContent, // Use correct property name
         category: existingEpisode.category,
-        knowledgeType: existingEpisode.knowledgeType,
+        learningType: existingEpisode.learningType,
         coachPersonality: existingEpisode.coachPersonality, // Required parameter
         hashtags: existingEpisode.hashtags,
         durationMinutes: existingEpisode.durationMinutes,
@@ -148,7 +148,7 @@ class InMemoryContentDatabase implements ContentDatabase {
         title: 'Introduction to Flutter',
         content: 'Learn the basics of Flutter development...',
         category: '💻 Technology & AI',
-        knowledgeType: '🔹 Core Concepts',
+        learningType: '🔹 Core Concepts',
         coachPersonality: 'Kai', // Required parameter
         hashtags: ['flutter', 'mobile', 'development'],
         durationMinutes: 15,
@@ -159,7 +159,7 @@ class InMemoryContentDatabase implements ContentDatabase {
         title: 'Advanced Dart Features',
         content: 'Explore advanced Dart programming concepts...',
         category: '💻 Technology & AI',
-        knowledgeType: '🛠️ Tools & Trends',
+        learningType: '🚀 Tools & Trends',
         coachPersonality: 'Kai', // Required parameter
         hashtags: ['dart', 'programming', 'advanced'],
         durationMinutes: 25,

@@ -225,7 +225,7 @@ class _JourneyCompletionScreenState extends State<JourneyCompletionScreen>
                                   Icons.schedule,
                                 ),
                                 _buildStatItem(
-                                  widget.journey.knowledgeType.toUpperCase(),
+                                  widget.journey.learningType.toUpperCase(),
                                   'Level',
                                   Icons.trending_up,
                                 ),

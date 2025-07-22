@@ -10,7 +10,7 @@ class PodcastContentGenerator {
     String episodeTitle,
     String episodeContent,
     String coachPersonality,
-    String knowledgeType, {
+    String learningType, {
     String? personalContext,
     String? openAiApiKey,
   }) async {
@@ -23,7 +23,7 @@ class PodcastContentGenerator {
         learningIntent: 'Generate episode content',
         personalContext: personalContext,
         preferredCoach: coachPersonality,
-        learningGoal: 'Complete understanding of $topic at $knowledgeType level',
+        learningGoal: 'Complete understanding of $topic at $learningType level',
       );
 
       // Extract the first episode's personalized content as the script
@@ -51,7 +51,7 @@ class PodcastContentGenerator {
   Future<EpisodeContent> generateCompleteEpisode({
     required String topic,
     required String episodeTitle,
-    required String knowledgeType,
+    required String learningType,
     required String coachPersonality,
     String? personalContext,
     int episodeNumber = 1,
@@ -66,7 +66,7 @@ class PodcastContentGenerator {
         learningIntent: 'Generate comprehensive episode content',
         personalContext: personalContext,
         preferredCoach: coachPersonality,
-        learningGoal: 'Complete understanding of $topic at $knowledgeType level',
+        learningGoal: 'Complete understanding of $topic at $learningType level',
       );
 
       // Extract episode data from learning experience
@@ -79,7 +79,7 @@ class PodcastContentGenerator {
         final targetEpisode = episodes.length >= episodeNumber ? episodes[episodeNumber - 1] : episodes[0];
         
         final personalizedContent = targetEpisode['personalizedContent'] as String? ?? '';
-        final duration = targetEpisode['duration'] as int? ?? _estimateDuration(knowledgeType);
+        final duration = targetEpisode['duration'] as int? ?? _estimateDuration(learningType);
         
         // Split the content into sections or generate them individually
         final sections = _parseContentSections(personalizedContent);
@@ -105,7 +105,7 @@ class PodcastContentGenerator {
         personalContext: personalContext,
         episodeNumber: episodeNumber,
         totalEpisodes: totalEpisodes,
-        knowledgeType: knowledgeType,
+        learningType: learningType,
       );
       
     } catch (e) {
@@ -117,7 +117,7 @@ class PodcastContentGenerator {
         personalContext: personalContext,
         episodeNumber: episodeNumber,
         totalEpisodes: totalEpisodes,
-        knowledgeType: knowledgeType,
+        learningType: learningType,
       );
     }
   }
@@ -173,7 +173,7 @@ class PodcastContentGenerator {
     String? personalContext,
     required int episodeNumber,
     required int totalEpisodes,
-    required String knowledgeType,
+    required String learningType,
   }) {
     final intro = _generateFallbackIntro(episodeTitle, coachPersonality);
     final core = _generateFallbackCore(topic, episodeTitle, coachPersonality, personalContext);
@@ -295,10 +295,10 @@ $encouragement You're building knowledge that will compound over time.
   }
 
   /// Estimate duration based on knowledge level
-  int _estimateDuration(String knowledgeType) {
-    if (knowledgeType.contains('Core Concepts')) return 8;
-    if (knowledgeType.contains('Case Studies')) return 12;
-    if (knowledgeType.contains('Tools & Trends')) return 10;
+  int _estimateDuration(String learningType) {
+    if (learningType.contains('Core Concepts')) return 8;
+    if (learningType.contains('Case Studies')) return 12;
+    if (learningType.contains('Tools & Trends')) return 10;
     return 10; // Default
   }
 

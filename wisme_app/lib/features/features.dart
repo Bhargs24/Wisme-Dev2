@@ -20,10 +20,8 @@ export 'learning/learning_choice_flow.dart';
 export 'learning/presentation/pages/complete_learning_choice_flow.dart';
 export 'learning/presentation/pages/journey_generation_system.dart';
 
-// Audio System
-export 'audio/audio_player_screen.dart';
-export 'audio/enhanced_audio_player_screen.dart';
-export 'audio/enhanced_audio_learning_engine.dart';
+// Audio System - Phase 1 (Uses Predefined Voice Pairs per Category)
+// Note: Enhanced audio player system is the main working player (1091 lines)
 export 'audio/presentation/pages/enhanced_audio_player_system.dart';
 
 // Library & Search
@@ -31,9 +29,14 @@ export 'library/presentation/pages/episode_library_screen.dart';
 export 'search/search_screen.dart';
 export 'search/presentation/pages/advanced_search_system.dart';
 
+// Coach Management
+export 'coach/presentation/pages/coach_management_system.dart';
+
 // Analytics
 export 'analytics/presentation/pages/learning_analytics_dashboard.dart';
 
 // Profile
 export 'profile/profile_screen.dart';
-export '../demo_app/demo_app_flow.dart';
+
+
+

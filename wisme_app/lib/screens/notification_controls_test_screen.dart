@@ -42,7 +42,7 @@ class _NotificationControlsTestScreenState extends State<NotificationControlsTes
       hashtags: ['demo', 'notification', 'controls'],
       createdAt: DateTime.now(),
       audioUrl: 'https://example.com/demo_audio.mp3',
-      knowledgeType: '🔹 Core Concepts',
+      learningType: '🔹 Core Concepts',
       coachPersonality: 'Kai',
     );
 

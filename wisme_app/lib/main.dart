@@ -1,41 +1,31 @@
 /// WISME - World's Most Successful AI Learning App
-/// 
-/// This is the main entry point for the WISME application.
+///
+/// This is the main entry point for the WISME application.   
 /// The app is built with a modular, scalable architecture that provides:
 /// - Comprehensive state management
 /// - Advanced analytics and personalization
 /// - Modern UI components
 /// - AI-powered learning experiences
 /// - Coach-like adaptive behavior
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 // Core architecture
-import 'core/architecture/app_architecture.dart';
 import 'core/state/app_state_manager.dart';
-import 'core/analytics/comprehensive_analytics_system.dart';
-
+import 'core/analytics/comprehensive_analytics_system.dart';  
 // Core services
-import 'core/services/audio_service_registry.dart';
 import 'core/services/enhanced_auth_service.dart';
 import 'core/services/supabase_service.dart';
-
 // Shared design system
 import 'shared/themes/app_theme.dart';
-import 'shared/components/modern_ui_components.dart';
-
 // Navigation
 import 'core/navigation/main_navigation_wrapper.dart';
-import 'features/features.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   try {
     // Initialize core systems
     await _initializeCoreSystems();
-    
     // Start the app
     runApp(const WismeApp());
   } catch (e) {
@@ -51,15 +41,11 @@ Future<void> _initializeCoreSystems() async {
   await AppStateManager.instance.initialize();
   
   // Initialize analytics system
-  await ComprehensiveAnalyticsSystem.instance.initialize();
+  await ComprehensiveAnalyticsSystem.instance.initialize();   
   
   // Initialize authentication
   final authService = EnhancedAuthService();
   authService.initialize();
-  
-  // Initialize audio services
-  final audioRegistry = AudioServiceRegistry.instance;
-  await audioRegistry.initializeServices();
   
   // Initialize Supabase
   await SupabaseService.initialize();
@@ -96,7 +82,6 @@ class WismeApp extends StatelessWidget {
       providers: [
         // State management providers
         ...AppProviders.providers,
-        
         // Additional providers can be added here
       ],
       child: MaterialApp(
@@ -104,10 +89,8 @@ class WismeApp extends StatelessWidget {
         theme: WismeTheme.lightTheme,
         darkTheme: WismeTheme.darkTheme,
         themeMode: ThemeMode.system,
-        // home: const MainNavigationWrapper(),
-        home: const DemoAppFlow(), // Set demo flow as entry point for now
+        home: const MainNavigationWrapper(),
         debugShowCheckedModeBanner: false,
-        
         // Global app configuration
         builder: (context, child) {
           return MediaQuery(

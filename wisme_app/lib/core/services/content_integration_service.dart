@@ -35,10 +35,11 @@ class ContentIntegrationService {
       // Step 2: Generate personalized podcast content script
       final episodeScript = await _generator.generateEpisodeScript(
         topic,
-        classification.episodePlan.learningObjectives.first, // title
-        'Educational episode about $topic', // content
-        classification.knowledgeType, // knowledgeType
-        'Kai', // coachPersonality (or use classification.recommendedCoach if available)
+        classification.episodePlan.learningObjectives.first, // Use first learning objective as title
+        'Educational episode about $topic', // Episode content description
+        classification.recommendedCoach,
+        classification.learningType,
+        personalContext: personalContext,
       );
 
       // Step 3: Create Episode with generated content
@@ -46,8 +47,8 @@ class ContentIntegrationService {
         title: 'Learning About: $topic',
         content: episodeScript,
         category: classification.category,
-        knowledgeType: classification.knowledgeType,
-        coachPersonality: 'Kai', // Default coach
+        learningType: classification.learningType,
+        coachPersonality: classification.recommendedCoach,
         hashtags: [topic.toLowerCase().replaceAll(' ', '_'), ...classification.subtopics.map((s) => s.title.toLowerCase().replaceAll(' ', '_'))],
         durationMinutes: classification.estimatedDuration,
         createdAt: DateTime.now(),
@@ -63,7 +64,7 @@ class ContentIntegrationService {
         title: episode.title,
         content: episode.content,
         category: episode.category,
-        knowledgeType: episode.knowledgeType,
+        learningType: episode.learningType,
         coachPersonality: episode.coachPersonality,
         hashtags: episode.hashtags,
         durationMinutes: episode.durationMinutes,
@@ -97,7 +98,7 @@ class ContentIntegrationService {
         title: 'Learning About: $topic',
         content: basicScript,
         category: 'Technology & AI', // Default category
-        knowledgeType: '🔹 Core Concepts', // Default level
+        learningType: '🔹 Core Concepts', // Default level
         coachPersonality: 'Kai', // Default coach
         hashtags: [topic.toLowerCase().replaceAll(' ', '_')],
         durationMinutes: 15,
@@ -112,7 +113,7 @@ class ContentIntegrationService {
         title: basicEpisode.title,
         content: basicEpisode.content,
         category: basicEpisode.category,
-        knowledgeType: basicEpisode.knowledgeType,
+        learningType: basicEpisode.learningType,
         coachPersonality: basicEpisode.coachPersonality,
         hashtags: basicEpisode.hashtags,
         durationMinutes: basicEpisode.durationMinutes,
@@ -256,3 +257,5 @@ class ContentIntegrationService {
   /// Get content generator instance for direct access if needed
   PodcastContentGenerator get generator => _generator;
 }
+
+

@@ -185,7 +185,7 @@ class _TopicInputSystemState extends ConsumerState<TopicInputSystem> {
       // Convert AI classification to UI classification
       final result = TopicClassificationResult(
         primaryCategory: aiClassification.category,
-        difficultyLevel: aiClassification.knowledgeType,
+        difficultyLevel: aiClassification.learningType,
         estimatedSessions: aiClassification.episodePlan.totalEpisodes,
         suggestedTags: aiClassification.subtopics.map((s) => s.title).toList(),
         confidenceScore: aiClassification.confidence,

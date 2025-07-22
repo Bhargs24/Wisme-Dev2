@@ -8,7 +8,7 @@ class LearningJourney {
   final String title;
   final String description;
   final String category;
-  final String knowledgeType;
+  final String learningType;
   final List<String> episodeIds;
   final List<Episode> episodes;
   final bool isCompleted;
@@ -25,7 +25,7 @@ class LearningJourney {
     required this.title,
     required this.description,
     required this.category,
-    required this.knowledgeType,
+    required this.learningType,
     this.episodeIds = const [],
     this.episodes = const [],
     this.isCompleted = false,
@@ -45,7 +45,7 @@ class LearningJourney {
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       category: json['category'] ?? '',
-      knowledgeType: json['knowledge_type'] ?? '',
+      learningType: json['knowledge_level'] ?? '',
       episodeIds: List<String>.from(json['episode_ids'] ?? []),
       episodes: [], // Episodes loaded separately
       isCompleted: json['is_completed'] ?? false,
@@ -70,7 +70,7 @@ class LearningJourney {
       'title': title,
       'description': description,
       'category': category,
-      'knowledge_type': knowledgeType,
+      'knowledge_level': learningType,
       'episode_ids': episodeIds,
       'is_completed': isCompleted,
       'completion_percentage': completionPercentage,
@@ -89,7 +89,7 @@ class LearningJourney {
     String? title,
     String? description,
     String? category,
-    String? knowledgeType,
+    String? learningType,
     List<String>? episodeIds,
     List<Episode>? episodes,
     bool? isCompleted,
@@ -106,7 +106,7 @@ class LearningJourney {
       title: title ?? this.title,
       description: description ?? this.description,
       category: category ?? this.category,
-      knowledgeType: knowledgeType ?? this.knowledgeType,
+      learningType: learningType ?? this.learningType,
       episodeIds: episodeIds ?? this.episodeIds,
       episodes: episodes ?? this.episodes,
       isCompleted: isCompleted ?? this.isCompleted,

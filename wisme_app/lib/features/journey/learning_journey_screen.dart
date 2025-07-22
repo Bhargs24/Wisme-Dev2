@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../shared/shared.dart';
-import '../audio/enhanced_audio_player_screen.dart';
+import '../audio/presentation/pages/enhanced_audio_player_system.dart';
 import 'presentation/pages/enhanced_journey_navigator.dart';
 
 /// Learning Journey Screen
@@ -48,7 +48,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
         title: 'Introduction to ${widget.topic}',
         content: 'Welcome to your learning journey about ${widget.topic}! Let\'s start with the basics and build a strong foundation.',
         category: widget.category ?? '💻 Technology & AI',
-        knowledgeType: '🔹 Core Concepts',
+        learningType: '🔹 Core Concepts',
         coachPersonality: 'Kai',
         hashtags: [widget.topic.toLowerCase().replaceAll(' ', '_')],
         durationMinutes: 8,
@@ -60,7 +60,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
         title: 'Core Concepts of ${widget.topic}',
         content: 'Now that you understand the basics, let\'s dive deeper into the core concepts that make ${widget.topic} so important.',
         category: widget.category ?? '💻 Technology & AI',
-        knowledgeType: '💡 Fundamentals',
+        learningType: '💡 Fundamentals',
         coachPersonality: 'Vee',
         hashtags: [widget.topic.toLowerCase().replaceAll(' ', '_')],
         durationMinutes: 12,
@@ -72,7 +72,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
         title: 'Practical Applications of ${widget.topic}',
         content: 'Time to see ${widget.topic} in action! We\'ll explore real-world applications and examples.',
         category: widget.category ?? '💻 Technology & AI',
-        knowledgeType: '💼 Case Studies',
+        learningType: '💼 Case Studies',
         coachPersonality: 'Kai',
         hashtags: [widget.topic.toLowerCase().replaceAll(' ', '_')],
         durationMinutes: 15,
@@ -84,7 +84,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
         title: 'Advanced Techniques in ${widget.topic}',
         content: 'Ready for the next level? Let\'s explore advanced concepts and techniques in ${widget.topic}.',
         category: widget.category ?? '💻 Technology & AI',
-        knowledgeType: '🛠 Tools & Trends',
+        learningType: '🛠 Tools & Trends',
         coachPersonality: 'Vee',
         hashtags: [widget.topic.toLowerCase().replaceAll(' ', '_')],
         durationMinutes: 18,
@@ -96,7 +96,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
         title: 'Mastering ${widget.topic}: Next Steps',
         content: 'Congratulations on your journey! Let\'s explore how to continue growing your expertise in ${widget.topic}.',
         category: widget.category ?? '💻 Technology & AI',
-        knowledgeType: '🎛 Bit of Everything',
+        learningType: '🎛 Bit of Everything',
         coachPersonality: 'Kai',
         hashtags: [widget.topic.toLowerCase().replaceAll(' ', '_')],
         durationMinutes: 10,
@@ -402,13 +402,16 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EnhancedAudioPlayerScreen(
-          episodeTitle: episode.title,
-          episodeContent: episode.content,
-          duration: Duration(minutes: episode.durationMinutes),
-          episode: episode, // Pass full episode for enhanced features
-          enableTwoSpeakerMode: episode.category.contains('Technology') || 
-                                episode.category.contains('Science'), // Smart detection
+        builder: (context) => EnhancedAudioPlayerSystem(
+          episode: {
+            'title': episode.title,
+            'content': episode.content,
+            'category': episode.category,
+            'learningType': episode.learningType,
+            'duration_minutes': episode.durationMinutes,
+          },
+          coachName: episode.coachPersonality,
+          audioUrl: episode.audioUrl,
         ),
       ),
     ).then((_) {
@@ -422,7 +425,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
               title: e.title,
               content: e.content,
               category: e.category,
-              knowledgeType: e.knowledgeType,
+              learningType: e.learningType,
               coachPersonality: e.coachPersonality,
               hashtags: e.hashtags,
               durationMinutes: e.durationMinutes,
@@ -462,7 +465,7 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
       title: 'Learning Journey: ${widget.topic}',
       description: 'A comprehensive 5-episode journey to master ${widget.topic}',
       category: widget.category ?? '💻 Technology & AI',
-      knowledgeType: '🔹 Core Concepts',
+      learningType: '🔹 Core Concepts',
       episodes: _journeyEpisodes,
       currentEpisodeIndex: _getCurrentEpisodeIndex(),
       completionPercentage: _getJourneyCompletionPercentage(),
@@ -504,3 +507,6 @@ class _LearningJourneyScreenState extends State<LearningJourneyScreen> {
     return _journeyEpisodes.every((e) => e.completionPercentage >= 1.0);
   }
 }
+
+
+

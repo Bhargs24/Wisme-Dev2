@@ -277,7 +277,7 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen>
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      episode.knowledgeType,
+                      episode.learningType,
                       style: const TextStyle(
                         fontSize: 12,
                         color: WismeColors.textSecondary,
@@ -441,7 +441,7 @@ class _EpisodeLibraryScreenState extends State<EpisodeLibraryScreen>
             'title': episode.title,
             'content': episode.content,
             'category': episode.category,
-            'knowledgeType': episode.knowledgeType,
+            'learningType': episode.learningType,
             'audioUrl': episode.audioUrl,
           },
           coachName: episode.coachPersonality,

@@ -2,7 +2,7 @@ import 'optimized_openai_service.dart';
 import '../ai/advanced_topic_classifier.dart';
 import '../config/environment_config.dart';
 
-/// Comprehensive Test Service for Prompt Engineering
+/// Comprehensive Test Service for God-Level Prompt Engineering
 /// Validates cost efficiency, accuracy, personalization, and uniqueness
 class PromptEngineeringAuditService {
   static final PromptEngineeringAuditService _instance = PromptEngineeringAuditService._internal();
@@ -175,7 +175,7 @@ class PromptEngineeringAuditService {
         results.add({
           'testCase': testCase,
           'personalizationScore': personalizationScore,
-          'knowledgeType': analysis['knowledgeType'],
+          'knowledgeLevel': analysis['knowledgeLevel'],
           'coach': analysis['recommendedCoach'],
           'hasPersonalizedInsight': analysis.containsKey('personalizedInsight'),
           'contextIntegration': _checkContextIntegration(testCase, episodes),
@@ -274,11 +274,11 @@ class PromptEngineeringAuditService {
           personalContext: testCase['context'] as String,
         );
         
-        final levelMatch = classification.knowledgeType == testCase['expectedLevel'];
+        final levelMatch = classification.learningType == testCase['expectedLevel'];
         
         results.add({
           'testCase': testCase,
-          'actualLevel': classification.knowledgeType,
+          'actualLevel': classification.learningType,
           'expectedLevel': testCase['expectedLevel'],
           'levelMatch': levelMatch,
           'category': classification.category,
@@ -396,10 +396,10 @@ class PromptEngineeringAuditService {
     }
     
     // Check knowledge level appropriateness
-    final knowledgeType = analysis['knowledgeType'] as String;
-    if (background.toLowerCase().contains('beginner') && knowledgeType.contains('Core Concepts')) {
+    final knowledgeLevel = analysis['knowledgeLevel'] as String;
+    if (background.toLowerCase().contains('beginner') && knowledgeLevel.contains('Core Concepts')) {
       score += 0.2;
-    } else if (background.toLowerCase().contains('experience') && !knowledgeType.contains('Core Concepts')) {
+    } else if (background.toLowerCase().contains('experience') && !knowledgeLevel.contains('Core Concepts')) {
       score += 0.2;
     }
     

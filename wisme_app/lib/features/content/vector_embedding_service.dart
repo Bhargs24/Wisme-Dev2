@@ -115,7 +115,7 @@ class VectorEmbeddingService {
     Title: ${episode.title}
     Content: ${episode.content}
     Category: ${episode.category}
-    Knowledge Type: ${episode.knowledgeType}
+    Learning Type: ${episode.learningType}
     Coach: ${episode.coachPersonality}
     Hashtags: ${episode.hashtags.join(', ')}
     ''';
@@ -130,7 +130,7 @@ class VectorEmbeddingService {
         'type': 'episode',
         'title': episode.title,
         'category': episode.category,
-        'knowledge_type': episode.knowledgeType,
+        'knowledge_level': episode.learningType,
         'coach_personality': episode.coachPersonality,
         'duration_minutes': episode.durationMinutes,
         'hashtags': episode.hashtags,
@@ -144,7 +144,7 @@ class VectorEmbeddingService {
     int limit = 10,
     double threshold = 0.7,
     List<String>? categories,
-    String? knowledgeType,
+    String? learningType,
   }) async {
     if (!_isInitialized) await initialize();
 
@@ -173,8 +173,8 @@ class VectorEmbeddingService {
         continue;
       }
       
-      if (knowledgeType != null && 
-          metadataMap['knowledge_type'] != knowledgeType) {
+      if (learningType != null && 
+          metadataMap['knowledge_level'] != learningType) {
         continue;
       }
 
@@ -267,7 +267,7 @@ class VectorEmbeddingService {
       limit: limit,
       threshold: threshold,
       categories: filters?['categories'],
-      knowledgeType: filters?['knowledge_type'],
+      learningType: filters?['knowledge_level'],
     );
   }
 
@@ -461,7 +461,7 @@ class SimilarityResult {
 
   String get title => metadata['title'] ?? '';
   String get category => metadata['category'] ?? '';
-  String get knowledgeType => metadata['knowledge_type'] ?? '';
+  String get learningType => metadata['knowledge_level'] ?? '';
   String get coachPersonality => metadata['coach_personality'] ?? '';
   int get durationMinutes => metadata['duration_minutes'] ?? 0;
   List<String> get hashtags => List<String>.from(metadata['hashtags'] ?? []);

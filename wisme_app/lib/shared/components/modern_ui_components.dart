@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 import '../design_system/wisme_typography.dart';
-import '../design_system/wisme_spacing.dart';
 
 // ===== CORE COMPONENT BASE =====
 

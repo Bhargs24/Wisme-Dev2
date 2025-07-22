@@ -1140,3 +1140,6 @@ class _AdvancedSearchSystemState extends State<AdvancedSearchSystem>
     return categoryData['color'];
   }
 }
+
+
+
