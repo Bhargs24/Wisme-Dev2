@@ -80,6 +80,98 @@ class WismeAnalytics {
     });
   }
 
+  // ===== LEARNING EVENTS (UPGRADED) =====
+  static void trackLearningEvent(String action, {
+    required String learningType,
+    required String category,
+    String? personalizationContext,
+    Map<String, dynamic>? extra,
+  }) {
+    _trackEvent(learningEvents, action, parameters: {
+      'learningType': learningType,
+      'category': category,
+      if (personalizationContext != null) 'personalizationContext': personalizationContext,
+      if (extra != null) ...extra,
+    });
+  }
+
+  // ===== AUDIO PERSONALIZATION EVENTS =====
+  static void trackAudioPersonalization({
+    required String voicePair,
+    required String ttsProvider,
+    required String category,
+    required String learningType,
+    bool cacheHit = false,
+    Map<String, dynamic>? extra,
+  }) {
+    _trackEvent('audio', 'personalization', parameters: {
+      'voicePair': voicePair,
+      'ttsProvider': ttsProvider,
+      'category': category,
+      'learningType': learningType,
+      'cacheHit': cacheHit,
+      if (extra != null) ...extra,
+    });
+  }
+
+  // ===== ADAPTIVE JOURNEY EVENTS =====
+  static void trackAdaptiveJourney({
+    required String aiModel,
+    required String category,
+    required String learningType,
+    String? userContext,
+    bool fallbackUsed = false,
+    Map<String, dynamic>? extra,
+  }) {
+    _trackEvent('learning', 'adaptive_journey', parameters: {
+      'aiModel': aiModel,
+      'category': category,
+      'learningType': learningType,
+      'userContext': userContext,
+      'fallbackUsed': fallbackUsed,
+      if (extra != null) ...extra,
+    });
+  }
+
+  // ===== USER FEEDBACK EVENTS =====
+  static void trackUserFeedback({
+    required String feedbackType,
+    required String targetId,
+    required String category,
+    required String learningType,
+    int rating = 0,
+    String? comment,
+    Map<String, dynamic>? extra,
+  }) {
+    _trackEvent('feedback', feedbackType, parameters: {
+      'targetId': targetId,
+      'category': category,
+      'learningType': learningType,
+      'rating': rating,
+      if (comment != null) 'comment': comment,
+      if (extra != null) ...extra,
+    });
+  }
+
+  // ===== ERROR/FALLBACK EVENTS (UPGRADED) =====
+  static void trackAIFallback({
+    required String errorType,
+    required String context,
+    required String aiModel,
+    required String category,
+    required String learningType,
+    Map<String, dynamic>? extra,
+  }) {
+    _trackEvent('error', 'ai_fallback', parameters: {
+      'errorType': errorType,
+      'context': context,
+      'aiModel': aiModel,
+      'category': category,
+      'learningType': learningType,
+      if (extra != null) ...extra,
+    });
+  }
+
   // ===== ERROR TRACKING =====
   static void trackError(String errorType, String errorMessage, String context) {
     _trackEvent(errorEvents, 'error_occurred', parameters: {

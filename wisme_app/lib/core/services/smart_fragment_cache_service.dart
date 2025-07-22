@@ -54,20 +54,14 @@ class SmartFragmentCacheService {
       return exactMatch;
     }
 
-    // 2. Try semantic similarity for same speaker and category
-    final semanticMatch = await _findSemanticMatch(content, speakerId, category);
-    if (semanticMatch != null) {
-      await _updateFragmentUsage(semanticMatch.id);
-      return semanticMatch;
-    }
-
-    // 3. Try common phrases regardless of specific content
+    // 2. Try common phrases (for generic, reusable content only)
     final commonPhraseMatch = await _findCommonPhraseMatch(content, speakerId);
     if (commonPhraseMatch != null) {
       await _updateFragmentUsage(commonPhraseMatch.id);
       return commonPhraseMatch;
     }
 
+    // No match found
     return null;
   }
 
@@ -110,35 +104,6 @@ class SmartFragmentCacheService {
       return fragment;
     }
     return null;
-  }
-
-  /// Find semantically similar content
-  /// Product Focus: Simple but effective similarity matching
-  Future<AudioFragment?> _findSemanticMatch(String content, String speakerId, String category) async {
-    final candidates = _fragmentIndex.values
-        .where((f) => f.speakerId == speakerId && f.category == category)
-        .toList();
-
-    // Simple similarity check - look for common words and phrases
-    final contentWords = _extractKeyWords(content);
-    
-    AudioFragment? bestMatch;
-    double bestSimilarity = 0.0;
-    const similarityThreshold = 0.7; // 70% similarity
-
-    for (final candidate in candidates) {
-      final candidateWords = _extractKeyWords(candidate.content);
-      final similarity = _calculateWordSimilarity(contentWords, candidateWords);
-      
-      if (similarity > similarityThreshold && similarity > bestSimilarity) {
-        if (await _validateFragmentExists(candidate)) {
-          bestMatch = candidate;
-          bestSimilarity = similarity;
-        }
-      }
-    }
-
-    return bestMatch;
   }
 
   /// Find common phrases (greetings, transitions, etc.)

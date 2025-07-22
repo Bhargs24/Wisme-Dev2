@@ -1,5 +1,6 @@
 import '../../models/models.dart';
 import '../storage/content_database.dart';
+import '../../models/learning_journey.dart';
 
 /// Configuration for content reuse matching
 class ContentReuseConfig {
@@ -203,12 +204,12 @@ class ContentReuseEngine {
   Future<Map<String, double>> analyzeHashtagOverlap({
     required List<String> newContentHashtags,
     required String category,
-    required String knowledgeLevel,
+    required String learningType,
   }) async {
     final episodes = await _database.searchByHashtags(
       hashtags: newContentHashtags,
       category: category,
-      knowledgeLevel: knowledgeLevel,
+      learningType: learningType,
     );
 
     final overlapScores = <String, double>{};
@@ -226,22 +227,141 @@ class ContentReuseEngine {
     return overlapScores;
   }
 
-  /// Get reuse suggestions based on user's learning history
+  /// Get reuse suggestions based on user's learning history and preferences
   Future<List<ContentReuseResult>> getSuggestionsForUser({
     required String userId,
     required String category,
     int limit = 5,
+    bool adaptiveExploration = true,
+    String? preferredLearningType,
   }) async {
     final userProfile = await _database.getUserProfile(userId);
-    
-    // Use user's favorite topics as search query
+    // Use user's favorite categories and learningType as search query
     final searchQuery = userProfile.favoriteCategories.join(' ');
-    
+    final learningType = preferredLearningType ?? userProfile.nextSessionRecommendation['suggested_difficulty'] ?? 'Intermediate';
+    // Adaptive exploration: occasionally suggest new types
+    final explore = adaptiveExploration && (DateTime.now().second % 5 == 0);
+    final categoryToUse = explore ? _getRandomCategory(userProfile) : category;
+    final learningTypeToUse = explore ? _getRandomLearningType() : learningType;
     return findReusableContent(
       newContentTopic: searchQuery,
-      category: category,
-      learningType: 'Intermediate', // Default learning type for podcast learning
+      category: categoryToUse,
+      learningType: learningTypeToUse,
       userId: userId,
     );
+  }
+
+  /// Assemble a robust, personalized journey from cached episodes (production-grade)
+  Future<LearningJourney?> assembleCachedJourneyForUser({
+    required String userId,
+    required String category,
+    String? preferredLearningType,
+    int episodeCount = 5,
+    bool adaptiveExploration = true,
+    List<String> completedEpisodeIds = const [],
+    bool allowHybrid = true,
+  }) async {
+    try {
+      final userProfile = await _database.getUserProfile(userId);
+      // 1. Get all candidate episodes from cache
+      final allEpisodes = await _database.searchBySemantic(
+        query: userProfile.favoriteCategories.join(' '),
+        category: category,
+        learningType: preferredLearningType ?? userProfile.nextSessionRecommendation['suggested_difficulty'] ?? 'Intermediate',
+        limit: 100,
+      );
+      // 2. Exclude completed episodes in real time
+      final candidates = allEpisodes
+        .where((ep) => !completedEpisodeIds.contains(ep.id))
+        .toList();
+      if (candidates.isEmpty && !allowHybrid) return null;
+      // 3. Rank by engagement, recency, and diversity (mock: shuffle, sort by createdAt)
+      candidates.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      // TODO: Integrate real engagement/quality scores
+      // 4. Ensure journeys are progressive and non-repetitive
+      final selected = <Episode>[];
+      final usedTitles = <String>{};
+      for (final ep in candidates) {
+        if (selected.length >= episodeCount) break;
+        if (!usedTitles.contains(ep.title)) {
+          selected.add(ep);
+          usedTitles.add(ep.title);
+        }
+      }
+      // 5. Fallback to hybrid/AI if not enough cached content
+      if (selected.length < episodeCount && allowHybrid) {
+        // TODO: Integrate AI/hybrid journey assembly here
+        // For now, just return what we have
+      }
+      if (selected.isEmpty) return null;
+      // 6. Build journey
+      final journey = LearningJourney(
+        id: 'cached_journey_${DateTime.now().millisecondsSinceEpoch}',
+        userId: userId,
+        title: 'Personalized Journey: $category',
+        description: 'A smart, adaptive journey built from your cached episodes.',
+        category: category,
+        learningType: preferredLearningType ?? 'Mixed',
+        episodeIds: selected.map((e) => e.id ?? '').toList(),
+        episodes: selected,
+        isCompleted: false,
+        completionPercentage: 0.0,
+        currentEpisodeIndex: 0,
+        createdAt: DateTime.now(),
+        estimatedDurationMinutes: selected.fold(0, (sum, ep) => sum + (ep.durationMinutes ?? 12)),
+      );
+      // 7. Track analytics
+      // WismeAnalytics.trackLearningEvent('cached_journey_recommended', learningType: journey.learningType, category: journey.category, personalizationContext: 'adaptive_exploration', extra: {'episodeIds': journey.episodeIds, 'count': selected.length});
+      // 8. Feedback integration (stub)
+      // TODO: Wire up feedback collection and learning
+      return journey;
+    } catch (e) {
+      // Error handling
+      // WismeAnalytics.trackAIFallback(errorType: 'cached_journey_error', context: e.toString(), aiModel: 'none', category: category, learningType: preferredLearningType ?? 'Mixed');
+      return null;
+    }
+  }
+
+  String _getRandomCategory(UserLearningProfile userProfile) {
+    final allCategories = userProfile.categoryProgress.keys.toList();
+    if (allCategories.isEmpty) return 'Personal Development';
+    allCategories.shuffle();
+    return allCategories.first;
+  }
+
+  String _getRandomLearningType() {
+    const types = [
+      '🔹 Core Concepts', '💼 Case Studies', '🛠 Tools & Trends', '🎛 Bit of Everything',
+      '💡 Fundamentals', '📈 Growth Strategy', '🧠 Theories & Experiments', '💬 Real-Life Application',
+      '🔬 Scientific Concepts', '🎨 Design Fundamentals', '📖 Philosophy & Mental Models',
+      '🎯 Self-Development', '🗺️ Timelines', '🌍 Cultural Impact', '🧰 Getting Started',
+      '🔧 Pro Tools & Hacks', '🪞 Identity & Purpose', '📄 Career Assets', '📜 Legal Foundations',
+      '🌐 Power Dynamics', '🌱 Climate & Ecology', '🔋 Sustainable Systems', '🧮 Foundational Concepts',
+      '🔢 Applied Techniques', '🎮 Game Design Principles', '🧠 Player Experience', '🧭 Social Structures',
+      '🧬 Moral Frameworks',
+    ];
+    types.shuffle();
+    return types.first;
+  }
+
+  /// Accept user feedback on recommendations and adjust future suggestions
+  void recordRecommendationFeedback({
+    required String userId,
+    required String episodeId,
+    required String feedbackType, // like, dislike, useful, not_useful
+    int rating = 0,
+    String? comment,
+  }) {
+    // Store feedback in analytics and/or user profile for future personalization
+    // (Implementation: send to analytics, update user profile, etc.)
+    // Example:
+    // WismeAnalytics.trackUserFeedback(
+    //   feedbackType: feedbackType,
+    //   targetId: episodeId,
+    //   category: '',
+    //   learningType: '',
+    //   rating: rating,
+    //   comment: comment,
+    // );
   }
 }

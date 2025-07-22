@@ -656,9 +656,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
               
               const SizedBox(height: 20),
               
-              // Level filter
+              // Learning Type filter
               const Text(
-                'Knowledge Level',
+                'Learning Type',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -671,7 +671,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                 runSpacing: 8,
                 children: _levels.map((level) {
                   return _buildFilterChip(
-                    level == 'all' ? 'All Levels' : level.toUpperCase(),
+                    level == 'all' ? 'All Types' : level.toUpperCase(),
                     _selectedLevel == level,
                     () {
                       setModalState(() {

@@ -109,6 +109,37 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
     }
   }
 
+  Future<void> _signInWithApple() async {
+    setState(() => _isLoading = true);
+    try {
+      final authService = EnhancedAuthService();
+      final result = await authService.signInWithApple();
+      if (!result && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Apple sign-in failed.'),
+            backgroundColor: WismeColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Apple sign-in failed: $error'),
+            backgroundColor: WismeColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,14 +290,54 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {
-                            // TODO: Implement forgot password
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Forgot password feature coming soon!'),
-                                behavior: SnackBarBehavior.floating,
+                          onPressed: () async {
+                            final emailController = TextEditingController();
+                            final result = await showDialog<String>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Reset Password'),
+                                content: TextField(
+                                  controller: emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter your email',
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, emailController.text.trim()),
+                                    child: const Text('Send Reset Link'),
+                                  ),
+                                ],
                               ),
                             );
+                            if (result != null && result.isNotEmpty) {
+                              try {
+                                await Supabase.instance.client.auth.resetPasswordForEmail(result);
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Password reset link sent! Check your email.'),
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+                              } catch (error) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Failed to send reset link: $error'),
+                                      backgroundColor: WismeColors.error,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+                              }
+                            }
                           },
                           child: Text(
                             'Forgot Password?',
@@ -320,6 +391,14 @@ class _SignInScreenState extends State<SignInScreen> with TickerProviderStateMix
                         onPressed: _isLoading ? null : _signInWithGoogle,
                         variant: WismeButtonVariant.outline,
                         icon: Icons.g_mobiledata,
+                      ),
+                      const SizedBox(height: 16),
+                      // Apple Sign In Button
+                      WismeButton(
+                        text: 'Continue with Apple',
+                        onPressed: _isLoading ? null : _signInWithApple,
+                        variant: WismeButtonVariant.outline,
+                        icon: Icons.apple,
                       ),
                       
                       const SizedBox(height: 32),

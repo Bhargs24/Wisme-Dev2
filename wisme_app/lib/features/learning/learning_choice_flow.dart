@@ -171,7 +171,7 @@ class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
   }
 
   Widget _buildLearningTypePage() {
-    final levels = AdvancedTopicClassifier.categoryLevels[_classification!.category] ?? [];
+    final types = AdvancedTopicClassifier.categoryLevels[_classification!.category] ?? [];
     
     return Padding(
       padding: const EdgeInsets.all(24.0),
@@ -196,16 +196,16 @@ class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
           const SizedBox(height: 32),
           Expanded(
             child: ListView.builder(
-              itemCount: levels.length,
+              itemCount: types.length,
               itemBuilder: (context, index) {
-                final level = levels[index];
-                final isSelected = _selectedLearningType == level;
-                final description = _getLevelDescription(_classification!.category, level);
+                final type = types[index];
+                final isSelected = _selectedLearningType == type;
+                final description = _getLevelDescription(_classification!.category, type);
                 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: InkWell(
-                    onTap: () => setState(() => _selectedLearningType = level),
+                    onTap: () => setState(() => _selectedLearningType = type),
                     child: ModernCard(
                       backgroundColor: isSelected 
                           ? WismeColors.primaryBlue.withOpacity(0.1) 
@@ -218,13 +218,13 @@ class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
                             Row(
                               children: [
                                 Radio<String>(
-                                  value: level,
+                                  value: type,
                                   groupValue: _selectedLearningType,
                                   onChanged: (value) => setState(() => _selectedLearningType = value),
                                 ),
                                 Expanded(
                                   child: Text(
-                                    level,
+                                    type,
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -520,7 +520,7 @@ class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
     );
   }
 
-  String _getLevelDescription(String category, String level) {
+  String _getLevelDescription(String category, String type) {
     final descriptions = {
       'Technology & AI': {
         '🔹 Core Concepts': 'Fundamentals, definitions, and basic principles',
@@ -537,7 +537,7 @@ class _SmartLearningChoiceFlowState extends State<SmartLearningChoiceFlow> {
       // Add more categories as needed...
     };
     
-    return descriptions[category]?[level] ?? 'Specialized approach for this topic';
+    return descriptions[category]?[type] ?? 'Specialized approach for this topic';
   }
 
   @override

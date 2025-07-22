@@ -625,7 +625,7 @@ class _ContentRefreshSystemState extends State<ContentRefreshSystem> {
         title: topic,
         content: 'Explore the latest developments and insights in $topic. This episode covers key concepts, real-world applications, and future implications.',
         category: _getRandomCategory(),
-        learningType: _getRandomLevel(),
+        learningType: _getRandomType(),
         coachPersonality: _getRandomCoach(),
         hashtags: _generateHashtags(topic),
         durationMinutes: _getRandomDuration(),
@@ -649,7 +649,7 @@ class _ContentRefreshSystemState extends State<ContentRefreshSystem> {
         title: 'Mastering $topic',
         description: 'A comprehensive 5-episode journey to understand and master $topic from fundamentals to advanced applications.',
         category: _getRandomCategory(),
-        learningType: _getRandomLevel(),
+        learningType: _getRandomType(),
         episodes: episodes,
         currentEpisodeIndex: 0,
         completionPercentage: 0.0,
@@ -674,7 +674,7 @@ class _ContentRefreshSystemState extends State<ContentRefreshSystem> {
         title: entry.value,
         content: 'Episode ${entry.key + 1} of the $topic journey. ${entry.value} - diving deep into the essential aspects.',
         category: _getRandomCategory(),
-        learningType: _getProgressiveLevel(entry.key),
+        learningType: _getProgressiveType(entry.key),
         coachPersonality: _getRandomCoach(),
         hashtags: _generateHashtags(topic),
         durationMinutes: 12 + (entry.key * 2),
@@ -690,8 +690,8 @@ class _ContentRefreshSystemState extends State<ContentRefreshSystem> {
     return categories[DateTime.now().millisecond % categories.length];
   }
 
-  String _getRandomLevel() {
-    final levelOptions = [
+  String _getRandomType() {
+    final typeOptions = [
       '🔹 Core Concepts',
       '💼 Case Studies',
       '🛠 Tools & Trends',
@@ -721,10 +721,10 @@ class _ContentRefreshSystemState extends State<ContentRefreshSystem> {
       '🧭 Social Structures',
       '🧬 Moral Frameworks',
     ];
-    return levelOptions[DateTime.now().millisecond % levelOptions.length];
+    return typeOptions[DateTime.now().millisecond % typeOptions.length];
   }
 
-  String _getProgressiveLevel(int episodeIndex) {
+  String _getProgressiveType(int episodeIndex) {
     switch (episodeIndex) {
       case 0:
         return '🔹 Core Concepts';

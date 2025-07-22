@@ -130,7 +130,7 @@ class VectorEmbeddingService {
         'type': 'episode',
         'title': episode.title,
         'category': episode.category,
-        'knowledge_level': episode.learningType,
+        'learningType': episode.learningType,
         'coach_personality': episode.coachPersonality,
         'duration_minutes': episode.durationMinutes,
         'hashtags': episode.hashtags,
@@ -174,7 +174,7 @@ class VectorEmbeddingService {
       }
       
       if (learningType != null && 
-          metadataMap['knowledge_level'] != learningType) {
+          metadataMap['learningType'] != learningType) {
         continue;
       }
 
@@ -267,33 +267,72 @@ class VectorEmbeddingService {
       limit: limit,
       threshold: threshold,
       categories: filters?['categories'],
-      learningType: filters?['knowledge_level'],
+      learningType: filters?['learningType'],
     );
   }
 
-  /// Get content recommendations for user
+  /// Get content recommendations for user (upgraded)
   Future<List<SimilarityResult>> getRecommendations({
     required List<String> userInterests,
     required List<String> completedEpisodeIds,
+    String? preferredLearningType,
+    bool adaptiveExploration = true,
     int limit = 10,
     double threshold = 0.6,
   }) async {
     // Create query from user interests
     final queryText = userInterests.join(' ');
-    
+    // Adaptive exploration: occasionally suggest new types
+    final explore = adaptiveExploration && (DateTime.now().second % 5 == 0);
+    final learningTypeToUse = explore ? _getRandomLearningType() : preferredLearningType;
     // Find similar content
     final results = await findSimilarContent(
       queryText: queryText,
       limit: limit * 2, // Get more results to filter
       threshold: threshold,
+      learningType: learningTypeToUse,
     );
-
     // Filter out completed episodes
     final filtered = results.where((result) => 
       !completedEpisodeIds.contains(result.id)
     ).toList();
-
     return filtered.take(limit).toList();
+  }
+
+  String _getRandomLearningType() {
+    const types = [
+      '🔹 Core Concepts', '💼 Case Studies', '🛠 Tools & Trends', '🎛 Bit of Everything',
+      '💡 Fundamentals', '📈 Growth Strategy', '🧠 Theories & Experiments', '💬 Real-Life Application',
+      '🔬 Scientific Concepts', '🎨 Design Fundamentals', '📖 Philosophy & Mental Models',
+      '🎯 Self-Development', '🗺️ Timelines', '🌍 Cultural Impact', '🧰 Getting Started',
+      '🔧 Pro Tools & Hacks', '🪞 Identity & Purpose', '📄 Career Assets', '📜 Legal Foundations',
+      '🌐 Power Dynamics', '🌱 Climate & Ecology', '🔋 Sustainable Systems', '🧮 Foundational Concepts',
+      '🔢 Applied Techniques', '🎮 Game Design Principles', '🧠 Player Experience', '🧭 Social Structures',
+      '🧬 Moral Frameworks',
+    ];
+    types.shuffle();
+    return types.first;
+  }
+
+  /// Accept user feedback on recommendations and adjust future suggestions
+  void recordRecommendationFeedback({
+    required String userId,
+    required String episodeId,
+    required String feedbackType, // like, dislike, useful, not_useful
+    int rating = 0,
+    String? comment,
+  }) {
+    // Store feedback in analytics and/or user profile for future personalization
+    // (Implementation: send to analytics, update user profile, etc.)
+    // Example:
+    // WismeAnalytics.trackUserFeedback(
+    //   feedbackType: feedbackType,
+    //   targetId: episodeId,
+    //   category: '',
+    //   learningType: '',
+    //   rating: rating,
+    //   comment: comment,
+    // );
   }
 
   /// Batch process episodes for embedding generation
@@ -461,7 +500,7 @@ class SimilarityResult {
 
   String get title => metadata['title'] ?? '';
   String get category => metadata['category'] ?? '';
-  String get learningType => metadata['knowledge_level'] ?? '';
+  String get learningType => metadata['learningType'] ?? '';
   String get coachPersonality => metadata['coach_personality'] ?? '';
   int get durationMinutes => metadata['duration_minutes'] ?? 0;
   List<String> get hashtags => List<String>.from(metadata['hashtags'] ?? []);

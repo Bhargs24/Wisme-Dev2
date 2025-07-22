@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../config/environment_config.dart';
 import '../services/supabase_service.dart';
+import '../analytics/wisme_analytics.dart'; // Correct import for analytics
 
 /// Enhanced Authentication Service with OAuth Integration
 /// Handles email/password, Google, and Apple authentication
@@ -16,6 +17,33 @@ class EnhancedAuthService extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _currentUser != null;
   
+  // Brute-force protection state
+  final Map<String, int> _failedAttempts = {};
+  final Map<String, DateTime> _lockoutUntil = {};
+  static const int maxAttempts = 5;
+  static const Duration lockoutDuration = Duration(minutes: 10);
+
+  bool _isLockedOut(String email) {
+    final until = _lockoutUntil[email];
+    if (until == null) return false;
+    return DateTime.now().isBefore(until);
+  }
+
+  void _recordFailedAttempt(String email) {
+    _failedAttempts[email] = (_failedAttempts[email] ?? 0) + 1;
+    if (_failedAttempts[email]! >= maxAttempts) {
+      _lockoutUntil[email] = DateTime.now().add(lockoutDuration);
+      _failedAttempts[email] = 0;
+      // Log suspicious activity
+      WismeAnalytics.trackSignInCompleted('email_locked_out');
+    }
+  }
+
+  void _resetFailedAttempts(String email) {
+    _failedAttempts.remove(email);
+    _lockoutUntil.remove(email);
+  }
+
   /// Initialize the auth service
   void initialize() {
     _currentUser = SupabaseService.currentUser;
@@ -55,63 +83,69 @@ class EnhancedAuthService extends ChangeNotifier {
     }
   }
   
-  /// Sign in with email and password
+  /// Sign in with email and password (with brute-force protection)
   Future<bool> signInWithEmail(String email, String password) async {
+    if (_isLockedOut(email)) {
+      _setError('Too many failed attempts. Please try again later.');
+      return false;
+    }
     _setLoading(true);
     _clearError();
-    
     try {
       final response = await SupabaseService.signInWithEmail(email, password);
-      
       if (response.user != null) {
         _currentUser = response.user;
+        _resetFailedAttempts(email);
         _setLoading(false);
         return true;
       } else {
+        _recordFailedAttempt(email);
         _setError('Invalid email or password.');
         _setLoading(false);
         return false;
       }
     } on AuthException catch (e) {
+      _recordFailedAttempt(email);
       _setError(_getReadableAuthError(e.message));
       _setLoading(false);
       return false;
     } catch (e) {
+      _recordFailedAttempt(email);
       _setError('An unexpected error occurred. Please try again.');
       _setLoading(false);
       return false;
     }
   }
   
-  /// Sign in with Google
+  /// Sign in with Google (with brute-force protection by device/session)
   Future<bool> signInWithGoogle() async {
+    // For OAuth, brute-force is less relevant, but can track by device/session if needed
     _setLoading(true);
     _clearError();
-    
     try {
-      // Check if Google OAuth is configured
       if (EnvironmentConfig.googleClientId.isEmpty) {
         _setError('Google Sign-In is not configured. Please contact support.');
         _setLoading(false);
         return false;
       }
-      
       final result = await SupabaseService.signInWithGoogle();
-      
       if (result) {
-        // OAuth flow initiated successfully (web redirect or mobile app)
         _setLoading(false);
         return true;
       } else {
+        // Log suspicious activity
+        WismeAnalytics.trackSignInCompleted('google_failed');
         _setError('Google sign-in failed. Please try again.');
         _setLoading(false);
         return false;
       }
     } on AuthException catch (e) {
+      WismeAnalytics.trackSignInCompleted('google_failed');
       _setError(_getReadableAuthError(e.message));
       _setLoading(false);
       return false;
     } catch (e) {
+      WismeAnalytics.trackSignInCompleted('google_failed');
       _setError('Google sign-in failed. Please try again.');
       _setLoading(false);
       return false;
@@ -261,6 +295,48 @@ class EnhancedAuthService extends ChangeNotifier {
       return true;
     } catch (e) {
       _setError('Failed to update profile. Please try again.');
+      _setLoading(false);
+      return false;
+    }
+  }
+  
+  /// Multi-Factor Authentication (MFA) - TOTP (Time-based One-Time Password)
+  Future<Map<String, String>?> enrollMfaTotp() async {
+    _setLoading(true);
+    _clearError();
+    try {
+      final response = await SupabaseService.client.auth.mfa.enroll(
+        factorType: FactorType.totp,
+      );
+      _setLoading(false);
+      // response is AuthMFAEnrollResponse, with .id and .totp.qrCode
+      return {
+        'factorId': response.id,
+        'qrCode': response.totp?.qrCode ?? '',
+      };
+    } catch (e) {
+      _setError('Failed to enroll MFA: $e');
+      _setLoading(false);
+      return null;
+    }
+  }
+
+  Future<bool> verifyMfaTotp(String factorId, String code) async {
+    _setLoading(true);
+    _clearError();
+    try {
+      final challenge = await SupabaseService.client.auth.mfa.challenge(
+        factorId: factorId,
+      );
+      final verified = await SupabaseService.client.auth.mfa.verify(
+        factorId: factorId,
+        challengeId: challenge.id,
+        code: code,
+      );
+      _setLoading(false);
+      return verified != null;
+    } catch (e) {
+      _setError('Failed to verify MFA: $e');
       _setLoading(false);
       return false;
     }

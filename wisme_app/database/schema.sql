@@ -42,7 +42,7 @@ CREATE TABLE episodes (
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     category TEXT NOT NULL,
-    knowledge_level TEXT NOT NULL,
+    learningType TEXT NOT NULL,
     coach_personality TEXT NOT NULL,
     duration_minutes INTEGER NOT NULL,
     hashtags TEXT[] DEFAULT '{}',
@@ -108,7 +108,7 @@ CREATE TABLE learning_journeys (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL,
-    knowledge_level TEXT NOT NULL,
+    learningType TEXT NOT NULL,
     episode_ids UUID[] DEFAULT '{}',
     
     -- Journey Progress

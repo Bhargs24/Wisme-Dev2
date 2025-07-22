@@ -61,9 +61,18 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
     'Night (8-11 PM)',
   ];
 
+  // MFA State
+  String? _mfaQrCode;
+  String? _mfaFactorId;
+  final TextEditingController _mfaCodeController = TextEditingController();
+  bool _mfaEnrolled = false;
+  bool _mfaLoading = false;
+  String? _mfaError;
+
   @override
   void dispose() {
     _pageController.dispose();
+    _mfaCodeController.dispose();
     super.dispose();
   }
 
@@ -130,6 +139,67 @@ class _AccountSetupScreenState extends State<AccountSetupScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
       }
+    }
+  }
+
+  Future<void> _enrollMfa() async {
+    setState(() {
+      _mfaLoading = true;
+      _mfaError = null;
+    });
+    try {
+      final authService = EnhancedAuthService();
+      final result = await authService.enrollMfaTotp();
+      if (result != null) {
+        setState(() {
+          _mfaQrCode = result['qrCode'];
+          _mfaFactorId = result['factorId'];
+        });
+      } else {
+        setState(() {
+          _mfaError = 'Failed to enroll MFA.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _mfaError = 'Failed to enroll MFA: $e';
+      });
+    } finally {
+      setState(() {
+        _mfaLoading = false;
+      });
+    }
+  }
+
+  Future<void> _verifyMfa() async {
+    if (_mfaFactorId == null || _mfaCodeController.text.isEmpty) return;
+    setState(() {
+      _mfaLoading = true;
+      _mfaError = null;
+    });
+    try {
+      final authService = EnhancedAuthService();
+      final verified = await authService.verifyMfaTotp(_mfaFactorId!, _mfaCodeController.text.trim());
+      if (verified) {
+        setState(() {
+          _mfaEnrolled = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('MFA enabled successfully!'), behavior: SnackBarBehavior.floating),
+        );
+      } else {
+        setState(() {
+          _mfaError = 'Invalid code. Please try again.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _mfaError = 'Failed to verify MFA: $e';
+      });
+    } finally {
+      setState(() {
+        _mfaLoading = false;
+      });
     }
   }
   

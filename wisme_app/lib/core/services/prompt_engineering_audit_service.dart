@@ -29,7 +29,7 @@ class PromptEngineeringAuditService {
       results['uniqueness'] = await _testContentUniqueness();
       
       // Test 5: Knowledge Level Accuracy
-      results['knowledgeAccuracy'] = await _testKnowledgeLevelAccuracy();
+      results['knowledgeAccuracy'] = await _testLearningTypeAccuracy();
       
       // Test 6: Hashtag Generation
       results['hashtagGeneration'] = await _testHashtagGeneration();
@@ -55,8 +55,8 @@ class PromptEngineeringAuditService {
     final config = {
       'hasApiKey': EnvironmentConfig.openaiApiKey.isNotEmpty,
       'isOptimizedServiceConfigured': OptimizedOpenAIService.isConfigured,
-      'knowledgeLevelsCount': AdvancedTopicClassifier.categoryLevels.length,
-      'totalKnowledgeLevels': AdvancedTopicClassifier.categoryLevels.values
+      'learningTypesCount': AdvancedTopicClassifier.categoryLevels.length,
+      'totalLearningTypes': AdvancedTopicClassifier.categoryLevels.values
           .map((levels) => levels.length)
           .reduce((a, b) => a + b),
     };
@@ -175,7 +175,7 @@ class PromptEngineeringAuditService {
         results.add({
           'testCase': testCase,
           'personalizationScore': personalizationScore,
-          'knowledgeLevel': analysis['knowledgeLevel'],
+          'learningType': analysis['learningType'],
           'coach': analysis['recommendedCoach'],
           'hasPersonalizedInsight': analysis.containsKey('personalizedInsight'),
           'contextIntegration': _checkContextIntegration(testCase, episodes),
@@ -243,9 +243,9 @@ class PromptEngineeringAuditService {
     }
   }
 
-  /// Test knowledge level accuracy
-  Future<Map<String, dynamic>> _testKnowledgeLevelAccuracy() async {
-    print('🎯 Testing Knowledge Level Accuracy...');
+  /// Test learning type accuracy
+  Future<Map<String, dynamic>> _testLearningTypeAccuracy() async {
+    print('🎯 Testing Learning Type Accuracy...');
     
     final testCases = [
       {
@@ -295,7 +295,7 @@ class PromptEngineeringAuditService {
     
     final accuracy = results.where((r) => r['levelMatch'] == true).length / results.length;
     
-    print('✅ Knowledge level accuracy: ${(accuracy * 100).toStringAsFixed(1)}%');
+    print('✅ Learning type accuracy: ${(accuracy * 100).toStringAsFixed(1)}%');
     
     return {
       'testResults': results,
@@ -395,11 +395,11 @@ class PromptEngineeringAuditService {
       }
     }
     
-    // Check knowledge level appropriateness
-    final knowledgeLevel = analysis['knowledgeLevel'] as String;
-    if (background.toLowerCase().contains('beginner') && knowledgeLevel.contains('Core Concepts')) {
+    // Check learning type appropriateness
+    final learningType = analysis['learningType'] as String;
+    if (background.toLowerCase().contains('beginner') && learningType.contains('Core Concepts')) {
       score += 0.2;
-    } else if (background.toLowerCase().contains('experience') && !knowledgeLevel.contains('Core Concepts')) {
+    } else if (background.toLowerCase().contains('experience') && !learningType.contains('Core Concepts')) {
       score += 0.2;
     }
     
@@ -473,11 +473,11 @@ class PromptEngineeringAuditService {
     // Analyze each test result
     final config = results['configuration'] as Map<String, dynamic>?;
     if (config != null) {
-      if (config['totalKnowledgeLevels'] == 60) {
+      if (config['totalLearningTypes'] == 60) {
         scores['knowledgeSystem'] = 1.0;
       } else {
         scores['knowledgeSystem'] = 0.5;
-        issues.add('Knowledge levels count mismatch: expected 60, got ${config['totalKnowledgeLevels']}');
+        issues.add('Learning types count mismatch: expected 60, got ${config['totalLearningTypes']}');
       }
     }
     

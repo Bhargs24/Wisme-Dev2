@@ -45,7 +45,7 @@ class LearningJourney {
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       category: json['category'] ?? '',
-      learningType: json['knowledge_level'] ?? '',
+      learningType: json['learningType'] ?? json['knowledge_level'] ?? '',
       episodeIds: List<String>.from(json['episode_ids'] ?? []),
       episodes: [], // Episodes loaded separately
       isCompleted: json['is_completed'] ?? false,
@@ -70,7 +70,7 @@ class LearningJourney {
       'title': title,
       'description': description,
       'category': category,
-      'knowledge_level': learningType,
+      'learningType': learningType,
       'episode_ids': episodeIds,
       'is_completed': isCompleted,
       'completion_percentage': completionPercentage,

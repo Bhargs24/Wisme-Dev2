@@ -3,6 +3,8 @@ import '../../core/core.dart';
 import '../../shared/shared.dart';
 import '../../models/phase1_models.dart';
 import '../../core/services/phase1_conversation_engine.dart';
+import '../../core/services/supabase_service.dart';
+import '../../core/analytics/wisme_analytics.dart';
 
 /// Phase 1 Learning Flow - Correct Implementation
 /// 1. Topic Selection (AI analyzes and categorizes)
@@ -77,6 +79,7 @@ class _Phase1LearningFlowState extends State<Phase1LearningFlow> {
     setState(() {
       _selectedLearningType = type;
     });
+    WismeAnalytics.trackFeatureInteraction('learning_type_selected:${type.name}_${_detectedCategory ?? ''}');
     _nextPage();
   }
 
@@ -120,12 +123,24 @@ class _Phase1LearningFlowState extends State<Phase1LearningFlow> {
         _isGenerating = false;
       });
 
+      // Persist journey and choices to Supabase
+      await SupabaseService.updateUserProfile({
+        'last_learning_topic': widget.selectedTopic,
+        'last_learning_category': _detectedCategory,
+        'last_learning_type': _selectedLearningType?.name,
+        'last_episode_count': episodeCount,
+        'last_journey': journey,
+        'last_journey_generated_at': DateTime.now().toIso8601String(),
+      });
+      WismeAnalytics.trackFeatureInteraction('journey_generated:${widget.selectedTopic}_${_detectedCategory ?? ''}_${_selectedLearningType?.name ?? ''}_$episodeCount');
+
       // Complete the flow
       widget.onJourneyCreated(journey);
     } catch (e) {
       setState(() {
         _isGenerating = false;
       });
+      WismeAnalytics.trackFeatureInteraction('journey_generation_error:${e.toString()}');
       // Show error and allow retry
       _showErrorDialog();
     }
@@ -453,84 +468,49 @@ class _Phase1LearningFlowState extends State<Phase1LearningFlow> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Generate Your Learning Journey',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'AI will create a personalized learning journey based on your preferences',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
+          ModernCard(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Why this journey?',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Based on your topic, learning approach, and episode count, we created a journey tailored to your preferences and goals. Each episode is designed to maximize your engagement and retention.',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (_generatedJourney != null)
+                    Text(
+                      'Episodes: ${_generatedJourney!['episodes']?.length ?? 0}\nEstimated duration: ${_generatedJourney!['estimatedDuration'] ?? ''} min',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 32),
-          Expanded(
-            child: Column(
-              children: [
-                // Summary of selections
-                ModernCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your Learning Setup',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _buildSummaryRow('Topic', widget.selectedTopic),
-                        _buildSummaryRow('Category', _detectedCategory ?? ''),
-                        _buildSummaryRow('Learning Approach', _selectedLearningType?.name ?? ''),
-                        _buildSummaryRow('Episode Count', '${_selectedEpisodeCount?.minEpisodes}-${_selectedEpisodeCount?.maxEpisodes} episodes'),
-                        if (_selectedLearningType != null && _selectedEpisodeCount != null)
-                          _buildSummaryRow('Estimated Duration', '~${Phase1LearningTypes.calculateEpisodeDuration(_selectedEpisodeCount!.getRandomEpisodeCount(), _selectedLearningType!.approach)} min per episode'),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                if (_isGenerating) ...[
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Generating your personalized learning journey...',
-                    textAlign: TextAlign.center,
-                  ),
-                ] else ...[
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _generateJourney,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: WismeColors.primaryBlue,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        'Generate Journey',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ],
+          if (_isGenerating) ...[
+            const CircularProgressIndicator(),
+            const SizedBox(height: 16),
+            const Text(
+              'Generating your personalized learning journey...',
+              textAlign: TextAlign.center,
             ),
-          ),
+          ],
         ],
       ),
     );

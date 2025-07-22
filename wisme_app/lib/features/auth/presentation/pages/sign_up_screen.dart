@@ -83,6 +83,54 @@ class _SignUpScreenState extends State<SignUpScreen> with TickerProviderStateMix
       );
 
       if (response.user != null && mounted) {
+        // Check if email is verified
+        final isVerified = response.user!.emailConfirmedAt != null;
+        if (!isVerified) {
+          final resendResult = await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: const Text('Verify Your Email'),
+              content: const Text('A verification link has been sent to your email. Please verify your email address to continue.'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      await Supabase.instance.client.auth.resend(
+                        type: OtpType.signup,
+                        email: _emailController.text.trim(),
+                      );
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Verification email resent!'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to resend: $e'),
+                            backgroundColor: WismeColors.error,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Resend Email'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('I Verified'),
+                ),
+              ],
+            ),
+          );
+          if (resendResult != true) return;
+        }
         // Navigate to account setup for additional profile information
         Navigator.pushReplacement(
           context,

@@ -12,7 +12,7 @@ abstract class ContentDatabase {
   Future<List<Episode>> searchByHashtags({
     required List<String> hashtags,
     required String category,
-    required String knowledgeLevel,
+    required String learningType,
     int limit = 50,
   });
   
@@ -56,13 +56,13 @@ class InMemoryContentDatabase implements ContentDatabase {
   Future<List<Episode>> searchByHashtags({
     required List<String> hashtags,
     required String category,
-    required String knowledgeLevel,
+    required String learningType,
     int limit = 50,
   }) async {
     final results = <Episode>[];
     
     for (final episode in _episodes.values) {
-      if (episode.category == category && episode.learningType == knowledgeLevel) {
+      if (episode.category == category && episode.learningType == learningType) {
         // Use episode's hashtags property
         final episodeHashtags = episode.hashtags;
         final overlap = hashtags.where((tag) => episodeHashtags.contains(tag)).length;

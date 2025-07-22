@@ -241,13 +241,13 @@ class AdvancedTopicClassifier {
   /// Get all available categories
   static List<String> get availableCategories => categoryLevels.keys.toList();
 
-  /// Get knowledge levels for a specific category
-  static List<String> getKnowledgeLevelsForCategory(String category) {
+  /// Get learning types for a specific category
+  static List<String> getLearningTypesForCategory(String category) {
     return categoryLevels[category] ?? [];
   }
 
-  /// Validate if a knowledge level exists
-  static bool isValidKnowledgeLevel(String category, String level) {
-    return categoryLevels[category]?.contains(level) ?? false;
+  /// Validate if a learning type exists
+  static bool isValidLearningType(String category, String type) {
+    return categoryLevels[category]?.contains(type) ?? false;
   }
 }

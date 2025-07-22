@@ -149,6 +149,116 @@ class PerformanceEvent extends AnalyticsEvent {
   );
 }
 
+/// Audio personalization event
+class AudioPersonalizationEvent extends AnalyticsEvent {
+  AudioPersonalizationEvent({
+    required String voicePair,
+    required String ttsProvider,
+    required String category,
+    required String learningType,
+    bool cacheHit = false,
+    Map<String, dynamic>? extra,
+    String? userId,
+    String? sessionId,
+  }) : super(
+    eventName: 'audio_personalization',
+    properties: {
+      'voicePair': voicePair,
+      'ttsProvider': ttsProvider,
+      'category': category,
+      'learningType': learningType,
+      'cacheHit': cacheHit,
+      if (extra != null) ...extra,
+    },
+    timestamp: DateTime.now(),
+    userId: userId,
+    sessionId: sessionId,
+  );
+}
+
+/// Adaptive journey event
+class AdaptiveJourneyEvent extends AnalyticsEvent {
+  AdaptiveJourneyEvent({
+    required String aiModel,
+    required String category,
+    required String learningType,
+    String? userContext,
+    bool fallbackUsed = false,
+    Map<String, dynamic>? extra,
+    String? userId,
+    String? sessionId,
+  }) : super(
+    eventName: 'adaptive_journey',
+    properties: {
+      'aiModel': aiModel,
+      'category': category,
+      'learningType': learningType,
+      'userContext': userContext,
+      'fallbackUsed': fallbackUsed,
+      if (extra != null) ...extra,
+    },
+    timestamp: DateTime.now(),
+    userId: userId,
+    sessionId: sessionId,
+  );
+}
+
+/// User feedback event
+class UserFeedbackEvent extends AnalyticsEvent {
+  UserFeedbackEvent({
+    required String feedbackType,
+    required String targetId,
+    required String category,
+    required String learningType,
+    int rating = 0,
+    String? comment,
+    Map<String, dynamic>? extra,
+    String? userId,
+    String? sessionId,
+  }) : super(
+    eventName: 'user_feedback',
+    properties: {
+      'feedbackType': feedbackType,
+      'targetId': targetId,
+      'category': category,
+      'learningType': learningType,
+      'rating': rating,
+      if (comment != null) 'comment': comment,
+      if (extra != null) ...extra,
+    },
+    timestamp: DateTime.now(),
+    userId: userId,
+    sessionId: sessionId,
+  );
+}
+
+/// AI fallback event
+class AIFallbackEvent extends AnalyticsEvent {
+  AIFallbackEvent({
+    required String errorType,
+    required String context,
+    required String aiModel,
+    required String category,
+    required String learningType,
+    Map<String, dynamic>? extra,
+    String? userId,
+    String? sessionId,
+  }) : super(
+    eventName: 'ai_fallback',
+    properties: {
+      'errorType': errorType,
+      'context': context,
+      'aiModel': aiModel,
+      'category': category,
+      'learningType': learningType,
+      if (extra != null) ...extra,
+    },
+    timestamp: DateTime.now(),
+    userId: userId,
+    sessionId: sessionId,
+  );
+}
+
 // ===== USER BEHAVIOR TRACKING =====
 
 /// Comprehensive user behavior tracking

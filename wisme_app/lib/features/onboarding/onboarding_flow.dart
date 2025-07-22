@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../navigation/main_navigation_shell.dart';
+import '../../core/services/supabase_service.dart';
+import '../../core/analytics/wisme_analytics.dart';
 
 /// Initial Onboarding Flow - 3 Screens for User Setup
 /// 1. Welcome & Intent - "Why are you here?" (sets general motivation)
@@ -43,9 +45,18 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     }
   }
 
-  void _completeOnboarding() {
-    // Save basic user preferences and navigate to main dashboard
-    // For a proper app, this would save to database/preferences
+  void _completeOnboarding() async {
+    // Save basic user preferences to Supabase
+    try {
+      await SupabaseService.updateUserProfile({
+        'onboarding_intent': _selectedIntent,
+        'onboarding_categories': _selectedCategories,
+        'onboarding_completed_at': DateTime.now().toIso8601String(),
+      });
+      WismeAnalytics.trackSignUpCompleted('onboarding');
+    } catch (e) {
+      // Optionally show error, but allow navigation
+    }
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -163,8 +174,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   bool _canContinue() {
     switch (_currentPage) {
       case 0: return _selectedIntent != null;
-      case 1: return _selectedCategories.isNotEmpty;
-      case 2: return true; // Profile setup is always complete
+      case 1: return _selectedCategories.length >= 3 && _selectedCategories.length <= 5;
+      case 2: return true;
       default: return false;
     }
   }
@@ -398,6 +409,9 @@ class _ProfileSetupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get onboarding data from parent if needed
+    final onboardingIntent = (context.findAncestorStateOfType<_OnboardingFlowState>()?._selectedIntent) ?? '';
+    final onboardingCategories = (context.findAncestorStateOfType<_OnboardingFlowState>()?._selectedCategories) ?? [];
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -412,7 +426,15 @@ class _ProfileSetupPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Your personalized learning experience is being prepared',
+            'You chose: $onboardingIntent',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Your interests: ${onboardingCategories.join(", ")}',
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[600],
@@ -447,7 +469,7 @@ class _ProfileSetupPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Based on your preferences, we\'ll personalize:\n\n• Content recommendations\n• Learning difficulty\n• Coach selection for each topic\n• Goal-specific content',
+                    'Based on your preferences, you\'ll get personalized content, coach selection, and goal-specific recommendations.',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],

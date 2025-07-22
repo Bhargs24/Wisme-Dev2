@@ -35,7 +35,7 @@ class TopicClassification {
     return TopicClassification(
       originalTopic: json['originalTopic'] ?? '',
       category: json['category'] ?? '',
-      learningType: json['learningType'] ?? json['knowledgeLevel'] ?? '',
+      learningType: json['learningType'] ?? json['learningType'] ?? '',
       confidence: (json['confidence'] ?? 0.0).toDouble(),
       subtopics: (json['subtopics'] as List? ?? [])
           .map((s) => SubtopicResult.fromJson(s))
