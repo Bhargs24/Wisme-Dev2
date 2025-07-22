@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
+import 'onboarding/welcome_screen.dart';
+import 'onboarding/consent_screen.dart';
+import 'onboarding/onboarding_screen.dart';
+import 'onboarding/learning_style_assessment_screen.dart';
+import 'onboarding/baseline_knowledge_test_screen.dart';
+import 'journeys/audio_player_screen.dart';
+import 'progress/learning_progress_screen.dart';
+import 'feedback/feedback_navigation_screen.dart';
+import 'core/app_shell.dart';
 
 void main() {
   runApp(const WismeResearchDemoApp());
@@ -19,8 +28,12 @@ class WismeResearchDemoApp extends StatelessWidget {
         '/': (context) => const WelcomeScreen(),
         '/consent': (context) => const ConsentScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
-        '/journey_selection': (context) => const JourneySelectionScreen(),
+        '/learning_style': (context) => const LearningStyleAssessmentScreen(),
+        '/baseline_knowledge': (context) => const BaselineKnowledgeTestScreen(),
+        '/app': (context) => const AppShell(),
         '/audio_player': (context) => const AudioPlayerScreen(),
+        '/progress_dashboard': (context) => const LearningProgressScreen(),
+        '/feedback_hub': (context) => const FeedbackNavigationScreen(),
         '/feedback': (context) => const FeedbackScreen(),
         '/gamification': (context) => const GamificationScreen(),
         '/thank_you': (context) => const ThankYouScreen(),
@@ -30,56 +43,6 @@ class WismeResearchDemoApp extends StatelessWidget {
 }
 
 // Placeholder widgets for each major screen
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('Welcome Screen', style: Theme.of(context).textTheme.headlineLarge)),
-    );
-  }
-}
-
-class ConsentScreen extends StatelessWidget {
-  const ConsentScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('Consent Screen', style: Theme.of(context).textTheme.headlineLarge)),
-    );
-  }
-}
-
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('Onboarding Screen', style: Theme.of(context).textTheme.headlineLarge)),
-    );
-  }
-}
-
-class JourneySelectionScreen extends StatelessWidget {
-  const JourneySelectionScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('Journey Selection Screen', style: Theme.of(context).textTheme.headlineLarge)),
-    );
-  }
-}
-
-class AudioPlayerScreen extends StatelessWidget {
-  const AudioPlayerScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('Audio Player Screen', style: Theme.of(context).textTheme.headlineLarge)),
-    );
-  }
-}
-
 class FeedbackScreen extends StatelessWidget {
   const FeedbackScreen({super.key});
   @override
