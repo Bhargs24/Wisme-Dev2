@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'core/auth_provider.dart';
 import 'theme/app_theme.dart';
 import 'onboarding/welcome_screen.dart';
 import 'onboarding/consent_screen.dart';
@@ -10,8 +14,17 @@ import 'progress/learning_progress_screen.dart';
 import 'feedback/feedback_navigation_screen.dart';
 import 'core/app_shell.dart';
 
-void main() {
-  runApp(const WismeResearchDemoApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AuthProvider(),
+      child: const WismeResearchDemoApp(),
+    ),
+  );
 }
 
 class WismeResearchDemoApp extends StatelessWidget {
@@ -19,24 +32,37 @@ class WismeResearchDemoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wisme Research Demo',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const WelcomeScreen(),
-        '/consent': (context) => const ConsentScreen(),
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/learning_style': (context) => const LearningStyleAssessmentScreen(),
-        '/baseline_knowledge': (context) => const BaselineKnowledgeTestScreen(),
-        '/app': (context) => const AppShell(),
-        '/audio_player': (context) => const AudioPlayerScreen(),
-        '/progress_dashboard': (context) => const LearningProgressScreen(),
-        '/feedback_hub': (context) => const FeedbackNavigationScreen(),
-        '/feedback': (context) => const FeedbackScreen(),
-        '/gamification': (context) => const GamificationScreen(),
-        '/thank_you': (context) => const ThankYouScreen(),
+    return Consumer<AuthProvider>(
+      builder: (context, auth, _) {
+        if (!auth.isSignedIn) {
+          // Start sign-in and show loading
+          auth.signInAnonymously();
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+        return MaterialApp(
+          title: 'Wisme Research Demo',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.darkTheme,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const WelcomeScreen(),
+            '/consent': (context) => const ConsentScreen(),
+            '/onboarding': (context) => const OnboardingScreen(),
+            '/learning_style': (context) => const LearningStyleAssessmentScreen(),
+            '/baseline_knowledge': (context) => const BaselineKnowledgeTestScreen(),
+            '/app': (context) => const AppShell(),
+            '/audio_player': (context) => const AudioPlayerScreen(),
+            '/progress_dashboard': (context) => const LearningProgressScreen(),
+            '/feedback_hub': (context) => const FeedbackNavigationScreen(),
+            '/feedback': (context) => const FeedbackScreen(),
+            '/gamification': (context) => const GamificationScreen(),
+            '/thank_you': (context) => const ThankYouScreen(),
+          },
+        );
       },
     );
   }

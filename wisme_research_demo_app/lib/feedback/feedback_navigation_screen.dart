@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import 'package:provider/provider.dart';
+import '../core/auth_provider.dart';
+import '../core/firebase_service.dart';
 
 class FeedbackNavigationScreen extends StatelessWidget {
   const FeedbackNavigationScreen({super.key});

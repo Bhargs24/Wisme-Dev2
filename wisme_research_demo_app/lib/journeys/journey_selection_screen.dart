@@ -1,44 +1,10 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../core/firebase_service.dart';
 
 class JourneySelectionScreen extends StatelessWidget {
   JourneySelectionScreen({super.key});
-
-  final List<Map<String, dynamic>> journeys = [
-    {
-      'id': 'dsa',
-      'title': 'Data Structures & Algorithms',
-      'subtitle': '5 episodes • 45 minutes',
-      'icon': Icons.code,
-      'color': AppColors.primaryBlue,
-      'difficulty': 'Intermediate',
-    },
-    {
-      'id': 'os',
-      'title': 'Operating Systems',
-      'subtitle': '6 episodes • 54 minutes',
-      'icon': Icons.computer,
-      'color': AppColors.accentOrange,
-      'difficulty': 'Advanced',
-    },
-    {
-      'id': 'dbms',
-      'title': 'Database Management',
-      'subtitle': '7 episodes • 63 minutes',
-      'icon': Icons.storage,
-      'color': AppColors.accentGreen,
-      'difficulty': 'Intermediate',
-    },
-    {
-      'id': 'finance',
-      'title': 'Personal Finance',
-      'subtitle': '6 episodes • 54 minutes',
-      'icon': Icons.attach_money,
-      'color': AppColors.accentRed,
-      'difficulty': 'Beginner',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -50,89 +16,113 @@ class JourneySelectionScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.8,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: journeys.length,
-              itemBuilder: (context, index) {
-                final journey = journeys[index];
-                return TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 1.0, end: 1.0),
-                  duration: const Duration(milliseconds: 200),
-                  builder: (context, scale, child) {
-                    return GestureDetector(
-                      onTapDown: (_) {}, // For tap animation stub
-                      onTapUp: (_) {},
-                      onTap: () => Navigator.pushNamed(context, '/audio_player', arguments: journey),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        transform: Matrix4.identity()..scale(scale),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [journey['color'].withOpacity(0.14), Colors.white],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: journey['color'].withOpacity(0.10),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              journey['icon'],
-                              size: 48,
-                              color: journey['color'],
-                            ),
-                            const Spacer(),
-                            Text(
-                              journey['title'],
-                              style: AppTextStyles.heading2.copyWith(fontSize: 18),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              journey['subtitle'],
-                              style: AppTextStyles.caption,
-                            ),
-                            const SizedBox(height: 4),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: journey['color'],
-                                borderRadius: BorderRadius.circular(12),
+          FutureBuilder(
+            future: FirebaseService.getJourneys(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (!snapshot.hasData || (snapshot.data as dynamic).docs.isEmpty) {
+                return Center(
+                  child: Text('No journeys available yet.', style: AppTextStyles.bodyLarge),
+                );
+              }
+              final journeys = (snapshot.data as dynamic).docs.map((doc) {
+                final data = doc.data() as Map<String, dynamic>;
+                return {
+                  'id': doc.id,
+                  'title': data['title'] ?? '',
+                  'subtitle': '${data['episodes']?.length ?? 0} episodes • ${(data['totalDuration'] ?? 0) ~/ 60} minutes',
+                  'icon': Icons.code, // You can map category to icon if needed
+                  'color': AppColors.primaryBlue,
+                  'difficulty': data['difficulty'] ?? 'Intermediate',
+                };
+              }).toList();
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: journeys.length,
+                  itemBuilder: (context, index) {
+                    final journey = journeys[index];
+                    return TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 1.0, end: 1.0),
+                      duration: const Duration(milliseconds: 200),
+                      builder: (context, scale, child) {
+                        return GestureDetector(
+                          onTapDown: (_) {},
+                          onTapUp: (_) {},
+                          onTap: () => Navigator.pushNamed(context, '/audio_player', arguments: journey),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            transform: Matrix4.identity()..scale(scale),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [journey['color'].withOpacity(0.14), Colors.white],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                              child: Text(
-                                journey['difficulty'],
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: journey['color'].withOpacity(0.10),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 6),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  journey['icon'],
+                                  size: 48,
+                                  color: journey['color'],
+                                ),
+                                const Spacer(),
+                                Text(
+                                  journey['title'],
+                                  style: AppTextStyles.heading2.copyWith(fontSize: 18),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  journey['subtitle'],
+                                  style: AppTextStyles.caption,
+                                ),
+                                const SizedBox(height: 4),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: journey['color'],
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    journey['difficulty'],
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
           Positioned(
             bottom: 24,
