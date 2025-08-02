@@ -25,7 +25,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
   
   int _currentPage = 0;
   String? _selectedCoach;
-  String? _selectedGoal;
+  String? _selectedDuration;
   String? _customCoachName;
   
   // Coach options with personalities
@@ -50,22 +50,27 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
     },
   ];
   
-  // Learning goals
-  final List<Map<String, String>> _goals = [
+  // Episode duration preferences
+  final List<Map<String, String>> _durations = [
     {
-      'title': 'Explore',
-      'description': 'Get a broad overview and discover new areas',
-      'icon': '🔍',
+      'title': '5 minutes',
+      'description': 'Quick, focused learning sessions',
+      'icon': '⚡',
     },
     {
-      'title': 'Master',
-      'description': 'Develop deep expertise and comprehensive knowledge',
-      'icon': '🎓',
+      'title': '10 minutes',
+      'description': 'Balanced approach with good depth',
+      'icon': '⭐',
     },
     {
-      'title': 'Apply',
-      'description': 'Focus on practical skills and immediate implementation',
-      'icon': '🛠️',
+      'title': '15 minutes',
+      'description': 'Comprehensive coverage with examples',
+      'icon': '📚',
+    },
+    {
+      'title': '20 minutes',
+      'description': 'Deep dive with detailed explanations',
+      'icon': '�',
     },
   ];
 
@@ -101,7 +106,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
       'category': widget.topicCategory,
       'coach': _selectedCoach,
       'customCoachName': _customCoachName,
-      'goal': _selectedGoal,
+      'duration': _selectedDuration,
       'completedAt': DateTime.now().toIso8601String(),
     };
     
@@ -113,7 +118,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
       case 0:
         return _selectedCoach != null;
       case 1:
-        return _selectedGoal != null;
+        return _selectedDuration != null;
       default:
         return false;
     }
@@ -472,7 +477,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'What\'s your learning goal?',
+            'What\'s your preferred episode duration?',
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -481,7 +486,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
           ),
           const SizedBox(height: 12),
           Text(
-            'This helps us tailor the learning journey for ${widget.selectedTopic}',
+            'This helps us create episodes that fit your schedule for ${widget.selectedTopic}',
             style: const TextStyle(
               fontSize: 16,
               color: WismeColors.textSecondary,
@@ -489,14 +494,14 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
           ),
           const SizedBox(height: 32),
           
-          ..._goals.map((goal) {
-            final isSelected = _selectedGoal == goal['title'];
+          ..._durations.map((duration) {
+            final isSelected = _selectedDuration == duration['title'];
             return Container(
               margin: const EdgeInsets.only(bottom: 16),
               child: GestureDetector(
                 onTap: () {
                   setState(() {
-                    _selectedGoal = goal['title'];
+                    _selectedDuration = duration['title'];
                   });
                 },
                 child: ModernCard(
@@ -519,7 +524,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                         ),
                         child: Center(
                           child: Text(
-                            goal['icon']!,
+                            duration['icon']!,
                             style: const TextStyle(fontSize: 24),
                           ),
                         ),
@@ -530,7 +535,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              goal['title']!,
+                              duration['title']!,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -541,7 +546,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              goal['description']!,
+                              duration['description']!,
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: WismeColors.textSecondary,
@@ -566,7 +571,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
           const SizedBox(height: 32),
           
           // Summary card
-          if (_selectedCoach != null && _selectedGoal != null)
+          if (_selectedCoach != null && _selectedDuration != null)
             ModernCard(
               backgroundColor: WismeColors.info.withOpacity(0.05),
               child: Column(
@@ -593,7 +598,7 @@ class _CompleteLearningChoiceFlowState extends State<CompleteLearningChoiceFlow>
                   const SizedBox(height: 16),
                   _buildSummaryRow('Topic', widget.selectedTopic),
                   _buildSummaryRow('Coach', _customCoachName ?? _selectedCoach!),
-                  _buildSummaryRow('Goal', _selectedGoal!),
+                  _buildSummaryRow('Duration', _selectedDuration!),
                 ],
               ),
             ),

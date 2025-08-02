@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import '../config/environment_config.dart';
+import '../../models/phase1_models.dart';
 
 /// GOD-LEVEL PROMPT ENGINEERING SYSTEM
 /// Optimized for cost efficiency, accuracy, and personalization
@@ -46,7 +47,7 @@ class OptimizedOpenAIService {
     String? personalContext,
     List<String>? previousTopics,
     String? preferredCoach,
-    String? learningGoal,
+    int? episodeDuration,
   }) async {
     if (!isConfigured) {
       throw Exception('OpenAI API key not configured');
@@ -60,7 +61,7 @@ class OptimizedOpenAIService {
       personalContext: personalContext,
       previousTopics: previousTopics,
       preferredCoach: preferredCoach,
-      learningGoal: learningGoal,
+      episodeDuration: episodeDuration,
     );
 
     try {
@@ -101,9 +102,23 @@ Mathematics & Logic: 🧮 Foundational Concepts, 🔢 Applied Techniques, 🧠 L
 Gaming & Interactive Media: 🎮 Game Design Principles, 🧠 Player Experience, 📚 Iconic Games & Genres, 🎛 Gaming Culture Mix
 Society & Ethics: 🧭 Social Structures, 🧬 Moral Frameworks, 💬 Real-World Ethics, 🎛 Reflective Society Blend
 
-COACH PERSONALITIES:
-• KAI: Philosophical, analytical, thoughtful pauses, deep insights, uses metaphors, slow-paced wisdom
-• VEE: Energetic, practical, motivational, fast-paced, action-oriented, uses examples and anecdotes
+VOICE PAIR SYSTEM (Category-based assignment):
+Each category has pre-assigned host-expert voice pairs optimized for that subject matter:
+- Technology & AI: Kai (curious host) + Alex (technical expert)
+- Business & Finance: Maya (strategic host) + David (business expert)  
+- Psychology & Mind: Kai (thoughtful host) + Sara (empathetic expert)
+- Science & Nature: Maya (analytical host) + Alex (research expert)
+- Creativity & Design: Zoe (creative host) + Sara (artistic expert)
+- Personal Development: Kai (reflective host) + David (mentor expert)
+- History & Culture: Zoe (storytelling host) + Alex (knowledge expert)
+- Skills & Tools: Maya (practical host) + David (experienced expert)
+- Career & Strategy: Maya (strategic host) + David (career expert)
+- Law & Governance: Kai (analytical host) + David (authority expert)
+- Geopolitics & Global Affairs: Zoe (curious host) + Alex (global expert)
+- Environment & Sustainability: Maya (systems host) + Alex (science expert)
+- Mathematics & Logic: Kai (logical host) + Alex (mathematical expert)
+- Gaming & Interactive Media: Zoe (enthusiastic host) + Sara (experience expert)
+- Society & Ethics: Kai (philosophical host) + Sara (ethical expert)
 
 CONTENT VARIATION REQUIREMENTS:
 - NEVER repeat identical phrases across episodes
@@ -117,14 +132,14 @@ PERSONALIZATION DEPTH:
 - Reference their learning intent in motivation and applications
 - Use personal context to shape relevance and urgency
 - Build upon previous topics with connections and progressions
-- Align coaching style with preferred personality and goals
+- Align coaching style with category-specific voice pair personalities
 
 OUTPUT JSON STRUCTURE:
 {
   "topicAnalysis": {
     "category": "exact category match",
     "knowledgeLevel": "exact level with emoji",
-    "recommendedCoach": "Kai|Vee",
+    "assignedVoicePair": "auto-assigned based on category",
     "confidence": 0.95,
     "personalizedInsight": "why this approach fits user's context",
     "estimatedTotalDuration": 45
@@ -145,14 +160,14 @@ OUTPUT JSON STRUCTURE:
   },
   "personalization": {
     "userProfileIntegration": "how user context was used",
-    "coachingAdaptations": "personality adjustments made",
+    "voicePairRationale": "why this voice pair fits the category",
     "learningPathRationale": "why this specific progression"
   }
 }
 
 EPISODE CONTENT GUIDELINES:
 - 8-12 minutes spoken content per episode
-- Natural conversational flow with coach personality
+- Natural conversational flow with category-specific voice pair personalities
 - Personal context integration throughout
 - Unique openings: "Today we're exploring...", "Let's dive into...", "I want to share..."
 - Varied transitions: [PAUSE], [EMPHASIS], [THOUGHTFUL_PAUSE], [ENERGY_SHIFT]
@@ -170,7 +185,7 @@ EPISODE CONTENT GUIDELINES:
     String? personalContext,
     List<String>? previousTopics,
     String? preferredCoach,
-    String? learningGoal,
+    int? episodeDuration,
   }) {
     final contextualPrompt = StringBuffer();
     contextualPrompt.writeln('TOPIC: "$topic"');
@@ -195,8 +210,8 @@ EPISODE CONTENT GUIDELINES:
       contextualPrompt.writeln('PREFERRED COACH: $preferredCoach');
     }
     
-    if (learningGoal?.isNotEmpty ?? false) {
-      contextualPrompt.writeln('LEARNING GOAL: $learningGoal');
+    if (episodeDuration != null) {
+      contextualPrompt.writeln('PREFERRED EPISODE DURATION: ${episodeDuration} minutes');
     }
     
     contextualPrompt.writeln('''
@@ -345,7 +360,7 @@ Return only hashtags, one per line, starting with #''';
     // Determine category using basic keyword matching
     final category = _determineFallbackCategory(topic);
     final knowledgeLevel = _determineFallbackLevel(userBackground ?? '');
-    final coach = preferredCoach ?? (knowledgeLevel.contains('Core') ? 'Kai' : 'Vee');
+    final voicePair = Phase1VoiceMapping.getVoicePairForCategory(category);
     
     // Generate 5 episodes with personalized content
     final episodes = <Map<String, dynamic>>[];
@@ -355,7 +370,7 @@ Return only hashtags, one per line, starting with #''';
         'title': _generateFallbackEpisodeTitle(topic, i, personalContext),
         'description': _generateFallbackDescription(topic, i, userBackground),
         'duration': 8 + (i * 2), // Progressive duration 8,10,12,14,16 mins
-        'personalizedContent': _generateFallbackContent(topic, i, personalContext, userBackground, coach),
+        'personalizedContent': _generateFallbackContent(topic, i, personalContext, userBackground, voicePair),
         'learningObjectives': _generateFallbackObjectives(topic, i),
         'keyInsights': _generateFallbackInsights(topic, i),
         'personalizedHashtags': _generateFallbackHashtagsList(topic, category),
@@ -366,7 +381,7 @@ Return only hashtags, one per line, starting with #''';
       'topicAnalysis': {
         'category': category,
         'knowledgeLevel': knowledgeLevel,
-        'recommendedCoach': coach,
+        'assignedVoicePair': '${voicePair.host} + ${voicePair.expert}',
         'confidence': 0.7, // Lower confidence for fallback
         'personalizedInsight': personalContext != null 
             ? 'This $topic journey is tailored to your context: $personalContext'
@@ -382,7 +397,7 @@ Return only hashtags, one per line, starting with #''';
         'userProfileIntegration': userBackground != null 
             ? 'Content adapted for $userBackground background'
             : 'General learning approach with progressive difficulty',
-        'coachingAdaptations': '$coach coaching style selected for optimal learning',
+        'voicePairRationale': 'Voice pair (${voicePair.host} + ${voicePair.expert}) automatically selected for $category',
         'learningPathRationale': 'Structured progression from fundamentals to advanced applications',
       }
     };
@@ -475,10 +490,11 @@ Return only hashtags, one per line, starting with #''';
   }
 
   /// Generate personalized episode content
-  String _generateFallbackContent(String topic, int episodeNumber, String? personalContext, String? background, String coach) {
-    final isKai = coach == 'Kai';
-    final greeting = isKai ? 'Welcome, learner.' : 'Hey there, let\'s dive in!';
-    final pace = isKai ? '[THOUGHTFUL_PAUSE]' : '[ENERGY_SHIFT]';
+  String _generateFallbackContent(String topic, int episodeNumber, String? personalContext, String? background, VoicePair voicePair) {
+    final hostName = voicePair.host;
+    final isKaiHost = hostName == 'kai';
+    final greeting = isKaiHost ? 'Welcome, learner.' : 'Hey there, let\'s dive in!';
+    final pace = isKaiHost ? '[THOUGHTFUL_PAUSE]' : '[ENERGY_SHIFT]';
     
     final contextIntro = personalContext != null 
         ? 'I know you\'re interested in this because $personalContext, so let\'s make this relevant to your journey.'

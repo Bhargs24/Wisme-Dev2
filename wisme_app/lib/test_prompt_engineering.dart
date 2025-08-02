@@ -91,7 +91,7 @@ Future<void> demoOptimizedService() async {
       userBackground: 'Web developer with React experience',
       personalContext: 'Want to build mobile apps for my startup',
       learningIntent: 'Create production-ready mobile applications',
-      learningGoal: 'Master',
+      episodeDuration: 12,
     );
     
     final analysis = result['topicAnalysis'] as Map<String, dynamic>;

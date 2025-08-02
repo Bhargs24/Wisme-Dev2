@@ -94,7 +94,7 @@ class PromptEngineeringAuditService {
         personalContext: testContext,
         userBackground: 'Software Developer, 5 years experience',
         learningIntent: 'Career transition to AI/ML field',
-        learningGoal: 'Master',
+        episodeDuration: 12,
       );
       
       final endTime = DateTime.now();

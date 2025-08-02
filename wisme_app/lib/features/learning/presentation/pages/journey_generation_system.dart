@@ -93,20 +93,22 @@ class _JourneyGenerationSystemState extends State<JourneyGenerationSystem>
     final choices = widget.learningChoices;
     final topic = choices['topic'] as String;
     final coach = choices['coach'] as String;
-    final goal = choices['goal'] as String;
+    final learningType = choices['learningType'] as String;
+    final category = choices['category'] as String;
+    final episodeCount = choices['episodeCount'] as int? ?? 5; // Default to 5 episodes
     
     // Generate episode titles and descriptions based on learning choices
-    final episodes = _generateEpisodes(topic, goal);
+    final episodes = _generateEpisodes(topic, learningType, episodeCount);
     
     return {
       'id': DateTime.now().millisecondsSinceEpoch.toString(),
-      'title': _generateJourneyTitle(topic, goal),
-      'description': _generateJourneyDescription(topic, goal),
+      'title': _generateJourneyTitle(topic, learningType),
+      'description': _generateJourneyDescription(topic, learningType),
       'topic': topic,
-      'category': choices['category'],
+      'category': category,
       'coach': coach,
       'customCoachName': choices['customCoachName'],
-      'goal': goal,
+      'learningType': learningType,
       'episodes': episodes,
       'estimatedDuration': episodes.length * 12, // 12 minutes per episode
       'totalEpisodes': episodes.length,
@@ -117,44 +119,65 @@ class _JourneyGenerationSystemState extends State<JourneyGenerationSystem>
     };
   }
 
-  List<Map<String, dynamic>> _generateEpisodes(String topic, String goal) {
+  List<Map<String, dynamic>> _generateEpisodes(String topic, String learningType, int episodeCount) {
     final episodes = <Map<String, dynamic>>[];
     
-    // Episode structure based on goal
-    if (goal == 'Explore') {
-      // 5 episodes for exploration
-      episodes.addAll([
-        _createEpisode(1, 'Introduction to $topic', 'Get oriented with the fundamentals', 'intro'),
-        _createEpisode(2, 'Core Concepts Explained', 'Understand the key principles', 'concepts'),
-        _createEpisode(3, 'Real-World Applications', 'See how it\'s used in practice', 'applications'),
-        _createEpisode(4, 'Common Misconceptions', 'Avoid typical mistakes', 'misconceptions'),
-        _createEpisode(5, 'Next Steps & Resources', 'Plan your continued learning', 'next_steps'),
-      ]);
-    } else if (goal == 'Master') {
-      // 8 episodes for mastery
-      episodes.addAll([
-        _createEpisode(1, 'Foundations of $topic', 'Build strong fundamentals', 'foundations'),
-        _createEpisode(2, 'Advanced Concepts', 'Dive deeper into complexity', 'advanced'),
-        _createEpisode(3, 'Case Study Analysis', 'Learn from real examples', 'case_study'),
-        _createEpisode(4, 'Expert Techniques', 'Professional-level methods', 'expert'),
-        _createEpisode(5, 'Problem-Solving Strategies', 'Tackle complex challenges', 'problem_solving'),
-        _createEpisode(6, 'Industry Best Practices', 'Learn from the pros', 'best_practices'),
-        _createEpisode(7, 'Common Pitfalls & Solutions', 'Avoid and fix mistakes', 'pitfalls'),
-        _createEpisode(8, 'Mastery Assessment', 'Test your understanding', 'assessment'),
-      ]);
-    } else { // Apply
-      // 6 episodes for application
-      episodes.addAll([
-        _createEpisode(1, 'Getting Started with $topic', 'First practical steps', 'getting_started'),
-        _createEpisode(2, 'Essential Tools & Setup', 'What you need to begin', 'tools'),
-        _createEpisode(3, 'Building Your First Project', 'Hands-on implementation', 'first_project'),
-        _createEpisode(4, 'Common Challenges & Solutions', 'Overcome typical obstacles', 'challenges'),
-        _createEpisode(5, 'Optimization & Best Practices', 'Make it better', 'optimization'),
-        _createEpisode(6, 'Next-Level Applications', 'Take it further', 'next_level'),
-      ]);
+    // Episode structure based on user's episode count preference and learning type
+    for (int i = 1; i <= episodeCount; i++) {
+      final episodeTitle = _generateEpisodeTitle(topic, learningType, i, episodeCount);
+      final episodeDescription = _generateEpisodeDescription(learningType, i, episodeCount);
+      final episodeType = _getEpisodeType(i, episodeCount);
+      
+      episodes.add(_createEpisode(i, episodeTitle, episodeDescription, episodeType));
     }
 
     return episodes;
+  }
+
+  String _getEpisodeType(int episodeNumber, int totalEpisodes) {
+    if (episodeNumber == 1) return 'intro';
+    if (episodeNumber == totalEpisodes) return 'conclusion';
+    if (episodeNumber <= totalEpisodes ~/ 2) return 'foundation';
+    return 'advanced';
+  }
+
+  String _generateEpisodeTitle(String topic, String learningType, int episodeNumber, int totalEpisodes) {
+    // Generate episode titles based on the actual learning type approach
+    if (learningType.contains('Core Concepts') || learningType.contains('Fundamentals')) {
+      switch (episodeNumber) {
+        case 1: return 'Introduction to $topic';
+        case 2: return 'Core Principles of $topic';
+        default: return 'Advanced $topic Concepts ${episodeNumber - 2}';
+      }
+    } else if (learningType.contains('Case Studies') || learningType.contains('Real-Life Application')) {
+      switch (episodeNumber) {
+        case 1: return '$topic in Action';
+        case 2: return 'Success Stories: $topic';
+        default: return '$topic Case Study ${episodeNumber - 2}';
+      }
+    } else if (learningType.contains('Tools') || learningType.contains('Getting Started')) {
+      switch (episodeNumber) {
+        case 1: return 'Getting Started with $topic';
+        case 2: return 'Essential $topic Tools';
+        default: return 'Advanced $topic Techniques ${episodeNumber - 2}';
+      }
+    } else { // Mixed/Balanced approaches
+      switch (episodeNumber) {
+        case 1: return 'Understanding $topic';
+        case 2: return '$topic in Practice';
+        default: return 'Exploring $topic ${episodeNumber - 2}';
+      }
+    }
+  }
+
+  String _generateEpisodeDescription(String learningType, int episodeNumber, int totalEpisodes) {
+    if (episodeNumber == 1) {
+      return 'Foundation and overview to get you started';
+    } else if (episodeNumber == totalEpisodes) {
+      return 'Advanced insights and next steps';
+    } else {
+      return 'Building deeper understanding and practical knowledge';
+    }
   }
 
   Map<String, dynamic> _createEpisode(int number, String title, String description, String type) {
@@ -187,23 +210,20 @@ class _JourneyGenerationSystemState extends State<JourneyGenerationSystem>
     }
   }
 
-  String _generateJourneyTitle(String topic, String goal) {
-    switch (goal) {
-      case 'Explore':
-        return '$topic: Complete Introduction';
-      case 'Master':
-        return 'Mastering $topic: Expert Level';
-      case 'Apply':
-        return '$topic: From Zero to Implementation';
-      default:
-        return 'Learning $topic';
+  String _generateJourneyTitle(String topic, String learningType) {
+    if (learningType.contains('Core Concepts') || learningType.contains('Fundamentals')) {
+      return '$topic: Core Concepts & Fundamentals';
+    } else if (learningType.contains('Case Studies')) {
+      return '$topic: Real-World Case Studies';
+    } else if (learningType.contains('Tools') || learningType.contains('Getting Started')) {
+      return '$topic: Tools & Practical Guide';
+    } else {
+      return '$topic: Comprehensive Overview';
     }
   }
 
-  String _generateJourneyDescription(String topic, String goal) {
-    final goalText = goal.toLowerCase();
-    
-    return 'A comprehensive podcast-style learning journey to help you $goalText $topic effectively. '
+  String _generateJourneyDescription(String topic, String learningType) {
+    return 'A comprehensive podcast-style learning journey focused on $learningType approach to $topic. '
            'Each episode is carefully crafted to build upon previous knowledge and provide practical insights.';
   }
 

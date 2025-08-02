@@ -31,7 +31,7 @@ class AdvancedTopicClassifier {
     String? personalContext,
     List<String>? previousTopics,
     String? preferredCoach,
-    String? learningGoal,
+    int? episodeDuration,
   }) async {
     try {
       // Single optimized API call for everything
@@ -42,7 +42,7 @@ class AdvancedTopicClassifier {
         personalContext: personalContext,
         previousTopics: previousTopics,
         preferredCoach: preferredCoach,
-        learningGoal: learningGoal,
+        episodeDuration: episodeDuration,
       );
 
       // Extract topic analysis from comprehensive response

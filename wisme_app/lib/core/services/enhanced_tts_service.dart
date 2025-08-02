@@ -8,6 +8,8 @@ import 'smart_fragment_cache_service.dart';
 import 'audio_assembly_engine.dart';
 import '../config/api_config.dart';
 import 'playht_service.dart';
+import 'elevenlabs_service.dart';
+import '../audio/audio_storage.dart';
 
 class EnhancedTTSService {
   static final EnhancedTTSService _instance = EnhancedTTSService._internal();
@@ -174,37 +176,61 @@ class EnhancedTTSService {
   }
 
   /// Generate new audio using configured TTS service
-  /// Now connects to your actual ElevenLabs/PlayHT integration
+  /// Now connects to real ElevenLabs/PlayHT integration
   Future<Map<String, dynamic>> _generateNewAudio(String text, String speakerId) async {
     try {
-      // Product Engineering: Use your existing TTS services
-      late Map<String, dynamic> result;
+      print('🎵 Generating audio for speaker: $speakerId');
       
       // Map your 6-voice system to appropriate voice IDs
       final voiceId = _getVoiceIdForSpeaker(speakerId);
       
       // Use your existing TTS services based on configuration
       if (ApiConfig.isElevenlabsConfigured) {
-        // Connect to your existing ElevenLabs service
-        result = await _generateWithElevenLabs(text, voiceId);
+        // Connect to real ElevenLabs service
+        final result = await _generateWithElevenLabs(text, voiceId);
+        
+        if (result['success'] == true && result['audioBytes'] != null) {
+          // Save audio to storage
+          final timestamp = DateTime.now().millisecondsSinceEpoch;
+          final audioPath = await AudioStorage.saveAudioFile(
+            audioBytes: result['audioBytes'] as Uint8List,
+            filename: 'tts_${speakerId}_$timestamp',
+          );
+          
+          return {
+            'success': true,
+            'audioData': result['audioBytes'],
+            'audioPath': audioPath,
+            'duration': _estimateAudioDuration(text),
+            'provider': 'elevenlabs',
+          };
+        } else {
+          throw Exception('ElevenLabs generation failed: ${result['error']}');
+        }
       } else if (ApiConfig.isPlayHtConfigured) {
         // Fallback to PlayHT
-        result = await PlayHTService.generateAudio(
+        final result = await PlayHTService.generateAudio(
           text: text,
           voiceId: voiceId,
           speed: 1.0,
         );
+        
+        if (result['success'] == true) {
+          return {
+            'success': true,
+            'audioData': result['audioBytes'] ?? result['audioPath'],
+            'audioPath': result['audioPath'] ?? '/tmp/generated_audio_${DateTime.now().millisecondsSinceEpoch}.mp3',
+            'duration': _estimateAudioDuration(text),
+            'provider': 'playht',
+          };
+        } else {
+          throw Exception('PlayHT generation failed: ${result['error']}');
+        }
       } else {
-        throw Exception('No TTS service configured');
+        throw Exception('No TTS service configured. Please set up ElevenLabs or PlayHT API keys.');
       }
-      
-      return {
-        'success': result['success'] ?? true,
-        'audioData': result['audioBytes'] ?? result['audioPath'],
-        'audioPath': '/tmp/generated_audio_${DateTime.now().millisecondsSinceEpoch}.mp3',
-        'duration': _estimateAudioDuration(text),
-      };
     } catch (e) {
+      print('❌ Audio generation failed: $e');
       return {
         'success': false,
         'error': 'TTS generation failed: $e',
@@ -298,12 +324,27 @@ class EnhancedTTSService {
     }
   }
   
-  /// Call ElevenLabs API - Replace this with your existing implementation
+  /// Call ElevenLabs API - REAL IMPLEMENTATION
   Future<Uint8List?> _callElevenLabsAPI(String text, String voiceId) async {
-    // TODO: Replace with your existing ElevenLabs service call
-    // For now, return placeholder data for testing
-    await Future.delayed(Duration(milliseconds: 500)); // Simulate API delay
-    return Uint8List.fromList([1, 2, 3, 4, 5]); // Placeholder audio data
+    try {
+      print('🔄 Calling ElevenLabs API for voice $voiceId with text: ${text.substring(0, 50)}...');
+      
+      final result = await ElevenLabsService.generateSpeech(
+        text: text,
+        voiceId: voiceId,
+      );
+      
+      if (result['success'] == true) {
+        print('✅ ElevenLabs API success - received ${result['audioBytes'].length} bytes');
+        return result['audioBytes'] as Uint8List;
+      } else {
+        print('❌ ElevenLabs API failed: ${result['error']}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ ElevenLabs API error: $e');
+      return null;
+    }
   }
 }
 
