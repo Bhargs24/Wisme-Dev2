@@ -4,7 +4,9 @@
 
 Built August 2025, under the original "Wisme" spelling. Not maintained.
 
-> **This repository is private and should stay private.** An OpenAI API key was committed to `wisme_app2/lib/config/api_keys.dart` and to two of the setup guides, and it is still in the git history. Making the repo public would expose it. Revoke the key and rewrite the history before considering otherwise.
+## A note on the history
+
+An OpenAI key and an admin password were committed to this repo during the build. Both have been revoked, and both were purged from every commit in the history before this repository was made public. Nothing here is a live credential. The Firebase values in the committed config are client-side identifiers, which ship in the app by design.
 
 ## What is in it
 
